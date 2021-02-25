@@ -1,0 +1,21 @@
+.header{
+    width: 100%;
+    height: 80px;
+    background-color:grey ;
+    padding: 10px;
+}
+
+.thisHeader{
+    margin-left: 82%;
+    margin-top: 10px;
+}
+.welcome{
+    margin-bottom: 100px;
+}
+.bungkusWelcome{
+    float: left;
+}
+.thisLogout{
+    float: right;
+    margin-right: 30px;
+}

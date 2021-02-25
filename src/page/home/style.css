@@ -1,0 +1,21 @@
+.bodyHome{
+    width: 102%;
+    height: 100vh;
+    background-color: #333333;
+}
+
+.containerHome{
+    margin:auto;
+    text-align: center;
+    width: 50%;
+    height: 100%;
+    border-style: solid;
+}
+
+.atas{
+    margin-top: 100px;
+}
+
+.bawah{
+    margin-top: 100px;
+}

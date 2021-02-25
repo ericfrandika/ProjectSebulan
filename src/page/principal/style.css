@@ -1,0 +1,56 @@
+.bodyPrin{
+    width: 100%;
+    height: 100vh;
+    border-style: solid;
+}
+.prinAtas{
+    width: 100%;
+    border-style: solid;
+    height: 10vh;
+}
+.SeacrhPrin{
+    margin-left: 10px;
+    margin-top: 15px;
+    width: 300px;
+    height: 30px;
+    font-size: larger;
+    border-style: solid;
+    border-radius: 10px;
+    margin-right: 60%;
+}
+.crudPrin{
+    display: inline-block;
+    width: 60px;
+    height: 20px;
+    background-color: grey;
+    border-style: solid;
+    margin-right: 1px;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.8);
+   font-weight: bold;
+}
+
+.prinKiri{
+    width: 30%;
+    border-style: solid;
+    height: 89vh;
+    float: left;
+    overflow-y:scroll;
+}
+.prinKanan{
+    width: 69%;
+    border-style: solid;
+    height: 89vh;
+    float: right;
+}
+.prinKiriLabel{
+    width: 30%;
+    border-style: solid;
+    height: 89vh;
+    float: left;
+}
+.prinKananInput{
+    width: 68%;
+    border-style: solid;
+    height: 89vh;
+    float: right;
+}
