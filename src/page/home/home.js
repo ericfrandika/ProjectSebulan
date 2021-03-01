@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './style.css'
 class Home extends Component {
     constructor(props) {
@@ -12,8 +13,12 @@ class Home extends Component {
                 <div className="containerHome">
                     <div className="atas">
                         <div>
+                    <Link to ="/principal">        
                     <i class="fas fa-tags " style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
+                    </Link>
+                    <Link to ="/distributor">
                     <i class="fas fa-truck" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
+                    </Link>
                         </div>
                         <div>
                             <label className="principal" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}} >PRINCIPAL</label>
@@ -22,7 +27,9 @@ class Home extends Component {
                     </div>
                     <div className="bawah" >
                         <div>
+                            <Link to ="/customer">
                     <i class="fas fa-users"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
+                    </Link>
                     <i class="fas fa-database"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
                        </div>
                        <div>

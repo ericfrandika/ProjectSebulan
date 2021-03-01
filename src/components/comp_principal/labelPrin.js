@@ -10,7 +10,8 @@ class LabelPrin extends Component {
             <label value={this.props.value} 
             onChange={this.props.onChange} 
             style={this.props.style}
-             className={this.props.className}>{this.props.children} </label>
+             className={this.props.className}
+             >{this.props.children}</label>
             </>
          );
     }

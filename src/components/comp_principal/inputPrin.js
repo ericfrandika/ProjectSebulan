@@ -13,6 +13,7 @@ class InputPrin extends Component {
             name={this.props.name}
             onChange={this.props.onChange}
             style={this.props.style}
+            disabled={this.props.disabled}
              />
              </>  );
     }

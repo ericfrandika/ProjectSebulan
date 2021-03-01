@@ -1,13 +1,13 @@
-
-import Login from './page/login/login'
 import Header from './templates/header/header'
-import Home from './page/home/home'
-import Principal from './page/principal/principal'
+import Body from './templates/body/index'
+import { BrowserRouter as Router } from "react-router-dom"
 function App() {
   return (
     <div>
+      <Router>
    <Header></Header>
-   <Principal></Principal>
+    <Body/>
+    </Router>
     </div>
   );
 }

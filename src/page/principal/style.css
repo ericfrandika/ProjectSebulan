@@ -35,7 +35,27 @@
     height: 89vh;
     float: left;
     overflow-y:scroll;
+    background-color: black;
 }
+
+.prinisiTable{
+    width: 96%;
+    height: 11vh;
+    border-color: white;
+    border-style: solid;
+    background-color: #696969;
+    padding:5px;
+}
+.prinTable{
+    float: left;
+}
+.prinlabelTabel{
+    margin-top: 10px;
+    float: right;
+    margin-right: 50%;
+    color: white;
+}
+
 .prinKanan{
     width: 69%;
     border-style: solid;
@@ -43,14 +63,35 @@
     float: right;
 }
 .prinKiriLabel{
+    padding-top: 1px;
+    padding-left: 2px;
     width: 30%;
     border-style: solid;
     height: 89vh;
     float: left;
+    background-color: black;
 }
 .prinKananInput{
     width: 68%;
     border-style: solid;
     height: 89vh;
     float: right;
+    background-color: gray;
+}
+.labelprin{
+    color: white;
+    display:inline-block;
+    width: 100%;
+    height: 30px;
+    border-bottom-style: solid;
+}
+.prinForm{
+    width: 500px;
+    height: 27px;
+    font-size: large;
+}
+.prinAlamat{
+    height:55px;
+    resize: none;
+    font-size: large;
 }

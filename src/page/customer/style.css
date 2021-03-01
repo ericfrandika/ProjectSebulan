@@ -1,0 +1,12 @@
+.CustomerTabel{
+    float: right;
+    width: 75%;
+    color: white;
+}
+
+.CustomerTabelkiri{
+    float:left;
+}
+.CustomerTabelKanan{
+    float: right;
+}
