@@ -97,13 +97,13 @@ class Customer extends Component {
                     <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
                     <div>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <select className="prinForm" id="StudentGender" name="prinName" style={{height:"33px"}} onChange={this.setValue}>
+                    <select className="prinForm"  name="prinName" style={{height:"33px"}} onChange={this.setValue}>
                         <option>Principal name</option> 
                     </select>
                     </div>
                     <div>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <select className="prinForm" id="StudentGender" name="disName" style={{height:"33px"}} onChange={this.setValue}>
+                    <select className="prinForm"  name="disName" style={{height:"33px"}} onChange={this.setValue}>
                         <option>Distributor name</option> 
                     </select>
                     </div>

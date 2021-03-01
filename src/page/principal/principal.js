@@ -13,9 +13,9 @@ class Principal extends Component {
             <div className="bodyPrin">
                 <div className="prinAtas">
                 <InputPrin className="SeacrhPrin" name="searchPrin" onChange={this.setValue} placeholder="Search"></InputPrin>
-                <LabelPrin className="crudPrin">ADD</LabelPrin>
-                <LabelPrin className="crudPrin">EDIT</LabelPrin>
-                <LabelPrin className="crudPrin">DELETE</LabelPrin>
+                <button className="crudPrin">ADD</button>
+                <button className="crudPrin">EDIT</button>
+                <button className="crudPrin">DELETE</button>
                 </div>
                 
                 <div className="prinKiri">
@@ -71,7 +71,7 @@ class Principal extends Component {
                     <InputPrin  type="text" className="prinForm" name="prinName" onChange={this.setValue} placeholder="Principal Name" ></InputPrin>
                     </div> 
                     <div>
-                    <textarea className="prinAlamat" name="prinAlamat" rows="4" cols="54" placeholder="alamat" onChange={this.setValue}></textarea>
+                    <textarea className="prinAlamat" name="prinAddress" rows="4" cols="54" placeholder="alamat" onChange={this.setValue}></textarea>
                     </div> 
                     <div>
                     <InputPrin  type="text" className="prinForm" name="prinCity" onChange={this.setValue} placeholder="Principal City" ></InputPrin>
@@ -96,7 +96,7 @@ class Principal extends Component {
                     <InputPrin  type="text" className="prinForm" name="princreatedAt" onChange={this.setValue} placeholder="Principal Created At" ></InputPrin>
                     </div> 
                     <div>
-                    <InputPrin  type="text" className="prinForm" name="princreatedBy" onChange={this.setValue} placeholder="Principal Created By" ></InputPrin>
+                    <InputPrin  type="text" className="prinForm" name= "princreatedBy" onChange={this.setValue} placeholder="Principal Created By" ></InputPrin>
                     </div>
                     <div>
                     <InputPrin  type="text" className="prinForm" name="prinupdatedAt" onChange={this.setValue} placeholder="Principal Updated At" ></InputPrin>

@@ -12,9 +12,9 @@ class Distributor extends Component {
          <div className="bodyPrin">
                 <div className="prinAtas">
                 <InputPrin className="SeacrhPrin" name="searchDis" onChange={this.setValue} placeholder="Search"></InputPrin>
-                <LabelPrin className="crudPrin">ADD</LabelPrin>
-                <LabelPrin className="crudPrin">EDIT</LabelPrin>
-                <LabelPrin className="crudPrin">DELETE</LabelPrin>
+                <button className="crudPrin">ADD</button>
+                <button className="crudPrin">EDIT</button>
+                <button className="crudPrin">DELETE</button>
                 </div>
                 
                 <div className="prinKiri">
