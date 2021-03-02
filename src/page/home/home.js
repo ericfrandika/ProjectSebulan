@@ -30,7 +30,9 @@ class Home extends Component {
                             <Link to ="/customer">
                     <i class="fas fa-users"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
                     </Link>
+                    <Link to="/backdata" >
                     <i class="fas fa-database"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
+                    </Link>
                        </div>
                        <div>
                             <label className="principal" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}} >CUSTOMER</label>

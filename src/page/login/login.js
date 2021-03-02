@@ -3,6 +3,7 @@ import LabelLog from '../../components/comp_login/label'
 import TextLog from '../../components/comp_login/text'
 import './style.css' 
 import Recaptcha from 'react-recaptcha'
+import { Link } from 'react-router-dom';
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ class Login extends Component {
     render() { 
         return (
             <>
-            <div className="bodyLogin">
+            <div className="bodyLogin" >
                 <div className="containerLogin">
                 <div>
                     <LabelLog className="labelAdmin">*Admin</LabelLog>
@@ -39,7 +40,7 @@ class Login extends Component {
                <i className="fas fa-lock" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"30px"}}></i>
                    <TextLog className="password" onChange={this.setValue} name="password" type="password" placeholder="Password"></TextLog>
                </div>
-               <div>
+               <div  className="div-recaptcha">
                <Recaptcha className="recaptcha"
                    sitekey="6LexcWYaAAAAAMWp_Rrps67jZRXyLQP86miIV-g1"
                     render="explicit"
@@ -48,7 +49,9 @@ class Login extends Component {
                     />
                </div>
                <div>
+                   <Link to ="/home">
                    <button className="login"><b>LOGIN</b></button>
+                   </Link>
                </div>
 
                 </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './style.css'
 class Header extends Component {
     constructor(props) {
@@ -8,8 +9,12 @@ class Header extends Component {
     render() { 
         return ( 
             <>
-            <div className ="header">
-
+            <div className ="header" style={{display:'flex' , flexDirection:'row'}}>
+            <div className="backHome"style={{fontSize:"50px"}}>
+            <Link to = "/home">
+            <i className="fas fa-home"></i>
+            </Link>
+            </div>
             <div className="thisHeader">
                 <div className="bungkusWelcome">
                 <div>

@@ -1,10 +1,10 @@
 .bodyLogin{
-    width: 100%;
-    height: 100%;
-    background-color: silver;
-    border-style: solid;
+    width: 88%;
+    height: 100vh;
+    background-image: url('login3.jpg');
     padding: 90px;
-}
+    background-size: cover;
+}   
 
 .containerLogin{
     margin:auto;
@@ -61,3 +61,6 @@
     color: white;
 }
 
+.div-recaptcha{
+    margin-left: 70px;
+}

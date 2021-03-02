@@ -1,0 +1,19 @@
+.bodyDatabase{
+border-style: solid;
+width: 100%;
+height: 100vh;
+background-color: #333333;
+
+}
+
+.ContinerData{
+    margin: auto;
+    border-style: gray;
+    width: 50%;
+    height: 80vh;
+    text-align: center;
+}
+
+.atasData{
+    margin-top: 30%;
+}

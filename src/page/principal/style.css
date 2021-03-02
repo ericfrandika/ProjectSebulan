@@ -2,6 +2,8 @@
     width: 100%;
     height: 100vh;
     border-style: solid;
+    display: flex;
+    flex-direction: row;
 }
 .prinAtas{
     width: 100%;
@@ -20,7 +22,7 @@
 }
 .crudPrin{
     display: inline-block;
-    width: 60px;
+    width: 65px;
     height: 20px;
     background-color: grey;
     border-style: solid;
@@ -41,7 +43,6 @@
     width: 30%;
     border-style: solid;
     height: 89vh;
-    float: left;
     overflow-y:scroll;
     background-color: black;
 }
@@ -54,6 +55,11 @@
     background-color: #696969;
     padding:5px;
 }
+.prinisiTable:active{
+    background-color: #3A539B;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
 .prinTable{
     float: left;
 }
@@ -65,10 +71,11 @@
 }
 
 .prinKanan{
+    display: flex;
+    flex-direction: row;
     width: 69%;
     border-style: solid;
     height: 89vh;
-    float: right;
 }
 .prinKiriLabel{
     padding-top: 1px;
@@ -76,14 +83,12 @@
     width: 30%;
     border-style: solid;
     height: 89vh;
-    float: left;
     background-color: black;
 }
 .prinKananInput{
     width: 68%;
     border-style: solid;
     height: 89vh;
-    float: right;
     background-color: gray;
 }
 .labelprin{

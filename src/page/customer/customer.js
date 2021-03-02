@@ -10,14 +10,13 @@ class Customer extends Component {
     render() { 
         return (  
             <>
-              <div className="bodyPrin">
-                <div className="prinAtas">
+              <div className="prinAtas">
                 <InputPrin className="SeacrhPrin" name="searchPrin" onChange={this.setValue} placeholder="Search"></InputPrin>
                 <LabelPrin className="crudPrin">ADD</LabelPrin>
                 <LabelPrin className="crudPrin">EDIT</LabelPrin>
                 <LabelPrin className="crudPrin">DELETE</LabelPrin>
                 </div>
-                
+              <div className="bodyPrin">
                 <div className="prinKiri">
                     {/* ini nanti di for */}
                     <div className="prinisiTable">
@@ -69,6 +68,14 @@ class Customer extends Component {
                   
                     <hr style={{backgroundColor:"blue" , height:"1px"}}/>
 
+                    <LabelPrin className="labelprin">Disable Login</LabelPrin>
+                    <LabelPrin className="labelprin">Registrasion Date</LabelPrin>
+                    <LabelPrin className="labelprin">Product Valid Thru</LabelPrin>
+
+
+
+                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+
                     <LabelPrin className="labelprin">Created At</LabelPrin>
                
                     <LabelPrin className="labelprin">Created By</LabelPrin>
@@ -108,6 +115,21 @@ class Customer extends Component {
                     </select>
                     </div>
                     <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
+                    <div>
+                    {/* -------------------------------------- nanti di for ini---------------------------------- */}
+                    <select className="prinForm"  name="cusOnOff" style={{height:"33px" ,width:"100px"}} onChange={this.setValue}>
+                        <option>True</option>
+                        <option>False</option> 
+                    </select>
+                    </div>
+                    <div>
+                    <InputPrin  type="text" className="prinForm" name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
+                    </div> 
+                    <div>
+                    <InputPrin  type="text" className="prinForm" name="cusValid" onChange={this.setValue} placeholder="Customer Product Thru" ></InputPrin>
+                    </div> 
+                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
+
                     <div>
                     <InputPrin  type="text" className="prinForm" name="cuscreatedAt" onChange={this.setValue} placeholder="Customer Created At" ></InputPrin>
                     </div> 
