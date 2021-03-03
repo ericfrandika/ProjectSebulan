@@ -16,12 +16,3 @@ Principal findByFaxPrincipalRepository(String prinFax);
 Principal findByConPhonePrincipalRepository(String prinConPhone);
 
 }
-//    INSERT Principal  oke 1
-//    Find By id        oke 2
-//    Find by Name      oke 3
-//    find by Phone     oke 4
-//    find by Fax       oke 5
-//    find by ConPhone  oke 6
-//    update            oke 7
-//    find ALL          oke 8
-//    delete Id         oke 9
