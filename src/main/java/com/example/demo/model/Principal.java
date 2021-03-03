@@ -5,8 +5,8 @@ private String prinId;
 private String prinName;
 private String prinAddress;
 private String prinCity;
-private String prinPhone;
-private String prinFax;
+private String prinPhone; //phone Gak boleh sama
+private String prinFax; // Fax gak boleh sama
 private String prinCountry;
 private String prinConPhone;
 private String prinLicensed;
