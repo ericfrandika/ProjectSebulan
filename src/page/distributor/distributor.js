@@ -17,7 +17,9 @@ class Distributor extends Component {
                 actDelete:0
                 //------------------------------------------------------------------------------------------
     }
+   
     }
+   
     //---------------------------------------------------button Add--------------------------------------
     buttonAdd = () => {
     if(this.state.act === 0){
@@ -87,6 +89,7 @@ class Distributor extends Component {
     }
     }
     render() { 
+
         return (
         <>
           <div className="prinAtas">

@@ -15,8 +15,8 @@ class Body extends Component {
         return ( 
         <>
         <Switch>
-            <Route path="/" exact component={Login}/>
-            <Route path="/home" exact component={Home}/>
+            {/* <Route path="/" exact component={Login}/> */}
+            <Route path="/" exact component={Home}/>
             <Route path="/principal" exact component={Principal}/>
             <Route path="/distributor" exact component={Distributor}/>
             <Route path="/customer" exact component={Customer}/>

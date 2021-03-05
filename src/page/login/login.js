@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {  }
+        this.state = { 
+            passType: "password"
+         }
     }
     recaptchaLoaded =()=>{
         console.log('Capctcha sukses')
@@ -15,8 +17,21 @@ class Login extends Component {
     }
     verifyCallback = (response)=>{
         if(response){
-
         }
+    }
+    passClick = () => {
+        console.log("pass");
+        const passTypeTemp = this.state.passType
+        if (passTypeTemp === "password") {
+            this.setState({
+                passType: "text"
+            })
+        } else {
+            this.setState({
+                passType: "password"
+            })
+        }
+
     }
     render() { 
         return (
@@ -38,7 +53,8 @@ class Login extends Component {
                 </div>
                <div>
                <i className="fas fa-lock" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"30px"}}></i>
-                   <TextLog className="password" onChange={this.setValue} name="password" type="password" placeholder="Password"></TextLog>
+                   <TextLog className="password" onChange={this.setValue} name="password" type={this.state.passType}  placeholder="Password"></TextLog>
+                   <i className={this.state.passType === "password" ? 'fa fa-eye-slash' : 'fa fa-eye'} onClick={() => this.passClick()} style={{ color: "grey", marginLeft: "-20px" }}></i>
                </div>
                <div  className="div-recaptcha">
                <Recaptcha className="recaptcha"
