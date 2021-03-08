@@ -1,19 +1,32 @@
 package com.example.demo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class Principal {
 private String prinId;
+    @NotBlank(message = "name cannot be empty")
+    @Pattern(regexp = "^(?![ .]+$)[a-zA-Z .]*$", message = "PrinName cannot be number or special character")
 private String prinName;
-private String prinAddress;
-private String prinCity;
-private String prinPhone; //phone Gak boleh sama
-private String prinFax; // Fax gak boleh sama
-private String prinCountry;
-private String prinConPhone;
-private String prinLicensed;
-private String princreatedAt;
-private String princreatedBy;
-private String prinupdatedAt;
-private String prinupdatedBy;
+    @NotBlank(message = "prinAddress cannot be empty")
+    private String prinAddress;
+    @NotBlank(message = "prinCity cannot be empty")
+    private String prinCity;
+    @NotBlank(message = "prinPhone cannot be empty")
+    private String prinPhone; //phone Gak boleh sama
+    @NotBlank(message = "prinFax cannot be empty")
+    private String prinFax; // Fax gak boleh sama
+    @NotBlank(message = "prinCountry cannot be empty")
+    private String prinCountry;
+    @NotBlank(message = "prinConPhone cannot be empty")
+    private String prinConPhone;
+    @NotBlank(message = "prinLicensed cannot be empty")
+    private String prinLicensed;
+
+    private String princreatedAt;
+    private String princreatedBy;
+    private String prinupdatedAt;
+    private String prinupdatedBy;
 
     public Principal(String prinId, String prinName,
                      String prinAddress, String prinCity,
