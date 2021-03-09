@@ -67,6 +67,12 @@
   align-items: center;
 }
 
-span {
+/* span {
   margin-left: 16px;
+} */
+
+.divlogout{
+  border-style: solid;
+  width: 50%;
+  height: 10vh;
 }

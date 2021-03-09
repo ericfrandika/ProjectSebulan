@@ -20,6 +20,7 @@ function Navbar() {
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
         </div>
+        
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
           <ul className='nav-menu-items' onClick={showSidebar}>
             <li className='navbar-toggle'>
@@ -37,18 +38,14 @@ function Navbar() {
                 </li>
               );
             })}
-            <div>
-            <li><AiIcons.AiOutlineLogout/>
-            <span style={{color:"white"}}>LogOut</span>
-            </li>
-            </div>
+      
           </ul>
         </nav>
-        
+    
       </IconContext.Provider>
       
     </>
-  );
+  );  
 }
 
 export default Navbar;

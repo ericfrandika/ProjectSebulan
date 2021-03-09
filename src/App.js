@@ -1,19 +1,33 @@
 import Header from './templates/header/header'
 import Body from './templates/body/index'
 import Login from './page/login/login'
-import { BrowserRouter as Router } from "react-router-dom"
+import { BrowserRouter as Router, Switch,Route } from "react-router-dom"
 import BackUpData from './page/database/backupData'
 import Navbar from './templates/sidebar/Navbar'
-function App() {
-  return (
-    <div>
-      <Router> 
-      {/* <Header></Header> */}
-      <Navbar/>
-      <Body/>
-      {/* <Login></Login> */}
-    </Router>
-    </div>
-  );
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { statusLogin:true  }
+  }
+  render() { 
+  console.log("ini react : ",this.props.dataLoginUser.username)
+    if (this.props.checkLogin === false){
+      return(<Login></Login>)
+    }
+    else{
+      return(<div> 
+              <Router> 
+                    <Navbar/>
+                     <Body/>
+              </Router>
+              </div>)
+    }
+  }
 }
-export default App;
+const mapStateToProps = state => ({
+  checkLogin: state.authReducer.isLogin,
+  dataLoginUser : state.authReducer.userLogin
+})
+export default connect(mapStateToProps)(App);

@@ -4,20 +4,31 @@ import TextLog from '../../components/comp_login/text'
 import './style.css' 
 import Recaptcha from 'react-recaptcha'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import Swal from 'sweetalert2'
+
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            passType: "password"
+            username:"",
+            password:"",
+            passType: "password",
+            loginData:{},
+            response:""
          }
     }
     recaptchaLoaded =()=>{
         console.log('Capctcha sukses')
-
     }
     verifyCallback = (response)=>{
         if(response){
+            this.setState({
+                response:response
+            })
         }
+        console.log(this.state.response)
     }
     passClick = () => {
         console.log("pass");
@@ -31,9 +42,47 @@ class Login extends Component {
                 passType: "password"
             })
         }
-
+    }
+    setValue = (el)=>{
+        this.setState({
+            [el.target.name] :el.target.value
+        })
+    }
+    doLogin = (object) =>{
+        const {username , password} =object
+        if(username === "" || password ===""){
+            Swal.fire(
+                'Insert Your Username and Password!',
+                'You clicked the button!',
+                'error'
+              )
+        }
+        else{       
+            axios.get("http://localhost:8080/admin/nexchief/login/?username="+username+"&password="+password)
+            .then((resp) =>{
+                Swal.fire(
+                    'Login Success',
+                    'You clicked the button!',
+                    'success'
+                  )
+              this.setState({
+                loginData :resp.data,
+                })
+                this.props.submitLogin({dataLogin : resp.data})
+                
+        })
+            .catch((e) =>{
+                console.log(e.response.data.errorMessage)
+                Swal.fire(
+                    e.response.data.errorMessage,
+                    'You clicked the button!',
+                    'error'
+                  )
+            })
+        }
     }
     render() { 
+        const{username , password} = this.state;
         return (
             <>
             <div className="bodyLogin" >
@@ -65,9 +114,7 @@ class Login extends Component {
                     />
                </div>
                <div>
-                   <Link to ="/home">
-                   <button className="login"><b>LOGIN</b></button>
-                   </Link>
+                   <button className="login" onClick={() => this.doLogin({ username, password })} ><b>LOGIN</b></button>
                </div>
 
                 </div>
@@ -78,4 +125,15 @@ class Login extends Component {
     }
 }
  
-export default Login;
+const mapStateToProps = state => ({ // NGAMBIL DATA
+    checkLogin: state.authReducer.isLogin,
+
+})
+
+const mapDispatchToProps = dispatch => { // NGIRIM DATA
+    return {
+        submitLogin: (data) => dispatch({ type: "LOGIN", payload: data }),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

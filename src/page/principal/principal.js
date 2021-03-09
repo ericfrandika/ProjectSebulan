@@ -3,17 +3,25 @@ import './style.css'
 import InputPrin from '../../components/comp_principal/inputPrin'
 import LabelPrin from '../../components/comp_principal/labelPrin'
 import axios from 'axios'
-import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Pagination from '@material-ui/lab/Pagination';
+import Swal from 'sweetalert2'
+
 class Principal extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+         //-------------------------------Find ALL with Pagination-----------------------------------------
+            page:1,
+            count:0,
+            limit:5,
 
     //----------------------------------------------------DIDMOUNT---------------------------------------------
             principals:[],
+            principalsRedux:[],
             prinId:"",
             prinName:"",
-            prinAddress:"",
+            prinAddress:"", 
             prinCity:"",
             prinPhone:"",
             prinFax:"",
@@ -27,6 +35,7 @@ class Principal extends Component {
             objPrin:{},
             
     //--------------------------------------------ini Seluruh State Condisii button------------------------------
+            disableInputId:true,
             butCondi: true,
             butCondEdit:true,
             butCondAdd:false,
@@ -34,6 +43,7 @@ class Principal extends Component {
             disableBut :false,
             disableInput :true,
             disableButEdit : true,
+            disableButDel : true,
             act : 0,
             actEdit:0,
             actDelete:0,
@@ -41,8 +51,9 @@ class Principal extends Component {
     //----------------------------------------------------------------------------------------------------------
          }
     }
-    componentDidMount(){
-        this.getApiALLPrincipal();
+    componentDidMount(){    
+               this.getApiALLPrincipal();
+                this.getAPICount();
     }
    
     setValue = el => {
@@ -56,72 +67,124 @@ class Principal extends Component {
     getApiALLPrincipal =()=>{
         axios.get("http://localhost:8080/admin/nexchief/principal/")
         .then(resp =>{
-          this.setState({principals:resp.data})
+          this.setState({
+              principals :resp.data,
+              principalsRedux: resp.data   
+            })
+            this.props.dataPrincipal({dataPrincipal : resp.data})
         })
         .catch(() =>{
           alert("Failed fetching")
         })
     }
-    
-
+    getAPICount=()=>{
+        axios.get("http://localhost:8080/admin/nexchief/principal/count/")
+        .then(resp =>{
+            let limitPage = resp.data/this.state.limit
+          this.setState({
+             count :Math.ceil(limitPage)
+            })
+        })
+        .catch(() =>{
+          alert("Failed fetching")
+        })
+    }
     //---------------------------------------------------button Add--------------------------------------
   buttonAdd = () => {
+    
       if(this.state.act === 0){
-        this.resetState()
-        this.resetPrin()
+        if (this.state.prinName !=="") {
+            this.resetState();
+        }
         let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
         console.log(createNow);
         this.setState ({
+            disableInputId:false,
             butCondi: false,
             disableButEdit : true,
             butCondDelete :false,
             disableInput :false,
             act:1,
             actDelete:1,
-            tableClick:true,      
+            tableClick:true, 
+            princreatedAt : createNow,
+            princreatedBy :this.props.dataLoginUser.username,
+            disableButDel : false,
+
         });
-        this.setState({
-                   princreatedAt : createNow
-            })
-    }
-    else{
-    // let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
-    // console.log(createNow);
-    //     this.setState({
-    //         princreatedAt : createNow,
-    //         prinupdatedAt : createNow
-    //      })
-         
+            console.log("ini Admin " , this.state.princreatedBy)
+    
+}
+    else{  
     const {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} =this.state
     let objprincipal = {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} 
-    let newPrincipals = this.state.principals
-    console.log("ini object Principal : ", objprincipal)
+    if ( prinName ==="" || prinAddress ==="" || prinCity ==="" ||  prinPhone ==="" ||  prinFax ==="" || prinCountry ==="" ||  prinConPhone ==="" ||  prinLicensed ===""){
+      Swal.fire(
+        'Insert All Data!',
+        'You clicked the button!',
+        'error'
+      )
+  }
+   else {
+     Swal.fire({
+        title: 'Do you want to save the changes?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+        denyButtonText: `Don't save`,
+    }).then((result) => {
+   if (result.isConfirmed) {
     axios.post("http://localhost:8080/admin/nexchief/principal/",{
-       ...objprincipal
-    })
-      .then((resp) => {
-          console.log(resp);
-          this.getApiALLPrincipal();
-      })
-        this.setState({
+        ...objprincipal
+     })
+       .then((resp) => {
+           console.log(resp);
+           this.getApiALLPrincipal();
+           this.setState({
             butCondi: true,
-            disableButEdit : false ,
+            disableButEdit : true ,
             disableInput :true,
             butCondDelete: true,
             act:0,
             actDelete:1,
-            tableClick:false
+            tableClick:false,
+            disableButDel : true,
+            disableInputId:true,
+
+
           })
+          this.resetState();
+       })
+       .catch((resp)=>{
+           console.log(resp.response)
+           Swal.fire({
+             icon: 'error',
+             title: 'Oops...',
+             text: resp.response.data.errorMessage || resp.response.data
+           })
+       })
+    Swal.fire('Saved!','', 'success')
+      
+  } else if (result.isDenied) {
+    Swal.fire('Changes are not saved', '', 'info')
+  }
+
+})
+   
+}
     }
-    this.resetState()
+   
 }
 
 //// ------------------------------------------------------Button edit--------------------------------------
 buttonEdit = () =>{
     if(this.state.actEdit === 0){
+      
         let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
         console.log(createNow);
         this.setState ({
+           disableInputId:true,
+
             butCondEdit: false,
             disableInput :false,
             butCondAdd:true,
@@ -131,35 +194,66 @@ buttonEdit = () =>{
             tableClick:true,
             princreatedAt:"",
             prinupdatedAt : createNow,
-
+            prinupdatedBy :this.props.dataLoginUser.username
         });
-        console.log("ini consologe  ID :",this.state.prinId)
-    }
-
+    
+}
     else{
         
         const {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} =this.state
         let objprincipal = {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} 
         console.log("ini object Principal : ", objprincipal)
-        axios.put("http://localhost:8080/admin/nexchief/principal/"+this.state.prinId,{
+        if (prinName ==="" || prinAddress ==="" || prinCity ==="" ||  prinPhone ==="" ||  prinFax ==="" || prinCountry ==="" ||  prinConPhone ==="" ||  prinLicensed ===""){
+          Swal.fire(
+            'Insert All Data!',
+            'You clicked the button!',
+            'error'
+          )
+      }
+      else{  Swal.fire({
+          title: 'Do you want to Update the changes?',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: `Update`,
+          denyButtonText: `Don't Update`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            axios.put("http://localhost:8080/admin/nexchief/principal/"+this.state.prinId,{
            ...objprincipal
         })
           .then((resp) => {
               console.log(resp);
               this.getApiALLPrincipal();
-
+              this.setState ({
+                butCondEdit: true,
+                disableInput :true,
+                butCondAdd:false,
+                butCondDelete: true,
+                disableButDel : true,
+                actEdit:0,
+                actDelete: 0,
+                tableClick:false,
+                disableButEdit : true,
+                disableInputId:true
+            });
+            this.resetState()
           })
-        this.setState ({
-            butCondEdit: true,
-            disableInput :true,
-            butCondAdd:false,
-            butCondDelete: true,
-            actEdit:0,
-            actDelete: 0,
-            tableClick:false
-        });
-        this.resetPrin()
+          .catch((resp)=>{
+            console.log(resp.response)
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: resp.response.data.errorMessage || resp.response.data
+            })
+        })
+            Swal.fire('Update!', '', 'success')
+          } else if (result.isDenied) {
+            Swal.fire('Changes are not Update', '', 'info')
+          }
+        })
     }
+  }
 }
 
 
@@ -173,6 +267,7 @@ buttonEdit = () =>{
         butCondDelete: true,
         butCondAdd:false,
         butCondEdit:true,
+        disableButDel : true,
         act:0,
         actEdit:0,
         actDelete:0,
@@ -181,16 +276,38 @@ buttonEdit = () =>{
         princreatedBy:"",
         prinupdatedAt:"",
         prinupdatedBy:"",
+        disableInputId:true,
       })
+
       this.resetState()
     }
     //------------------------------------------------Untuk Delete----------------------------------
     else{
-        axios.delete("http://localhost:8080/admin/nexchief/principal/"+this.state.prinId)
-        .then(resp =>{
-          console.log(resp)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete("http://localhost:8080/admin/nexchief/principal/"+this.state.prinId)
+                 .then(resp =>{
+          this.setState({
+            disableButDel : true,
+            disableButEdit : true ,
+          })
           this.getApiALLPrincipal();
         })
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+            }
+          }) 
     }    
   }
    //---------------------------------------------------Button TampilForm---------------------------------
@@ -206,6 +323,7 @@ buttonEdit = () =>{
     })
     this.setState(({
         disableButEdit : false,
+        disableButDel : false,
         
     }))
 }
@@ -227,12 +345,19 @@ buttonEdit = () =>{
         prinCountry:"",
         prinConPhone:"",
         prinLicensed:"",
-        // princreatedAt:"",
-        princreatedBy:"",
         prinupdatedAt:"",
         prinupdatedBy:"",
      })
  }
+ //--------------------------------------------------------ONCHANGE PAGINATION------------------------------------------
+ handleChange = (el,value) => {
+    axios.get("http://localhost:8080/admin/nexchief/principal/paging/?page="+value+"&limit="+this.state.limit)
+    .then((resp) => {
+      this.setState({
+        principals: resp.data,
+      });
+    });
+  };
  //--------------------------------------------------------ONCHANGE SEARCH NAMA-----------------------------------------
  setValueSearch =(el)=>{
      const search = el.target.value;
@@ -252,6 +377,7 @@ buttonEdit = () =>{
  }
 
     render() { 
+        console.log("ini adalah ARRAY REDUX : ",this.state.principalsRedux)
         if ("prinName" in this.state.objPrin) {
             this.setState({
                 prinId:this.state.objPrin.prinId,
@@ -275,10 +401,10 @@ buttonEdit = () =>{
         return (  
             <>
              <div className="prinAtas">
-                <InputPrin className="SeacrhPrin" name="searchPrin" onChange={this.setValueSearch} placeholder="Search"></InputPrin>
+                <InputPrin className="SeacrhPrin" name="searchPrin" onChange={this.setValueSearch} placeholder="Search name Principal"></InputPrin>
                 <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
                 <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
-                <button className="crudPrin" onClick={this.buttonCancel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
+                <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
                 </div>
             <div className="bodyPrin">
                 
@@ -290,7 +416,7 @@ buttonEdit = () =>{
                             return(
                                 <div className="prinisiTable" disabled={this.state.tableClick} onClick={()=>this.HandleTable(prin.prinId)}>
                                 <div className ="prinTable">
-                                <i class="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
+                                <i className="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
                                 </div>
                                 <div className="prinlabelTabel">
                                 <LabelPrin className="prinlabelName">{prin.prinName}</LabelPrin>
@@ -303,7 +429,10 @@ buttonEdit = () =>{
                   }
                 </div>
                 <div className="prinKiriPagin">
-
+                  
+                <div>
+               <Pagination style={{background:'white',marginTop:'5%'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
+                </div>
                 </div>
                 </div>
                 <div className="prinKanan">
@@ -340,7 +469,7 @@ buttonEdit = () =>{
                 </div>
                 <div className="prinKananInput">
                     <div>
-                    <InputPrin type="text" value={prinId} disabled={this.state.disableInput} className="prinForm" name="prinId"  onChange={this.setValue} placeholder="Principal ID" ></InputPrin>
+                    <InputPrin type="text" value={prinId} disabled={this.state.disableInputId} className="prinForm" name="prinId"  onChange={this.setValue} placeholder="Principal ID" ></InputPrin>
                     </div>
                     <div>
                     <InputPrin  type="text" value={prinName} disabled={this.state.disableInput} className="prinForm" name="prinName" onChange={this.setValue} placeholder="Principal Name" ></InputPrin>
@@ -364,20 +493,20 @@ buttonEdit = () =>{
                     <InputPrin  type="text" value={prinConPhone} disabled={this.state.disableInput} className="prinForm" name="prinConPhone" onChange={this.setValue} placeholder="Principal Contact Phone" ></InputPrin>
                     </div> 
                     <div>
-                    <InputPrin  type="text" value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
+                    <InputPrin  type="date" value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
                     </div> 
                     <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
                     <div>
                     <InputPrin  type="text" value={princreatedAt} disabled={true} className="prinForm" name="princreatedAt" onChange={this.setValue} placeholder="Principal Created At" ></InputPrin>
                     </div> 
                     <div>
-                    <InputPrin  type="text" value={princreatedBy} disabled={this.state.disableInput} className="prinForm" name= "princreatedBy" onChange={this.setValue} placeholder="Principal Created By" ></InputPrin>
+                    <InputPrin  type="text" value={princreatedBy} disabled={true} className="prinForm" name= "princreatedBy" onChange={this.setValue} placeholder="Principal Created By" ></InputPrin>
                     </div>
                     <div>
                     <InputPrin  type="text" value={prinupdatedAt} disabled={true} className="prinForm" name="prinupdatedAt" onChange={this.setValue} placeholder="Principal Updated At" ></InputPrin>
                     </div>
                     <div>
-                    <InputPrin  type="text" value={prinupdatedBy} disabled={this.state.disableInput} className="prinForm" name="prinupdatedBy" onChange={this.setValue} placeholder="Principal Updated by" ></InputPrin>
+                    <InputPrin  type="text" value={prinupdatedBy} disabled={true} className="prinForm" name="prinupdatedBy" onChange={this.setValue} placeholder="Principal Updated by" ></InputPrin>
                     </div>
                 </div>
                 </div>
@@ -385,6 +514,16 @@ buttonEdit = () =>{
             </>
          );
     }
+    
 }
  
-export default Principal;
+const mapStateToProps = state => ({
+    dataLoginUser : state.authReducer.userLogin
+})
+const mapDispatchToProps = dispatch => { // NGIRIM DATA
+  return {
+    dataPrincipal: (data) => dispatch({ type: "PRINCIPAL", payload: data }),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps) (Principal);

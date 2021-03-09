@@ -7,7 +7,6 @@
 
 .thisHeader{
     margin-left: 75%;
-    margin-top: 10px;
 }
 .welcome{
     margin-bottom: 100px;
@@ -18,5 +17,5 @@
 }
 .thisLogout{
     float: right;
-    margin-left: 40px;
+    margin-right: 10%;
 }
