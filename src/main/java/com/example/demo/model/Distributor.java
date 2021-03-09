@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 public class Distributor {
-    private String prinName;
+    private String prinId;
     private String disId;
     private String disName;
     private String disAddress;
@@ -14,13 +14,11 @@ public class Distributor {
     private String disupdatedAt;
     private String disupdatedBy;
 
-    public Distributor(String prinName, String disId,
-                       String disName, String disAddress,
-                       String disCity, String disOwner,
-                       String disEmail, String disPhone,
-                       String discreatedAt, String discreatedBy,
-                       String disupdatedAt, String disupdatedBy) {
-        this.prinName = prinName;
+    public Distributor(String prinId, String disId, String disName,
+                       String disAddress, String disCity, String disOwner,
+                       String disEmail, String disPhone, String discreatedAt,
+                       String discreatedBy, String disupdatedAt, String disupdatedBy) {
+        this.prinId = prinId;
         this.disId = disId;
         this.disName = disName;
         this.disAddress = disAddress;
@@ -34,12 +32,12 @@ public class Distributor {
         this.disupdatedBy = disupdatedBy;
     }
 
-    public String getPrinName() {
-        return prinName;
+    public String getPrinId() {
+        return prinId;
     }
 
-    public void setPrinName(String prinName) {
-        this.prinName = prinName;
+    public void setPrinId(String prinId) {
+        this.prinId = prinId;
     }
 
     public String getDisId() {
@@ -129,4 +127,5 @@ public class Distributor {
     public void setDisupdatedBy(String disupdatedBy) {
         this.disupdatedBy = disupdatedBy;
     }
+
 }

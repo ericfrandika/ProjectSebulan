@@ -91,20 +91,32 @@ public class PrincipalController {
             logger.error("Unable to update. Pasien with id {} not found.", prinId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Principal with id " + prinId + " not found."),
                     HttpStatus.NOT_FOUND);
-        } else {
-
+        }
+        if (principalService.isPrincipalNameExist(principal) && !currentPrincipal.getPrinName().equalsIgnoreCase(principal.getPrinName())) {
+            logger.error("Unable to create. A Principal with name {} already exist", principal.getPrinName());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with name " + principal.getPrinName() + " already exist."), HttpStatus.CONFLICT);
+        }
+        if (principalService.findByPhonePrincipalService(principal.getPrinPhone()) != null && !currentPrincipal.getPrinPhone().equalsIgnoreCase(principal.getPrinPhone())) {
+            logger.error("Unable to create. A Principal with Phone {} already exist", principal.getPrinPhone());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Phone " + principal.getPrinPhone() + " already exist."), HttpStatus.CONFLICT);
+        }
+        if (principalService.findByFaxPrincipalService(principal.getPrinFax()) !=null && !currentPrincipal.getPrinFax().equalsIgnoreCase(principal.getPrinFax())) {
+            logger.error("Unable to create. A Principal with Fax {} already exist", principal.getPrinFax());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Fax " + principal.getPrinFax() + " already exist."), HttpStatus.CONFLICT);
+        }
+        if (principalService.findByConPhonePrincipalService(principal.getPrinConPhone()) != null && !currentPrincipal.getPrinConPhone().equalsIgnoreCase(principal.getPrinConPhone())) {
+            logger.error("Unable to create. A Principal with ConPhone {} already exist", principal.getPrinConPhone());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with ChonPhone " + principal.getPrinConPhone() + " already exist."), HttpStatus.CONFLICT);
+        }
+        else {
             currentPrincipal.setPrinName(principal.getPrinName());
             currentPrincipal.setPrinAddress(principal.getPrinAddress());
             currentPrincipal.setPrinCity(principal.getPrinCity());
-
             currentPrincipal.setPrinPhone(principal.getPrinPhone());
             currentPrincipal.setPrinFax(principal.getPrinFax());
             currentPrincipal.setPrinCountry(principal.getPrinCountry());
-
             currentPrincipal.setPrinConPhone(principal.getPrinConPhone());
             currentPrincipal.setPrinLicensed(principal.getPrinLicensed());
-
-
             currentPrincipal.setPrincreatedBy(principal.getPrincreatedBy());
             currentPrincipal.setPrinupdatedAt(principal.getPrinupdatedAt());
             currentPrincipal.setPrinupdatedBy(principal.getPrinupdatedBy());

@@ -6,21 +6,21 @@ import javax.validation.constraints.Pattern;
 public class Principal {
 private String prinId;
     @NotBlank(message = "name cannot be empty")
-    @Pattern(regexp = "^(?![ .]+$)[a-zA-Z .]*$", message = "PrinName cannot be number or special character")
+    @Pattern(regexp = "^(?![ .]+$)[a-zA-Z .]*$", message = "Name cannot be number or special character")
 private String prinName;
-    @NotBlank(message = "prinAddress cannot be empty")
+    @NotBlank(message = "Address cannot be empty")
     private String prinAddress;
-    @NotBlank(message = "prinCity cannot be empty")
+    @NotBlank(message = "City cannot be empty")
     private String prinCity;
-    @NotBlank(message = "prinPhone cannot be empty")
+    @NotBlank(message = "Phone cannot be empty")
     private String prinPhone; //phone Gak boleh sama
-    @NotBlank(message = "prinFax cannot be empty")
+    @NotBlank(message = "Fax cannot be empty")
     private String prinFax; // Fax gak boleh sama
-    @NotBlank(message = "prinCountry cannot be empty")
+    @NotBlank(message = "Country cannot be empty")
     private String prinCountry;
-    @NotBlank(message = "prinConPhone cannot be empty")
+    @NotBlank(message = "Contact Phone cannot be empty")
     private String prinConPhone;
-    @NotBlank(message = "prinLicensed cannot be empty")
+    @NotBlank(message = "Licensed cannot be empty")
     private String prinLicensed;
 
     private String princreatedAt;

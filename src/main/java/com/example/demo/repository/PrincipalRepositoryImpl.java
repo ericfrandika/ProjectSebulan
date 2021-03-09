@@ -40,6 +40,10 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
 
     @Override
     public void savePrincipalRepository(Principal principal) {
+        UUID uuidPrinId = UUID.randomUUID();
+        if(principal.getPrinId() == "") {
+            principal.setPrinId(uuidPrinId.toString());
+        }
         jdbcTemplate.update("insert into principal(prinId,prinName," +
                         "prinAddress,prinCity,prinPhone,prinFax," +
                         "prinCountry,prinConPhone,prinLicensed," +
