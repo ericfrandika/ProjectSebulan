@@ -13,8 +13,10 @@ private String prinName;
     @NotBlank(message = "City cannot be empty")
     private String prinCity;
     @NotBlank(message = "Phone cannot be empty")
+    @Pattern(regexp ="^(^08)(\\d{3,4}-?){2}\\d{3,4}$", message ="Phone number min 11 and max 14 number, must in Indonesia type (ex: 628113912109 or 08134455555)" )
     private String prinPhone; //phone Gak boleh sama
     @NotBlank(message = "Fax cannot be empty")
+    @Pattern(regexp ="^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$", message ="Phone number min 11 and max 14 number, must in Indonesia type (ex: 628113912109 or 08134455555)" )
     private String prinFax; // Fax gak boleh sama
     @NotBlank(message = "Country cannot be empty")
     private String prinCountry;

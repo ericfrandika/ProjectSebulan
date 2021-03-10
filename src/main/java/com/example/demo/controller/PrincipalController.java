@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Distributor;
 import com.example.demo.model.Principal;
 import com.example.demo.service.PrincipalService;
 import com.example.demo.util.CustomErrorType;
@@ -155,7 +156,6 @@ public class PrincipalController {
     public ResponseEntity<?>getPrincipalWithPagin(@RequestParam int page, @RequestParam int limit){
         List<Principal>principalList = principalService.findAllPrincipalWithPagingService(page,limit);
             return new ResponseEntity<>(principalList, HttpStatus.OK);
-
     }
     //-----------------------------------COUNT ALL DATA--------------------------------
     @RequestMapping(value = "/principal/count/", method = RequestMethod.GET)
@@ -164,5 +164,6 @@ public class PrincipalController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-    }
+
+}
 

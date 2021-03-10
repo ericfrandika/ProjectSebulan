@@ -2,23 +2,22 @@ package com.example.demo.model;
 
 public class Distributor {
     private String prinId;
+    private String prinName;
     private String disId;
-    private String disName;
+    private String disName;//NotSame
     private String disAddress;
     private String disCity;
     private String disOwner;
-    private String disEmail;
-    private String disPhone;
+    private String disEmail; //Not Same
+    private String disPhone; //Not Same
     private String discreatedAt;
     private String discreatedBy;
     private String disupdatedAt;
     private String disupdatedBy;
 
-    public Distributor(String prinId, String disId, String disName,
-                       String disAddress, String disCity, String disOwner,
-                       String disEmail, String disPhone, String discreatedAt,
-                       String discreatedBy, String disupdatedAt, String disupdatedBy) {
+    public Distributor(String prinId, String prinName, String disId, String disName, String disAddress, String disCity, String disOwner, String disEmail, String disPhone, String discreatedAt, String discreatedBy, String disupdatedAt, String disupdatedBy) {
         this.prinId = prinId;
+        this.prinName = prinName;
         this.disId = disId;
         this.disName = disName;
         this.disAddress = disAddress;
@@ -38,6 +37,14 @@ public class Distributor {
 
     public void setPrinId(String prinId) {
         this.prinId = prinId;
+    }
+
+    public String getPrinName() {
+        return prinName;
+    }
+
+    public void setPrinName(String prinName) {
+        this.prinName = prinName;
     }
 
     public String getDisId() {
@@ -127,5 +134,4 @@ public class Distributor {
     public void setDisupdatedBy(String disupdatedBy) {
         this.disupdatedBy = disupdatedBy;
     }
-
 }

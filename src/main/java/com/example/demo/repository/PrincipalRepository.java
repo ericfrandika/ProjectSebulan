@@ -15,5 +15,6 @@ Principal findByPhonePrincipalRepository(String prinPhone);
 Principal findByFaxPrincipalRepository(String prinFax);
 Principal findByConPhonePrincipalRepository(String prinConPhone);
 List<Principal> findAllPrincipalWithPaging(int page, int limit);
-    int findAllCountRepository();
+int findAllCountRepository();
+
 }
