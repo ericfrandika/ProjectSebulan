@@ -54,8 +54,8 @@ public class PrincipalServiceImpl implements PrincipalService {
     }
 
     @Override
-    public List<Principal> findByNamePrincipalService(String prinName) {
-        List<Principal>principalList = principalRepository.findByNamePrincipalRepository(prinName);
+    public List<Principal> findByNamePrincipalService(String prinName , int page, int limit) {
+        List<Principal>principalList = principalRepository.findByNamePrincipalRepository(prinName, page, limit);
         return principalList;
     }
 
@@ -99,8 +99,20 @@ public class PrincipalServiceImpl implements PrincipalService {
     }
 
     @Override
+    public Principal findByNameObjPrincipalService(String prinName) {
+        Principal prinN;
+        try {
+            prinN = principalRepository.findByNameObjPrincipalRepository(prinName);
+        }
+        catch (EmptyResultDataAccessException e){
+            System.out.println(e);
+            prinN = null;
+        }
+        return  prinN;    }
+
+    @Override
     public boolean isPrincipalNameExist(Principal principal) {
-        return findByNamePrincipalService(principal.getPrinName()) .size() != 0;
+        return true;
     }
 
     @Override
@@ -111,6 +123,11 @@ public class PrincipalServiceImpl implements PrincipalService {
     @Override
     public int findAllCountService() {
         return principalRepository.findAllCountRepository();
+    }
+
+    @Override
+    public int findAllCountNameService(String prinName) {
+        return principalRepository.findAllCountNameRepository(prinName);
     }
 
 }

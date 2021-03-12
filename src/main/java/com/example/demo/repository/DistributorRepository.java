@@ -12,6 +12,7 @@ public interface DistributorRepository {
     List<Distributor> findByNameDistributorRepository(String disName) ;
     Distributor findByEmailDistributorRepository(String disEmail);
     Distributor findByPhoneDistributorRepository(String disPhone);
+    Distributor findByNameObjDistributorRepository(String disName);
     int deleteByIdDistributorRepository(String disId);
     void updateDistributorRepository(Distributor distributor);
     List<Distributor> findAllDistributorWithPaging(int page, int limit);

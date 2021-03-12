@@ -38,7 +38,11 @@ public class PrincipalController {
         if(error.hasErrors()){
             return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
-        if (principalService.isPrincipalNameExist(principal)) {
+        if (principalService.findByIdPrincipalService(principal.getPrinId()) != null) {
+            logger.error("Unable to create. A Principal with Id {} already exist", principal.getPrinId());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + principal.getPrinId()+ " already exist."), HttpStatus.CONFLICT);
+        }
+        if (principalService.findByNameObjPrincipalService(principal.getPrinName())!=null) {
             logger.error("Unable to create. A Principal with name {} already exist", principal.getPrinName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with name " + principal.getPrinName() + " already exist."), HttpStatus.CONFLICT);
         }
@@ -93,7 +97,7 @@ public class PrincipalController {
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Principal with id " + prinId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
-        if (principalService.isPrincipalNameExist(principal) && !currentPrincipal.getPrinName().equalsIgnoreCase(principal.getPrinName())) {
+        if (principalService.findByNameObjPrincipalService(principal.getPrinName())!=null && !currentPrincipal.getPrinName().equalsIgnoreCase(principal.getPrinName())) {
             logger.error("Unable to create. A Principal with name {} already exist", principal.getPrinName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with name " + principal.getPrinName() + " already exist."), HttpStatus.CONFLICT);
         }
@@ -110,20 +114,8 @@ public class PrincipalController {
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with ChonPhone " + principal.getPrinConPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
-            currentPrincipal.setPrinName(principal.getPrinName());
-            currentPrincipal.setPrinAddress(principal.getPrinAddress());
-            currentPrincipal.setPrinCity(principal.getPrinCity());
-            currentPrincipal.setPrinPhone(principal.getPrinPhone());
-            currentPrincipal.setPrinFax(principal.getPrinFax());
-            currentPrincipal.setPrinCountry(principal.getPrinCountry());
-            currentPrincipal.setPrinConPhone(principal.getPrinConPhone());
-            currentPrincipal.setPrinLicensed(principal.getPrinLicensed());
-            currentPrincipal.setPrincreatedBy(principal.getPrincreatedBy());
-            currentPrincipal.setPrinupdatedAt(principal.getPrinupdatedAt());
-            currentPrincipal.setPrinupdatedBy(principal.getPrinupdatedBy());
-
-            principalService.updatePrincipalService(currentPrincipal);
-            return new ResponseEntity<>(currentPrincipal, HttpStatus.OK);
+            principalService.updatePrincipalService(principal);
+            return new ResponseEntity<>(principal, HttpStatus.OK);
         }
     }
     //--(5)----------Oke----------------------------Delete ID Principal-------------------------------------------
@@ -146,21 +138,27 @@ public class PrincipalController {
     //(1)----------------------------FIND BY NAME PRINCIPAL----------------------------------
 
     @RequestMapping(value = "/principal/name/{prinName}", method = RequestMethod.GET)
-    public ResponseEntity<List<Principal>> listPrincipalName(@PathVariable("prinName") String prinName) {
-        List<Principal> principalList = principalService.findByNamePrincipalService(prinName);
+    public ResponseEntity<List<Principal>> listPrincipalName(@PathVariable("prinName") String prinName, @RequestParam int page, @RequestParam int limit) {
+        List<Principal> principalList = principalService.findByNamePrincipalService(prinName , page , limit);
             return new ResponseEntity<>(principalList, HttpStatus.OK);
     }
 
-    //(2) --------------------------------find All with pagination--------------------------------
-    @RequestMapping(value = "/principal/paging/", method = RequestMethod.GET)
-    public ResponseEntity<?>getPrincipalWithPagin(@RequestParam int page, @RequestParam int limit){
-        List<Principal>principalList = principalService.findAllPrincipalWithPagingService(page,limit);
-            return new ResponseEntity<>(principalList, HttpStatus.OK);
-    }
+        //(2) --------------------------------find All with pagination--------------------------------
+        @RequestMapping(value = "/principal/paging/", method = RequestMethod.GET)
+        public ResponseEntity<?>getPrincipalWithPagin(@RequestParam int page, @RequestParam int limit){
+            List<Principal>principalList = principalService.findAllPrincipalWithPagingService(page,limit);
+                return new ResponseEntity<>(principalList, HttpStatus.OK);
+        }
     //-----------------------------------COUNT ALL DATA--------------------------------
     @RequestMapping(value = "/principal/count/", method = RequestMethod.GET)
     public ResponseEntity<?> countprincipal() {
         int count = principalService.findAllCountService();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    //-----------------------------------COUNT ALL DATA--------------------------------
+    @RequestMapping(value = "/principal/countName/{prinName}", method = RequestMethod.GET)
+    public ResponseEntity<?> countprincipal(@PathVariable("prinName") String prinName) {
+        int count = principalService.findAllCountNameService(prinName);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 

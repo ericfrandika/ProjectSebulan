@@ -36,14 +36,21 @@ public class DistributorController {
     }
     //--------------------------------------CREATE DATA DISTRIBUTOR-------------------------------------------------------------
     @RequestMapping(value = "/distributor/", method = RequestMethod.POST)
-    public ResponseEntity<?> createDistributor( @RequestBody Distributor distributor) {
+    public ResponseEntity<?> createDistributor(@Valid @RequestBody Distributor distributor ,Errors error) {
         Principal principal = principalService.findByIdPrincipalService(distributor.getPrinId());
-
+        if(error.hasErrors()){
+            return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        }
         if (principal == null){
             logger.error("Unable to create. A Principal with id {} not Found", distributor.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + distributor.getPrinId() + " Not Found."), HttpStatus.NOT_FOUND);
         }
-        if (distributorService.isDistributorNameExist(distributor)) {
+        if (distributorService.findByIdDistributorService(distributor.getDisId()) != null) {
+            logger.error("Unable to create. A Distributor with Id {} already exist", distributor.getDisId());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with id " + distributor.getDisId() + " already exist."), HttpStatus.CONFLICT);
+        }
+
+        if (distributorService.findByNameObjDistributorService(distributor.getDisName()) != null) {
             logger.error("Unable to create. A Distributor with name {} already exist", distributor.getDisName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with name " + distributor.getDisName() + " already exist."), HttpStatus.CONFLICT);
         }
@@ -101,19 +108,21 @@ public class DistributorController {
     //-(4)-----OKE-------------------------------------Update Bye Id------------------------------------------
 
     @RequestMapping(value = "/distributor/{disId}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePrincipal(@PathVariable("disId") String disId
+    public ResponseEntity<?> updatePrincipal(@Valid @PathVariable("disId") String disId
             , @RequestBody Distributor distributor , Errors error) {
 
         logger.info("Updating Distributor with id {}", disId);
 
         Distributor currentDistributor = distributorService.findByIdDistributorService(disId);
-
+        if(error.hasErrors()){
+            return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        }
         if (currentDistributor == null) {
             logger.error("Unable to update. Distributor with id {} not found.", disId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Distributor with id " + disId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
-        if (distributorService.isDistributorNameExist(distributor) && !currentDistributor.getDisName().equalsIgnoreCase(distributor.getDisName())) {
+        if (distributorService.findByNameObjDistributorService(distributor.getDisName()) != null && !currentDistributor.getDisName().equalsIgnoreCase(distributor.getDisName())) {
             logger.error("Unable to create. A Distributor with name {} already exist", distributor.getDisName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with name " + distributor.getDisName() + " already exist."), HttpStatus.CONFLICT);
         }
@@ -127,17 +136,6 @@ public class DistributorController {
         }
         else {
 
-            currentDistributor.setPrinId(distributor.getPrinId());
-            currentDistributor.setDisName(distributor.getDisName());
-            currentDistributor.setDisAddress(distributor.getDisAddress());
-            currentDistributor.setDisCity(distributor.getDisCity());
-            currentDistributor.setDisOwner(distributor.getDisOwner());
-            currentDistributor.setDisEmail(distributor.getDisEmail());
-            currentDistributor.setDisPhone(distributor.getDisPhone());
-            currentDistributor.setDisupdatedAt(distributor.getDisupdatedAt());
-            currentDistributor.setDisupdatedBy(distributor.getDisupdatedBy());
-
-            distributorService.updateDistributorService(currentDistributor);
             return new ResponseEntity<>(distributor, HttpStatus.OK);
         }
 

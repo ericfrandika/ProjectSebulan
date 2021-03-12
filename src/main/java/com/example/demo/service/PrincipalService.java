@@ -16,7 +16,7 @@ public interface PrincipalService {
 
     void deletePrincipalServicebyId(String prinId);
 
-    List<Principal> findByNamePrincipalService(String prinName);
+    List<Principal> findByNamePrincipalService(String prinName, int page , int limit);
 
     Principal findByPhonePrincipalService(String prinPhone);
 
@@ -24,7 +24,12 @@ public interface PrincipalService {
 
     Principal findByConPhonePrincipalService(String prinConPhone);
 
+    Principal findByNameObjPrincipalService(String prinName);
+
+
     boolean isPrincipalNameExist(Principal principal);
     List<Principal> findAllPrincipalWithPagingService(int page, int limit);
     int findAllCountService();
+    int findAllCountNameService(String prinName);
+
 }

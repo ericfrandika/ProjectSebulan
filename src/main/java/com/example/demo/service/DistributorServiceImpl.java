@@ -80,6 +80,19 @@ public class DistributorServiceImpl implements DistributorService {
     }
 
     @Override
+    public Distributor findByNameObjDistributorService(String disName) {
+        Distributor obj;
+        try {
+            obj = distributorRepository.findByNameObjDistributorRepository(disName);
+        }
+        catch (EmptyResultDataAccessException e){
+            System.out.println(e);
+            obj = null;
+        }
+        return  obj;
+    }
+
+    @Override
     public void deleteDistributorServicebyId(String disId) {
         synchronized (this){
             distributorRepository.deleteByIdDistributorRepository(disId);

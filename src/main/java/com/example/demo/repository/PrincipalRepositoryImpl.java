@@ -72,9 +72,17 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
     }
 
     @Override
-    public List<Principal> findByNamePrincipalRepository(String prinName) {
-        return jdbcTemplate.query("select *from principal where prinName like ?",
-                new Object[]{"%"+prinName+"%"},
+    public List<Principal> findByNamePrincipalRepository(String prinName,int page ,int limit) {
+        int numPages;
+        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal where prinName like '%"+prinName+"%'" ,
+                (rs, rowNum) -> rs.getInt("count")).get(0);
+        if(numPages > 0){
+            if (page > numPages) page = numPages;
+        }
+        if (page < 1) page = 1;
+        int start = (page - 1) * limit;
+
+        return jdbcTemplate.query("select * from principal where prinName like '%"+prinName+"%' LIMIT "+start +" ,"+ limit +"",
                 (rs,rowNum)->
                         new Principal(
                                 rs.getString("prinId"),
@@ -221,5 +229,35 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         int countUser;
         countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM principal", Integer.class);
         return countUser;
+    }
+
+    @Override
+    public int findAllCountNameRepository(String prinName) {
+        int countUser;
+        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM principal where prinName like '%"+prinName+"%'" , Integer.class);
+        return countUser;
+    }
+
+    @Override
+    public Principal findByNameObjPrincipalRepository(String prinName) {
+        return jdbcTemplate.queryForObject(
+                "select * from principal where prinName = ?",
+                new Object[]{prinName},
+                (rs, rowNum) ->
+                        new Principal(
+                                rs.getString("prinId"),
+                                rs.getString("prinName"),
+                                rs.getString("prinAddress"),
+                                rs.getString("prinCity"),
+                                rs.getString("prinPhone"),
+                                rs.getString("prinFax"),
+                                rs.getString("prinCountry"),
+                                rs.getString("prinConPhone"),
+                                rs.getString("prinLicensed"),
+                                rs.getString("princreatedAt"),
+                                rs.getString("princreatedBy"),
+                                rs.getString("prinupdatedAt"),
+                                rs.getString("prinupdatedBy")
+                        ));
     }
 }

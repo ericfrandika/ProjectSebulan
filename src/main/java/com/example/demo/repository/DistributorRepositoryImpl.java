@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Repository("DistributorRepository")
@@ -15,6 +16,11 @@ public class DistributorRepositoryImpl implements DistributorRepository {
 
     @Override
     public void saveDistributorRepository(Distributor distributor) {
+        UUID uuidDisID = UUID.randomUUID();
+        if(distributor.getDisId() == "") {
+            distributor.setPrinId(uuidDisID.toString());
+        }
+
         jdbcTemplate.update("insert into distributor(prinId,disId," +
                         "disName,disAddress,disCity,disOwner,disEmail,disPhone," +
                         "discreatedAt,discreatedBy,disupdatedAt," +
@@ -131,6 +137,31 @@ public class DistributorRepositoryImpl implements DistributorRepository {
                         "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
                         "distributor dis WHERE dis.prinId = prin.prinId AND dis.disPhone=?",
                 new Object[]{disPhone},
+                (rs, rowNum) ->
+                        new Distributor(
+                                rs.getString("prinId"),
+                                rs.getString("prinName"),
+                                rs.getString("disId"),
+                                rs.getString("disName"),
+                                rs.getString("disAddress"),
+                                rs.getString("disCity"),
+                                rs.getString("disOwner"),
+                                rs.getString("disEmail"),
+                                rs.getString("disPhone"),
+                                rs.getString("discreatedAt"),
+                                rs.getString("discreatedBy"),
+                                rs.getString("disupdatedAt"),
+                                rs.getString("disupdatedBy")
+                        ));
+    }
+
+    @Override
+    public Distributor findByNameObjDistributorRepository(String disName) {
+        return jdbcTemplate.queryForObject(
+                "SELECT prin.prinId, prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
+                        "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
+                        "distributor dis WHERE dis.prinId = prin.prinId AND dis.disName=?",
+                new Object[]{disName},
                 (rs, rowNum) ->
                         new Distributor(
                                 rs.getString("prinId"),

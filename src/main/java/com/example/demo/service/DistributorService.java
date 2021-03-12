@@ -14,6 +14,7 @@ public interface DistributorService {
     boolean isDistributorNameExist(Distributor distributor);
     Distributor findByEmailDistributorService(String disEmail);
     Distributor findByPhoneDistributorService(String disPhone);
+    Distributor findByNameObjDistributorService(String disName);
     void deleteDistributorServicebyId(String disId);
     void updateDistributorService(Distributor distributor);
     int findAllDistributorCountService();

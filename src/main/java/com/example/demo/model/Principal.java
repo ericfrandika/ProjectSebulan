@@ -11,20 +11,21 @@ private String prinName;
     @NotBlank(message = "Address cannot be empty")
     private String prinAddress;
     @NotBlank(message = "City cannot be empty")
+    @Pattern(regexp = "^(?![ .]+$)[a-zA-Z .]*$", message = "Name cannot be number or special character")
     private String prinCity;
     @NotBlank(message = "Phone cannot be empty")
-    @Pattern(regexp ="^(^08)(\\d{3,4}-?){2}\\d{3,4}$", message ="Phone number min 11 and max 14 number, must in Indonesia type (ex: 628113912109 or 08134455555)" )
+    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "Number Phone Must be 08****** or 021******")
     private String prinPhone; //phone Gak boleh sama
     @NotBlank(message = "Fax cannot be empty")
-    @Pattern(regexp ="^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$", message ="Phone number min 11 and max 14 number, must in Indonesia type (ex: 628113912109 or 08134455555)" )
+    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "Number Fax Must be 08****** or 021******")
     private String prinFax; // Fax gak boleh sama
     @NotBlank(message = "Country cannot be empty")
     private String prinCountry;
     @NotBlank(message = "Contact Phone cannot be empty")
+    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "Number Contact Phone Must be 08****** or 021******")
     private String prinConPhone;
     @NotBlank(message = "Licensed cannot be empty")
     private String prinLicensed;
-
     private String princreatedAt;
     private String princreatedBy;
     private String prinupdatedAt;

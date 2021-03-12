@@ -1,15 +1,33 @@
 package com.example.demo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 public class Distributor {
     private String prinId;
     private String prinName;
     private String disId;
+
+    @NotBlank(message = "Name cannot be empty")
     private String disName;//NotSame
+
+    @NotBlank(message = "Address cannot be empty")
     private String disAddress;
+
+    @NotBlank(message = "City cannot be empty")
     private String disCity;
+
+    @NotBlank(message = "Owner cannot be empty")
     private String disOwner;
+
+    @NotBlank(message = "Email cannot be empty")
+    @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message = "Insert format your email = ****@****.co.id ")
     private String disEmail; //Not Same
+
+    @NotBlank(message = "name cannot be empty")
+    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "Number Phone Must be 08****** or 021******")
     private String disPhone; //Not Same
+
     private String discreatedAt;
     private String discreatedBy;
     private String disupdatedAt;
