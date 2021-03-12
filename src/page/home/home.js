@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux';  
+import {Carousel} from 'react-bootstrap'
 
 import { Link, Redirect } from 'react-router-dom';
 import './style.css'
@@ -30,42 +31,15 @@ class Home extends Component {
                 <i className="fas fa-sign-out-alt" onClick={()=>{this.props.logout()}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
                 </div>
                 <div>
-                    <label><b>LOGOUT</b></label>
+                    <label style={{color:"white"}}><b>LOGOUT</b></label>
                 </div>
                 </div>
             </div>
-                <div className="containerHome">
-                    <div className="atas">
-                        <div>
-                    <Link to ="/principal">        
-                    <i className="fas fa-tags " style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
-                    </Link>
-                    <Link to ="/distributor">
-                    <i className="fas fa-truck" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
-                    </Link>
-                        </div>
-                        <div>
-                            <label className="principal" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}} >PRINCIPAL</label>
-                            <label className="distrubutor"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}}>DISTRIBUTOR</label>
-                        </div>
-                    </div>
-                    <div className="bawah" >
-                        <div>
-                            <Link to ="/customer">
-                    <i className="fas fa-users"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
-                    </Link>
-                    <Link to="/backdata" >
-                    <i class="fas fa-database"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"100px"}}></i>
-                    </Link>
-                       </div>
-                       <div>
-                            <label className="principal" style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}} >CUSTOMER</label>
-                            <label className="distrubutor"style={{color:"white",display:'inline-block', width:"250px" ,marginLeft:"15px",fontSize:"20px"}}>DATABASE</label>
-                       </div>
-                    </div>
-
-                </div>
-                </div> 
+            <div className="welcomeNexchief">
+                <h1 className="labelWeclome" >WELCOME TO FORM NEXCHIEF ADMIN</h1>
+            </div>
+                
+            </div> 
             </>
                  );
     }

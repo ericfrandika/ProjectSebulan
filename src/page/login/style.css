@@ -1,21 +1,23 @@
 .bodyLogin{
-    width: 87%;
-    height: 100vh;
+    width: auto;
+    height: 74vh;
     background-image: url('login3.jpg');
-    padding: 90px;
+    padding: 6%;
     background-size: cover;
+   
 }   
 
 .containerLogin{
     margin:auto;
     width: 400px;
-    height: 500px;
+    height: 497px;
     border-style: solid;
     border-color: darkblue;
     border-radius: 20px;   
     text-align: center;
     padding: 10px;
     background-color:black;
+   
 }
 .labelAdmin{
     margin-left: 80%;

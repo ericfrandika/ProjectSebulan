@@ -1,22 +1,24 @@
 .bodyHome{
     width: 100%;
-    height: 85vh;
-    background-color: #333333;
+    height: 86vh;
+    background-image: url('home2.jpg');
+    border-top: solid;
 }
-
-.containerHome{
-    margin:auto;
+.bungkusWelcome{
+    color:whitesmoke
+}
+.welcomeNexchief{
     text-align: center;
-    width: 50%;
-    height: 80vh;
-    border-style: solid;
-    border-color: #333333;
+    border:transparent;
+    width: 60%;
+    height: 55vh;
+    margin:auto;
+}
+.labelWeclome{
+    margin-top: 20%;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    color: whitesmoke;
+    font-size: xx-large;
 }
 
-.atas{
-    margin-top: 100px;
-}
 
-.bawah{
-    margin-top: 100px;
-}

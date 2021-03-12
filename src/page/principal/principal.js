@@ -15,6 +15,7 @@ class Principal extends Component {
             page:1,
             count:0,
             limit:5,
+            pageNow:1,
 
     //----------------------------------------------------DIDMOUNT---------------------------------------------
             principals:[],
@@ -33,6 +34,8 @@ class Principal extends Component {
             prinupdatedAt:"",
             prinupdatedBy:"",
             objPrin:{},
+            searchPrin:"",
+            actSearch:0,
             
     //--------------------------------------------ini Seluruh State Condisii button------------------------------
             disableInputId:true,
@@ -51,26 +54,35 @@ class Principal extends Component {
     //----------------------------------------------------------------------------------------------------------
          }
     }
-    componentDidMount(){    
-               this.getApiALLPrincipal();
+    componentDidMount(){  
+                this.getApiALLPrincipal();  
                 this.getAPICount();
-    }
+                this.getPaging(this.state.page ,this.state.limit);
+              }
    
     setValue = el => {
         this.setState({
             [el.target.name]: el.target.value
             
-        })
-    
+        })  
     }
+    setLimit = el =>{
+      this.setState({
+          limit : el.target.value,
+      })
+      if(this.state.searchPrin ==""){
+      this.getAPICount();
+      this.getPaging(this.state.pageNow, el.target.value);
+      }
+      else{
+      this.getApiCountName();
+      this.getApiName(this.state.pageNow, el.target.value);
+      }
+  }
     //---------------------------------------------------FUNCTION GET API--------------------------------------
     getApiALLPrincipal =()=>{
         axios.get("http://localhost:8080/admin/nexchief/principal/")
         .then(resp =>{
-          this.setState({
-              principals :resp.data,
-              principalsRedux: resp.data   
-            })
             this.props.dataPrincipal({dataPrincipal : resp.data})
         })
         .catch(() =>{
@@ -89,6 +101,42 @@ class Principal extends Component {
           alert("Failed fetching")
         })
     }
+     //--------------------------------------------------------ONCHANGE PAGINATION------------------------------------------
+ handleChange = (el,value) => {
+  this.setState({
+    page:value,
+  });
+  if(this.state.searchPrin ===""){
+    this.getAPICount();
+    this.getPaging(value ,this.state.limit);
+  }
+  else{
+    this.getApiCountName();
+    this.getApiName(value, this.state.limit)
+  }
+  
+};
+getPaging = (value, limit) => {
+axios.get("http://localhost:8080/admin/nexchief/principal/paging/?page="+value+"&limit="+limit)
+.then((resp) => {
+  this.setState({
+    principals: resp.data,
+  });
+});
+}
+
+//--------------------------------------------------GET PAGING NAME---------------------------------------------
+getApiName=(value ,limit)=>{
+  axios.get("http://localhost:8080/admin/nexchief/principal/name/"+this.state.searchPrin+"?page="+value+"&limit="+limit)
+  .then(resp =>{
+this.setState({principals:resp.data})
+console.log(resp.data)
+})
+.catch(() =>{
+
+})
+
+}
     //---------------------------------------------------button Add--------------------------------------
   buttonAdd = () => {
     
@@ -109,6 +157,8 @@ class Principal extends Component {
             tableClick:true, 
             princreatedAt : createNow,
             princreatedBy :this.props.dataLoginUser.username,
+            prinupdatedAt : createNow,
+            prinupdatedBy: this.props.dataLoginUser.username,
             disableButDel : false,
 
         });
@@ -140,23 +190,24 @@ class Principal extends Component {
        .then((resp) => {
            console.log(resp);
            this.getApiALLPrincipal();
+           this.getAPICount();
+           this.getPaging(this.state.page ,this.state.limit);
            this.setState({
             butCondi: true,
             disableButEdit : true ,
             disableInput :true,
             butCondDelete: true,
             act:0,
-            actDelete:1,
+            actDelete:0,
             tableClick:false,
             disableButDel : true,
             disableInputId:true,
-
 
           })
           this.resetState();
        })
        .catch((resp)=>{
-           console.log(resp.response)
+           console.log("ini Consolog Eror : ",resp.response)
            Swal.fire({
              icon: 'error',
              title: 'Oops...',
@@ -179,12 +230,10 @@ class Principal extends Component {
 //// ------------------------------------------------------Button edit--------------------------------------
 buttonEdit = () =>{
     if(this.state.actEdit === 0){
-      
         let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
         console.log(createNow);
         this.setState ({
            disableInputId:true,
-
             butCondEdit: false,
             disableInput :false,
             butCondAdd:true,
@@ -192,7 +241,6 @@ buttonEdit = () =>{
             actEdit:1,
             actDelete: 1,
             tableClick:true,
-            princreatedAt:"",
             prinupdatedAt : createNow,
             prinupdatedBy :this.props.dataLoginUser.username
         });
@@ -210,7 +258,8 @@ buttonEdit = () =>{
             'error'
           )
       }
-      else{  Swal.fire({
+      else{ 
+         Swal.fire({
           title: 'Do you want to Update the changes?',
           showDenyButton: true,
           showCancelButton: true,
@@ -225,6 +274,8 @@ buttonEdit = () =>{
           .then((resp) => {
               console.log(resp);
               this.getApiALLPrincipal();
+              this.getAPICount();
+              this.getPaging(this.state.page ,this.state.limit);
               this.setState ({
                 butCondEdit: true,
                 disableInput :true,
@@ -300,6 +351,8 @@ buttonEdit = () =>{
             disableButEdit : true ,
           })
           this.getApiALLPrincipal();
+          this.getAPICount();
+          this.getPaging(this.state.page ,this.state.limit);
         })
               Swal.fire(
                 'Deleted!',
@@ -323,8 +376,7 @@ buttonEdit = () =>{
     })
     this.setState(({
         disableButEdit : false,
-        disableButDel : false,
-        
+        disableButDel : false,  
     }))
 }
 //-------------------------------------------------------RESET OBJEK--------------------------------------------------
@@ -349,34 +401,51 @@ buttonEdit = () =>{
         prinupdatedBy:"",
      })
  }
- //--------------------------------------------------------ONCHANGE PAGINATION------------------------------------------
- handleChange = (el,value) => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/paging/?page="+value+"&limit="+this.state.limit)
-    .then((resp) => {
+
+ //--------------------------------------------------------ONCCLICK SEARCH NAMA-----------------------------------------
+
+ searchName =()=>{
+  if(this.state.searchPrin==="" && this.state.actSearch === 0 ){
+    Swal.fire(
+      'Insert Your Principal Name Before Click Search',
+      'You clicked the button!',
+      'error'
+    )
+  }
+else{
+  if(this.state.actSearch === 0){
+    this.getApiCountName();
+    this.getApiName(this.state.pageNow , this.state.limit)
       this.setState({
-        principals: resp.data,
-      });
-    });
-  };
- //--------------------------------------------------------ONCHANGE SEARCH NAMA-----------------------------------------
- setValueSearch =(el)=>{
-     const search = el.target.value;
-     if(search === ""){
-        this.getApiALLPrincipal();
-     }
-     else{
-        axios.get("http://localhost:8080/admin/nexchief/principal/name/"+search)
-        .then(resp =>{
-          this.setState({principals:resp.data})
-          console.log(resp.data)
-        })
-        .catch(() =>{
-         
-        })
-     }
+          actSearch:1
+      })
+  }
+  else{
+      this.getAPICount();
+      this.getPaging(this.state.pageNow, this.state.limit);
+      this.setState({
+          actSearch:0,
+          searchPrin:""
+      })
+  }
+}
+
+}
+ getApiCountName =()=>{
+  axios.get("http://localhost:8080/admin/nexchief/principal/countName/"+this.state.searchPrin)
+  .then(resp =>{
+      let limitPage = resp.data/this.state.limit
+    this.setState({
+       count :Math.ceil(limitPage)
+      })
+  })
+  .catch(() =>{
+   
+  })
  }
 
     render() { 
+      console.log("Panjang Lenght : " , this.state.principals.length);
         console.log("ini adalah ARRAY REDUX : ",this.state.principalsRedux)
         if ("prinName" in this.state.objPrin) {
             this.setState({
@@ -396,12 +465,12 @@ buttonEdit = () =>{
             })
             this.resetPrin();
         }
-     
         const {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} =this.state
         return (  
             <>
              <div className="prinAtas">
-                <InputPrin className="SeacrhPrin" name="searchPrin" onChange={this.setValueSearch} placeholder="Search name Principal"></InputPrin>
+                <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{marginRight:"1%"}} name="searchPrin" onChange={this.setValue} placeholder="Search name Principal"></InputPrin>
+                <i className={this.state.actSearch === 0 ?'fas fa-search':'far fa-window-close'} style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
                 <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
                 <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
                 <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
@@ -429,7 +498,13 @@ buttonEdit = () =>{
                   }
                 </div>
                 <div className="prinKiriPagin">
-                  
+                    <div>
+                    <select  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"15%", marginTop:"3%", marginLeft:"2%"}} onChange={this.setLimit}>
+                    <option value={parseInt(5)}>5</option>
+                    <option value={parseInt(10)}>10</option> 
+                    <option value={parseInt(15)}>15</option>
+                    </select>
+                    </div>
                 <div>
                <Pagination style={{background:'white',marginTop:'5%'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
                 </div>
