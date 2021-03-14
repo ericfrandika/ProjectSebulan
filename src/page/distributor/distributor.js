@@ -90,8 +90,14 @@ class Distributor extends Component {
         this.setState({
             page: value
         }) 
+        if(this.state.searchDis ===""){
         this.getAPICount();
         this.getPaging(value ,this.state.limit);
+        }
+        else{
+            this.getApiCountName();
+            this.getApiName(value, this.state.limit)
+        }
     }
     //---------------------GET PAGINATION--------------------------
     getPaging = (value, limit) => {
@@ -365,7 +371,7 @@ resetDisObj =()=>{
     }
     //-----------------------------------------------------SEARCH NAME-----------------------------------
     searchName =()=>{
-        if(this.state.searchDis ===""){
+        if(this.state.searchDis ==="" && this.state.actSearch ===0){
             Swal.fire(
               'Insert Distributor Name Before Search!',
               'You clicked the button!',
@@ -374,15 +380,10 @@ resetDisObj =()=>{
           }
           else{
         if(this.state.actSearch === 0){
-            axios.get("http://localhost:8080/admin/nexchief/distributor/name/"+this.state.searchDis)
-             .then(resp =>{
-          this.setState({distributors:resp.data})
-          console.log(resp.data)
-        })
-        .catch(() =>{
-        })
+            this.getApiCountName();
+            this.getApiName(this.state.pageNow , this.state.limit)
             this.setState({
-                actSearch:1,
+                actSearch : 1
             })
         }
         else{
@@ -396,8 +397,34 @@ resetDisObj =()=>{
     }
     }
 
+//--------------------------------------GetCountAndApiName-------------------------------
+getApiName = (value, limit) => {
+    axios.get("http://localhost:8080/admin/nexchief/distributor/name/"+this.state.searchDis+"?page="+value+"&limit="+limit)
+    .then(resp =>{
+ this.setState({distributors:resp.data})
+ console.log(resp.data)
+})
+.catch(() =>{
+})
+   this.setState({
+       actSearch:1,
+   })
+}
+getApiCountName =()=>{
+    axios.get("http://localhost:8080/admin/nexchief/distributor/countName/"+this.state.searchDis)
+    .then(resp =>{
+        let limitPage = resp.data/this.state.limit
+      this.setState({
+         count :Math.ceil(limitPage)
+        })
+    })
+    .catch(() =>{
+     
+    })
+   }
+
     render() { 
-        console.log("ini adalah obj Dist :",this.state.objDis)
+        console.log("ini adalah obj SearchName = " , this.state.searchDis )
         console.log("INI DATA PRIN NAME : ", this.state.prinId );
         if ("disName" in this.state.objDis) {
             this.setState({

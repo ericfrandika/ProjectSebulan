@@ -498,15 +498,15 @@ else{
                   }
                 </div>
                 <div className="prinKiriPagin">
-                    <div>
-                    <select  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"15%", marginTop:"3%", marginLeft:"2%"}} onChange={this.setLimit}>
+                    <div className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
+                    <select  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>
                     <option value={parseInt(5)}>5</option>
                     <option value={parseInt(10)}>10</option> 
                     <option value={parseInt(15)}>15</option>
                     </select>
                     </div>
-                <div>
-               <Pagination style={{background:'white',marginTop:'5%'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
+                <div className="prinPage" style={{width:"75%"}}>
+               <Pagination style={{background:'white' ,width:"100%"}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
                 </div>
                 </div>
                 </div>
