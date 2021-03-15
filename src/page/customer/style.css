@@ -1,12 +1,26 @@
 .CustomerTabel{
-    float: right;
     width: 75%;
     color: white;
+    display: flex;
 }
 
 .CustomerTabelkiri{
-    float:left;
+   margin-right: 20%;
 }
-.CustomerTabelKanan{
-    float: right;
+
+
+.cusisiTable{
+    width: 96%;
+    height: 11vh;
+    border-color: white;
+    border-style: solid;
+    background-color: #696969;
+    padding:5px;
+    display: flex;
+    flex-direction: row;
+}
+.cusisiTable:active{
+    background-color: #3A539B;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }

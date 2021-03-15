@@ -63,7 +63,6 @@ class Principal extends Component {
     setValue = el => {
         this.setState({
             [el.target.name]: el.target.value
-            
         })  
     }
     setLimit = el =>{
@@ -247,7 +246,6 @@ buttonEdit = () =>{
     
 }
     else{
-        
         const {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} =this.state
         let objprincipal = {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} 
         console.log("ini object Principal : ", objprincipal)
@@ -405,32 +403,35 @@ buttonEdit = () =>{
  //--------------------------------------------------------ONCCLICK SEARCH NAMA-----------------------------------------
 
  searchName =()=>{
-  if(this.state.searchPrin==="" && this.state.actSearch === 0 ){
-    Swal.fire(
-      'Insert Your Principal Name Before Click Search',
-      'You clicked the button!',
-      'error'
-    )
+      this.getAPICount();
+      this.getPaging(this.state.pageNow, this.state.limit);
+      this.setState({
+          searchPrin:""
+      })
+  }
+
+
+//--------------------------------------------------SearchName--------------------------------------------------------
+buttonSearch =()=>{
+  if(this.state.searchPrin===""){
+    this.getAPICount();
+    this.getPaging(this.state.pageNow, this.state.limit);
+    this.setState({
+        searchPrin:""
+    })
+   
   }
 else{
-  if(this.state.actSearch === 0){
+
     this.getApiCountName();
     this.getApiName(this.state.pageNow , this.state.limit)
       this.setState({
           actSearch:1
       })
-  }
-  else{
-      this.getAPICount();
-      this.getPaging(this.state.pageNow, this.state.limit);
-      this.setState({
-          actSearch:0,
-          searchPrin:""
-      })
-  }
+  
 }
-
 }
+//--------------------------------------------------------------------------------------------------------------------
  getApiCountName =()=>{
   axios.get("http://localhost:8080/admin/nexchief/principal/countName/"+this.state.searchPrin)
   .then(resp =>{
@@ -440,7 +441,7 @@ else{
       })
   })
   .catch(() =>{
-   
+
   })
  }
 
@@ -470,7 +471,8 @@ else{
             <>
              <div className="prinAtas">
                 <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{marginRight:"1%"}} name="searchPrin" onChange={this.setValue} placeholder="Search name Principal"></InputPrin>
-                <i className={this.state.actSearch === 0 ?'fas fa-search':'far fa-window-close'} style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
+                <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
+                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
                 <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
                 <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
                 <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>

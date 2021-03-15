@@ -57,6 +57,7 @@ class Distributor extends Component {
     componentDidMount(){    
          this.getAPICount();
          this.getPaging(this.state.page, this.state.limit);
+         this.getApiALLDistributor();
 }
     //------------------------------------------SET VALUE---------------------------------------------
     setValue = el => {
@@ -107,6 +108,16 @@ class Distributor extends Component {
         distributors: resp.data,
       });
     });
+    }
+    //--------------------------------------GET API ALL---------------------------------------------
+    getApiALLDistributor =()=>{
+        axios.get("http://localhost:8080/admin/nexchief/distributor/")
+        .then(resp =>{
+            this.props.dataDistributor({dataDistributor : resp.data})
+        })
+        .catch(() =>{
+          alert("Failed fetching")
+        })
     }
     //---------------------------------------------------Button TampilForm---------------------------------
   HandleTable = (disId) =>{
@@ -371,31 +382,33 @@ resetDisObj =()=>{
     }
     //-----------------------------------------------------SEARCH NAME-----------------------------------
     searchName =()=>{
-        if(this.state.searchDis ==="" && this.state.actSearch ===0){
-            Swal.fire(
-              'Insert Distributor Name Before Search!',
-              'You clicked the button!',
-              'error'
-            )
-          }
-          else{
-        if(this.state.actSearch === 0){
-            this.getApiCountName();
-            this.getApiName(this.state.pageNow , this.state.limit)
-            this.setState({
-                actSearch : 1
-            })
-        }
-        else{
             this.getAPICount();
             this.getPaging(this.state.page, this.state.limit);
             this.setState({
                 actSearch:0,
                 searchDis:""
             })
-        }
+        
     }
+
+//-------------------------------------------Search Name Distributor------------------------------------------------------------
+buttonSearch =()=>{
+    if(this.state.searchDis === ""){
+        this.getAPICount();
+        this.getPaging(this.state.pageNow, this.state.limit);
+        this.setState({
+            searchDis:""
+        })
     }
+    else{
+        this.getApiCountName();
+        this.getApiName(this.state.pageNow , this.state.limit)
+            this.setState({
+                actSearch : 1
+            })
+}
+}
+//------------------------------------------------------------------------------------------------------------------------------
 
 //--------------------------------------GetCountAndApiName-------------------------------
 getApiName = (value, limit) => {
@@ -450,10 +463,11 @@ getApiCountName =()=>{
         <>
           <div className="prinAtas">
                 <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Distributor Name" value={this.state.searchDis}></InputPrin>
-                <i className={this.state.actSearch === 0 ?'fas fa-search':'far fa-window-close'} style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
-                           <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
-                            <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</button>
-                            <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
+                <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
+                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
+                    <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
+                    <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</button>
+                    <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
                 </div>
          <div className="bodyPrin">
                
@@ -463,7 +477,7 @@ getApiCountName =()=>{
                     {
                         this.state.distributors.map((dis,idx)=>{
                             return(
-                                <div className="prinisiTable" disabled={this.state.tableClick} onClick={()=>this.HandleTable(dis.disId)}>
+                                <div className="prinisiTable" disabled={this.state.tableClick} style={{cursor:"pointer"}} onClick={()=>this.HandleTable(dis.disId)}>
                                 <div className ="prinTable">
                                 <i className="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
                                 </div>
@@ -481,15 +495,15 @@ getApiCountName =()=>{
                    
             </div>
                 <div className="prinKiriPagin">
-                    <div>
-                    <select  className="prinForm"  name="limit" style={{height:"5vh",width:"20%", marginTop:"3%"}} onChange={this.setLimit}>
+                <div className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
+                    <select  className="prinForm"  name="limit" style={{height:"5vh",width:"100%"}} onChange={this.setLimit}>
                     <option value={parseInt(5)}>5</option>
                     <option value={parseInt(10)}>10</option> 
                     <option value={parseInt(15)}>15</option>
                     </select>
                     </div>
-                <div>
-                    <Pagination style={{background:'white',marginTop:'3%'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
+                    <div className="prinPage" style={{width:"75%"}}>
+                    <Pagination style={{background:'white'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
                 </div>
                 </div>
                 </div>
@@ -584,7 +598,11 @@ const mapStateToProps = state => ({
     dataLoginUser : state.authReducer.userLogin,
     dataPrincipal : state.prinReducer.reducPrincipal
 })
+const mapDispatchToProps = dispatch => { // NGIRIM DATA
+    return {
+      dataDistributor: (data) => dispatch({ type: "DISTRIBUTOR", payload: data }),
+    }
+  }
 
 
-
-export default connect(mapStateToProps) (Distributor);
+export default connect(mapStateToProps,mapDispatchToProps) (Distributor);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import InputPrin from '../../components/comp_principal/inputPrin'
 import LabelPrin from '../../components/comp_principal/labelPrin'
+import { connect } from 'react-redux';
 import './style.css'
 class Customer extends Component {
     constructor(props) {
@@ -88,6 +89,9 @@ class Customer extends Component {
  }
  }
     render() { 
+        console.log("INI REDUX PRINCIPAL TO CUSTOMER" , this.props.dataPrincipal)
+        console.log("INI REDUX DISTRIBUTOR TO CUSTOMER" , this.props.dataDistributor)
+
         return (  
             <>
               <div className="prinAtas">
@@ -99,19 +103,19 @@ class Customer extends Component {
               <div className="bodyPrin">
                 <div className="prinKiri">
                     {/* ini nanti di for */}
-                    <div className="prinisiTable">
+                    <div className="cusisiTable">
                     <div className ="prinTable">
                     <i class="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
                     </div>
                     <div className="CustomerTabel">
                         <div className="CustomerTabelkiri" style={{marginLeft:"10%"}}>
-                    <LabelPrin className="prinlabelName">Kong Guan</LabelPrin>
-                    <br/>
-                    <LabelPrin className="prinLabelid">Userid.</LabelPrin>
-                    <LabelPrin className="prinLabelid">Principal</LabelPrin>
-                    <br/>
-                    <LabelPrin className="prinLabelDis">Principal</LabelPrin>
-                    </div>
+                            <LabelPrin className="prinlabelName">Kong Guan</LabelPrin>
+                            <br/>
+                            <LabelPrin className="prinLabelid">Userid.</LabelPrin>
+                            <LabelPrin className="prinLabelid">Principal</LabelPrin>
+                            <br/>
+                            <LabelPrin className="prinLabelDis">Principal</LabelPrin>
+                        </div>
                     <div className="CustomerTabelKanan">
                         <LabelPrin className="prinIndex">1</LabelPrin>
                         <br/>  
@@ -185,13 +189,27 @@ class Customer extends Component {
                     <div>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
                     <select className="prinForm" disabled={this.state.disableInput}  name="prinName" style={{height:"33px"}} onChange={this.setValue}>
-                        <option>Principal name</option> 
+                    <option value="">Principal name</option> 
+                        {
+                        this.props.dataPrincipal.map((prin,idx)=>{
+                            return(
+                                <option value={prin.prinId}>{prin.prinId +" || "+prin.prinName}</option> 
+                            )
+                        })  
+                    }
                     </select>
                     </div>
                     <div>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
                     <select className="prinForm" disabled={this.state.disableInput} name="disName" style={{height:"33px"}} onChange={this.setValue}>
-                        <option>Distributor name</option> 
+                        <option value="">Distributor name</option>
+                        {
+                        this.props.dataDistributor.map((dis,idx)=>{
+                            return(
+                                <option value={dis.disId}>{dis.disId +" || "+ dis.disName}</option> 
+                            )
+                        })  
+                    } 
                     </select>
                     </div>
                     <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px",marginBottom:"0"}}/>
@@ -203,10 +221,10 @@ class Customer extends Component {
                     </select>
                     </div>
                     <div>
-                    <InputPrin  type="text" disabled={this.state.disableInput} disabled={this.state.disableInput} className="prinForm" name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
+                    <InputPrin  type="date" style={{width:"20%"}} disabled={this.state.disableInput} disabled={this.state.disableInput} className="prinForm" name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
                     </div> 
                     <div>
-                    <InputPrin  type="text" disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} placeholder="Customer Product Thru" ></InputPrin>
+                    <InputPrin  type="date" style={{width:"20%"}}  disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} placeholder="Customer Product Thru" ></InputPrin>
                     </div> 
                     <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px", marginBottom:"0"}}/>
 
@@ -230,5 +248,10 @@ class Customer extends Component {
         );
     }
 }
- 
-export default Customer;
+
+const mapStateToProps = state => ({
+    dataLoginUser   : state.authReducer.userLogin,
+    dataPrincipal   : state.prinReducer.reducPrincipal,
+    dataDistributor : state.disReducer.reducDistributor
+})
+export default connect(mapStateToProps) (Customer);

@@ -1,6 +1,6 @@
 import Header from './templates/header/header'
 import Body from './templates/body/index'
-import Login from './page/login/login'
+import LoginR from './page/loginR/loginR'
 import { BrowserRouter as Router, Switch,Route } from "react-router-dom"
 import BackUpData from './page/database/backupData'
 import Navbar from './templates/sidebar/Navbar'
@@ -14,7 +14,7 @@ class App extends Component {
   render() { 
   console.log("ini react : ",this.props.dataLoginUser.username)
     if (this.props.checkLogin === false){
-      return(<Login></Login>)
+      return(<LoginR></LoginR>)
     }
     else{
       return(<div> 
