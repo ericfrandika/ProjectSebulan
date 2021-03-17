@@ -73,12 +73,11 @@ class LoginR extends Component {
                 loginData :resp.data,
                 })
                 this.props.submitLogin({dataLogin : resp.data})
-                
+                this.props.history.push("/")
         })
             .catch((e) =>{
-                console.log(e.response.data.errorMessage)
                 Swal.fire(
-                    e.response.data.errorMessage,
+                    'Username Or Password Wrong...!!!',
                     'You clicked the button!',
                     'error'
                   )

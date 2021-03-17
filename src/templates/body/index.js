@@ -16,14 +16,9 @@ class Body extends Component {
     render() { 
         return ( 
         <>
-        <Switch>  
-        <Route path="/" exact component={Home}/>
-            <Route path="/principal" exact component={Principal}/>
-            <Route path="/distributor" exact component={Distributor}/>
-            <Route path="/customer" exact component={Customer}/>
-            <Route path="/backdata" exact component={BackUpData}/>
-          
-        </Switch>
+            <Navbar {...this.props}/>
+            {this.props.comp}
+        
         
         </> );
     }

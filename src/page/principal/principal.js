@@ -11,7 +11,7 @@ class Principal extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-         //-------------------------------Find ALL with Pagination-----------------------------------------
+     //-------------------------------Find ALL with Pagination-----------------------------------------
             page:1,
             count:0,
             limit:5,
@@ -138,7 +138,7 @@ console.log(resp.data)
 }
     //---------------------------------------------------button Add--------------------------------------
   buttonAdd = () => {
-    
+    this.props.dataNavbar({dataNavbar : this.state.tableClick})
       if(this.state.act === 0){
         if (this.state.prinName !=="") {
             this.resetState();
@@ -422,7 +422,6 @@ buttonSearch =()=>{
    
   }
 else{
-
     this.getApiCountName();
     this.getApiName(this.state.pageNow , this.state.limit)
       this.setState({
@@ -446,6 +445,7 @@ else{
  }
 
     render() { 
+      this.props.dataNavbar({dataNavbar : this.state.tableClick})
       console.log("Panjang Lenght : " , this.state.principals.length);
         console.log("ini adalah ARRAY REDUX : ",this.state.principalsRedux)
         if ("prinName" in this.state.objPrin) {
@@ -472,7 +472,7 @@ else{
              <div className="prinAtas">
                 <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{marginRight:"1%"}} name="searchPrin" onChange={this.setValue} placeholder="Search name Principal"></InputPrin>
                 <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
-                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
+                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></i>
                 <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
                 <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
                 <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
@@ -485,14 +485,16 @@ else{
                     {
                         this.state.principals.map((prin,idx)=>{
                             return(
+                              <div key={idx}>
                                 <div className="prinisiTable" disabled={this.state.tableClick} onClick={()=>this.HandleTable(prin.prinId)}>
                                 <div className ="prinTable">
-                                <i className="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
+                                <i className="fas fa-tags" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
                                 </div>
                                 <div className="prinlabelTabel">
                                 <LabelPrin className="prinlabelName">{prin.prinName}</LabelPrin>
                                 <br/>
                                 <LabelPrin className="prinLabelid">{prin.prinId}</LabelPrin>
+                                </div>
                                 </div>
                                 </div>
                             )
@@ -600,6 +602,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
   return {
     dataPrincipal: (data) => dispatch({ type: "PRINCIPAL", payload: data }),
+    dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data })
+
   }
 }
 

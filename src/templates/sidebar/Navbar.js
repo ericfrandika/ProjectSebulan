@@ -1,26 +1,62 @@
 import React, { useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
+import { connect } from 'react-redux';
+import Swal from 'sweetalert2'
 
-function Navbar() {
+const verifLogout = (logout,history) => {
+  Swal.fire({
+    title: 'Do you want to Logout?',
+    showCancelButton: true,
+    confirmButtonText: `Yes`,
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      Swal.fire('LogOut Success..!', '', 'success')
+      logout();
+      history.push("/")
+    } 
+  })
+}
+
+
+function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
-
+  const [logout, setLogout] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
-
+  console.log("data login Navbar " , props.dataLoginUser)
+  console.log(props.dataNavbar)
   return (
     <>
-      <IconContext.Provider value={{ color: '#fff' }}>
-        
-        <div className='navbar'>
+      <IconContext.Provider value={{ color: '#fff' }} >
+        <div className='navbar' disabled={props.dataNavbar}>
           <Link to='#' className='menu-bars'>
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
+          <div className="thisHeader1" style={{fontFamily:"Georgia, serif"}}>
+                <div className="bungkusWelcome" style={{marginRight:"240%" }}>
+                <div>
+                <label className="welcome"><b>WELCOME</b></label>
+                </div>
+                <div>
+                <label className="admin" ><b>{props.dataLoginUser.username}</b></label>
+                </div>
+                </div>
+                <div className="thisLogout">
+                <div>
+                <i className="fas fa-sign-out-alt" onClick={()=>{verifLogout(props.logout, props.history)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
+                </div>
+                <div>
+                    <label style={{color:"white"}}><b>LOGOUT</b></label>
+                </div>
+                </div>
+            </div>
         </div>
-        
+
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
           <ul className='nav-menu-items' onClick={showSidebar}>
             <li className='navbar-toggle'>
@@ -33,7 +69,7 @@ function Navbar() {
                 <li key={index} className={item.cName}>
                   <Link to={item.path}>
                     {item.icon}
-                    <span>{item.title}</span>
+                    <span style={{marginLeft:"5%"}}>{item.title}</span>
                   </Link>
                 </li>
               );
@@ -45,7 +81,22 @@ function Navbar() {
       </IconContext.Provider>
       
     </>
-  );  
+  );
 }
 
-export default Navbar;
+ 
+const mapStateToProps = state => ({
+  checkLogin: state.authReducer.isLogin,
+  dataLoginUser : state.authReducer.userLogin,
+  dataNavbar :state.authReducer.statusNavbar
+
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+      submitLogin: (data) => dispatch({ type: "LOGIN", payload: data }),
+      logout: ()=>dispatch({type:"LOGOUT"})
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (Navbar);

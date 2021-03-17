@@ -69,9 +69,14 @@ class Distributor extends Component {
         this.setState({
             limit : el.target.value
         })
-    
-        this.getAPICount();
-        this.getPaging(this.state.pageNow, el.target.value);
+        if(this.state.searchDis ==""){
+            this.getAPICount();
+            this.getPaging(this.state.pageNow, el.target.value);
+            }
+            else{
+            this.getApiCountName();
+            this.getApiName(this.state.pageNow, el.target.value);
+            }
     }
     //----------------------------------------------GET API COUNT----------------------------------
     getAPICount=()=>{
@@ -134,7 +139,6 @@ class Distributor extends Component {
       
     })
    
-
 }
    
     //---------------------------------------------------button Add--------------------------------------
@@ -183,7 +187,7 @@ class Distributor extends Component {
            ...objDistributor
           })
        .then((resp) => {
-           console.log(resp);
+           
         this.getAPICount();
         this.getPaging(this.state.page, this.state.limit);
         this.setState({
@@ -241,7 +245,6 @@ resetDisObj =()=>{
         inputId:true,
         tableClick:true,
     });
-    console.log("inibutton Add : " ,this.state.disId )
     }
 
     else{
@@ -297,7 +300,6 @@ resetDisObj =()=>{
           text: resp.response.data.errorMessage || resp.response.data
         })
     })
-
     Swal.fire('Update!', '', 'success')
           } else if (result.isDenied) {
             Swal.fire('Changes are not Update', '', 'info')
@@ -324,6 +326,8 @@ resetDisObj =()=>{
     tableClick:false,
     discreatedAt:"",
     discreatedBy:"",
+    disupdatedAt:"",
+    disupdatedBy:"",
     inputId:true
     })
     this.resetDis()
@@ -361,7 +365,7 @@ resetDisObj =()=>{
             }
           }) 
     }    
-    }
+}
     
 
     //--------------------------------------------------RESET INPUT------------------------------------
@@ -437,6 +441,7 @@ getApiCountName =()=>{
    }
 
     render() { 
+        this.props.dataNavbar({dataNavbar : this.state.tableClick})
         console.log("ini adalah obj SearchName = " , this.state.searchDis )
         console.log("INI DATA PRIN NAME : ", this.state.prinId );
         if ("disName" in this.state.objDis) {
@@ -464,7 +469,7 @@ getApiCountName =()=>{
           <div className="prinAtas">
                 <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Distributor Name" value={this.state.searchDis}></InputPrin>
                 <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
-                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer"}} onClick={()=> this.searchName()}></i>
+                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></i>
                     <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
                     <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</button>
                     <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
@@ -477,9 +482,10 @@ getApiCountName =()=>{
                     {
                         this.state.distributors.map((dis,idx)=>{
                             return(
+                                <div key={idx}>
                                 <div className="prinisiTable" disabled={this.state.tableClick} style={{cursor:"pointer"}} onClick={()=>this.HandleTable(dis.disId)}>
                                 <div className ="prinTable">
-                                <i className="fas fa-band-aid" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
+                                <i className="fas fa-hand-holding-usd" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
                                 </div>
                                 <div className="prinlabelTabel" style={{marginTop:"0px"}}>
                                 <LabelPrin className="prinlabelName">{dis.disName}</LabelPrin>
@@ -487,6 +493,7 @@ getApiCountName =()=>{
                                 <LabelPrin className="prinLabelalamat">{dis.disCity}</LabelPrin>
                                 <br/>
                                 <LabelPrin className="prinLabelid">{dis.disId}</LabelPrin>
+                                </div>
                                 </div>
                                 </div>
                             )
@@ -545,7 +552,7 @@ getApiCountName =()=>{
                     {
                         this.props.dataPrincipal.map((dis,idx)=>{
                             return(
-                                <option value={dis.prinId}>{dis.prinName}</option> 
+                                <option key={idx} value={dis.prinId}>{dis.prinName}</option> 
                             )
                         })  
                   }
@@ -601,6 +608,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
     return {
       dataDistributor: (data) => dispatch({ type: "DISTRIBUTOR", payload: data }),
+      dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
     }
   }
 

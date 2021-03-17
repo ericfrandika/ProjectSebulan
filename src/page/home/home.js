@@ -17,24 +17,6 @@ class Home extends Component {
         return ( 
             <>
                 <div className="bodyHome">
-                <div className="thisHeader">
-                <div className="bungkusWelcome">
-                <div>
-                <label className="welcome"><b>WELCOME</b></label>
-                </div>
-                <div>
-                <label className="admin"><b>{this.props.dataLoginUser.username}</b></label>
-                </div>
-                </div>
-                <div className="thisLogout">
-                <div>
-                <i className="fas fa-sign-out-alt" onClick={()=>{this.props.logout()}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
-                </div>
-                <div>
-                    <label style={{color:"white"}}><b>LOGOUT</b></label>
-                </div>
-                </div>
-            </div>
             <div className="welcomeNexchief">
                 <h1 className="labelWeclome" >WELCOME TO FORM NEXCHIEF ADMIN</h1>
             </div>

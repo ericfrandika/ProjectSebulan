@@ -1,4 +1,5 @@
 let defaultState={
+    statusNavbar: false,
     isLogin: false,
     userLogin : {
         username:""
@@ -15,15 +16,21 @@ const authReducer = (state=defaultState, action)=>{
                 isLogin: true,
                 userLogin : {
                     username:action.payload.dataLogin.username,
-                }
-                
+                }  
             }
+
         case "LOGOUT":
             return{
                 ...state,
                 isLogin: false
             }
-    
+            
+        case "NAVBAR":
+            return{
+                ...state,
+                statusNavbar: action.payload.dataNavbar
+            }
+            
         default:
             return state;
     }

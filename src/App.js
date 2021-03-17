@@ -4,6 +4,10 @@ import LoginR from './page/loginR/loginR'
 import { BrowserRouter as Router, Switch,Route } from "react-router-dom"
 import BackUpData from './page/database/backupData'
 import Navbar from './templates/sidebar/Navbar'
+import Home from './page/home/home'
+import Principal from './page/principal/principal'
+import Distributor from './page/distributor/distributor'
+import Customer from './page/customer/customer'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 class App extends Component {
@@ -11,16 +15,32 @@ class App extends Component {
     super(props);
     this.state = { statusLogin:true  }
   }
+
+  tampilPage = () => {
+
+  }
+
   render() { 
   console.log("ini react : ",this.props.dataLoginUser.username)
     if (this.props.checkLogin === false){
-      return(<LoginR></LoginR>)
+      return(
+      <Router>
+         <Switch>  
+        <Route path="/" exact component={LoginR}/>
+        <LoginR></LoginR>
+        </Switch>
+        </Router>)
     }
     else{
       return(<div> 
-              <Router> 
-                    <Navbar/>
-                     <Body/>
+              <Router>
+                <Switch>  
+                    <Route path="/" exact component={(props) => <Body {...props} comp={<Home/>} />}/>
+                    <Route path="/principal" exact component={(props) => <Body {...props} comp={<Principal/>} />}/>
+                    <Route path="/distributor" component={(props) => <Body {...props} comp={<Distributor/>} />}/>
+                    <Route path="/customer" component={(props) => <Body {...props} comp={<Customer/>} />}/>
+                    <Route path="/backdata" component={(props) => <Body {...props} comp={<BackUpData/>} />}/>
+                </Switch> 
               </Router>
               </div>)
     }

@@ -1,14 +1,17 @@
 .CustomerTabel{
-    width: 75%;
+    width: 100%;
     color: white;
     display: flex;
 }
 
 .CustomerTabelkiri{
-   margin-right: 20%;
+   margin-right: 10%;
+   width: 100%;
 }
 
-
+.CustomerTabelKanan{
+    width: 70%;
+}
 .cusisiTable{
     width: 96%;
     height: 11vh;
@@ -23,4 +26,11 @@
     background-color: #3A539B;
     box-shadow: 0 5px #666;
     transform: translateY(4px);
+}
+
+.toggleOnOff{
+    height:4vh;
+    width:30%;
+    margin-left: 1%;
+    margin-top: 1%;
 }

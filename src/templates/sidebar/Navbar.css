@@ -71,8 +71,7 @@
   margin-left: 16px;
 } */
 
-.divlogout{
-  border-style: solid;
-  width: 50%;
-  height: 10vh;
+.thisHeader1{
+  display: flex;
+  margin-left: 40%;
 }
