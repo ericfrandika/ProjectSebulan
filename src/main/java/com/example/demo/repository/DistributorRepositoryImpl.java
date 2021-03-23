@@ -18,9 +18,12 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     public void saveDistributorRepository(Distributor distributor) {
         UUID uuidDisID = UUID.randomUUID();
         if(distributor.getDisId() == "") {
-            distributor.setPrinId(uuidDisID.toString());
+            int a = (int)(Math.random()*1000);
+            String dis="PrinID.";
+            String idFirst = distributor.getDisName().substring(2,7);
+            String idDistributor =dis + idFirst +""+a+"" ;
+            distributor.setDisId(idDistributor);
         }
-
         jdbcTemplate.update("insert into distributor(prinId,disId," +
                         "disName,disAddress,disCity,disOwner,disEmail,disPhone," +
                         "discreatedAt,discreatedBy,disupdatedAt," +
@@ -81,11 +84,19 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     }
 
     @Override
-    public List<Distributor> findByNameDistributorRepository(String disName) {
+    public List<Distributor> findByNameDistributorRepository(String disName , int page , int limit) {
+        int numPages;
+        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM distributor where disName like '%"+disName+"%'" ,
+                (rs, rowNum) -> rs.getInt("count")).get(0);
+
+        if(numPages > 0){
+            if (page > numPages) page = numPages;
+        }
+        if (page < 1) page = 1;
+        int start = (page - 1) * limit;
         return jdbcTemplate.query("SELECT prin.prinId,prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
                 "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
-                "distributor dis WHERE dis.prinId = prin.prinId AND dis.disName like ?",
-                new Object[]{"%"+disName+"%"},
+                "distributor dis WHERE dis.prinId = prin.prinId AND dis.disName like '%"+disName+"%' Limit "+start+","+limit+"",
                 (rs,rowNum)->
                         new Distributor(
                                 rs.getString("prinId"),
@@ -157,6 +168,7 @@ public class DistributorRepositoryImpl implements DistributorRepository {
 
     @Override
     public Distributor findByNameObjDistributorRepository(String disName) {
+
         return jdbcTemplate.queryForObject(
                 "SELECT prin.prinId, prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
                         "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
@@ -201,11 +213,11 @@ public class DistributorRepositoryImpl implements DistributorRepository {
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM distributor",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
+        if(numPages > 0){
+            if (page > numPages) page = numPages;
+        }
         if (page < 1) page = 1;
-        if (page > numPages) page = numPages;
         int start = (page - 1) * limit;
-//        "SELECT * FROM distributor LIMIT " + start + "," + limit + ";"
         List<Distributor> distributorList = jdbcTemplate.query("SELECT prin.prinId, prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
                 "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
                 "distributor dis WHERE dis.prinId = prin.prinId LIMIT "+ start +","+limit+";",
@@ -233,6 +245,13 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     public int findAllCountDistributorRepository() {
         int countUser;
         countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM distributor", Integer.class);
+        return countUser;
+    }
+
+    @Override
+    public int findAllCountNameDistributorRespository(String disName) {
+        int countUser;
+        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM distributor where disName like '%"+disName+"%'", Integer.class);
         return countUser;
     }
 

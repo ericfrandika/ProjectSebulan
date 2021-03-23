@@ -14,7 +14,6 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Override
     public List<Principal> findAllPrincipalRepository() {
         return jdbcTemplate.query("select *from principal",
@@ -42,7 +41,12 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
     public void savePrincipalRepository(Principal principal) {
         UUID uuidPrinId = UUID.randomUUID();
         if(principal.getPrinId() == "") {
-            principal.setPrinId(uuidPrinId.toString());
+            int a = (int)(Math.random()*1000);
+            String prin="PrinID.";
+            String idFirst = principal.getPrinName().substring(2,7);
+            String idPrincipal =prin + idFirst +""+a+"" ;
+            System.out.println(idPrincipal);
+            principal.setPrinId(idPrincipal);
         }
         jdbcTemplate.update("insert into principal(prinId,prinName," +
                         "prinAddress,prinCity,prinPhone,prinFax," +
@@ -76,9 +80,11 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal where prinName like '%"+prinName+"%'" ,
                 (rs, rowNum) -> rs.getInt("count")).get(0);
+
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
+
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
 
@@ -199,9 +205,10 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
+        if(numPages > 0){
+            if (page > numPages) page = numPages;
+        }
         if (page < 1) page = 1;
-        if (page > numPages) page = numPages;
         int start = (page - 1) * limit;
         List<Principal> principalList = jdbcTemplate.query("SELECT * FROM principal LIMIT " + start + "," + limit + ";",
                 (rs, rowNum) ->

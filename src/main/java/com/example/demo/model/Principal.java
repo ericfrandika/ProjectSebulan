@@ -4,10 +4,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class Principal {
-private String prinId;
+
+    private String prinId;
     @NotBlank(message = "name cannot be empty")
     @Pattern(regexp = "^(?![ .]+$)[a-zA-Z .]*$", message = "Name cannot be number or special character")
-private String prinName;
+    private String prinName;
     @NotBlank(message = "Address cannot be empty")
     private String prinAddress;
     @NotBlank(message = "City cannot be empty")

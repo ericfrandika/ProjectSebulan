@@ -10,14 +10,15 @@ public interface DistributorService {
     void saveDistributorService(Distributor distributor);
     List<Distributor> findAllDistributorService();
     Distributor findByIdDistributorService(String disId);
-    List<Distributor> findByNameDistributorService(String disName);
-    boolean isDistributorNameExist(Distributor distributor);
+    List<Distributor> findByNameDistributorService(String disName, int page , int limit);
     Distributor findByEmailDistributorService(String disEmail);
     Distributor findByPhoneDistributorService(String disPhone);
     Distributor findByNameObjDistributorService(String disName);
     void deleteDistributorServicebyId(String disId);
     void updateDistributorService(Distributor distributor);
     int findAllDistributorCountService();
+    int findAllCountNameDistributorService(String disName);
     List<Distributor> findAllDistributorWithPagingService(int page, int limit);
+
 
 }

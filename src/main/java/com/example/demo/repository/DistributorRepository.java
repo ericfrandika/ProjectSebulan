@@ -9,7 +9,7 @@ public interface DistributorRepository {
     void saveDistributorRepository(Distributor distributor);
     List<Distributor> findAllDistributorRepository();
     Distributor findByIdDistributorRepository(String disId);
-    List<Distributor> findByNameDistributorRepository(String disName) ;
+    List<Distributor> findByNameDistributorRepository(String disName, int page ,int limit) ;
     Distributor findByEmailDistributorRepository(String disEmail);
     Distributor findByPhoneDistributorRepository(String disPhone);
     Distributor findByNameObjDistributorRepository(String disName);
@@ -17,5 +17,6 @@ public interface DistributorRepository {
     void updateDistributorRepository(Distributor distributor);
     List<Distributor> findAllDistributorWithPaging(int page, int limit);
     int findAllCountDistributorRepository();
+    int findAllCountNameDistributorRespository(String disName);
 
 }

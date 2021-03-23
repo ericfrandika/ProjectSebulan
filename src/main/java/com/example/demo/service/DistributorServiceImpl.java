@@ -42,16 +42,12 @@ public class DistributorServiceImpl implements DistributorService {
     }
 
     @Override
-    public List<Distributor> findByNameDistributorService(String disName) {
-        List<Distributor>distributorList = distributorRepository.findByNameDistributorRepository(disName);
+    public List<Distributor> findByNameDistributorService(String disName , int page , int limit) {
+        List<Distributor>distributorList = distributorRepository.findByNameDistributorRepository(disName, page , limit);
         return distributorList;
     }
 
-    @Override
-    public boolean isDistributorNameExist(Distributor distributor) {
-        return findByNameDistributorService(distributor.getDisName()) .size() != 0;
 
-    }
 
     @Override
     public Distributor findByEmailDistributorService(String disEmail) {
@@ -109,6 +105,11 @@ public class DistributorServiceImpl implements DistributorService {
     @Override
     public int findAllDistributorCountService() {
         return distributorRepository.findAllCountDistributorRepository();
+    }
+
+    @Override
+    public int findAllCountNameDistributorService(String disName) {
+        return distributorRepository.findAllCountNameDistributorRespository(disName);
     }
 
     @Override
