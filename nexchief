@@ -1,0 +1,170 @@
+-- MariaDB dump 10.18  Distrib 10.4.17-MariaDB, for Win64 (AMD64)
+--
+-- Host: localhost    Database: nexchief
+-- ------------------------------------------------------
+-- Server version	10.4.17-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `nexchief`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `nexchief` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `nexchief`;
+
+--
+-- Table structure for table `adminnc`
+--
+
+DROP TABLE IF EXISTS `adminnc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `adminnc` (
+  `username` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `adminnc`
+--
+
+LOCK TABLES `adminnc` WRITE;
+/*!40000 ALTER TABLE `adminnc` DISABLE KEYS */;
+INSERT INTO `adminnc` VALUES ('admin1','admin1'),('admin2','nexchief231');
+/*!40000 ALTER TABLE `adminnc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer` (
+  `cusId` varchar(200) NOT NULL,
+  `cusName` varchar(200) NOT NULL,
+  `cusPass` varchar(200) NOT NULL,
+  `cusAddress` varchar(200) NOT NULL,
+  `cusPhone` varchar(200) NOT NULL,
+  `prinId` varchar(200) NOT NULL,
+  `disId` varchar(200) DEFAULT NULL,
+  `cusOnOff` varchar(200) NOT NULL,
+  `cusRegis` varchar(200) NOT NULL,
+  `cusValid` varchar(200) NOT NULL,
+  `cuscreatedAt` varchar(200) NOT NULL,
+  `cuscreatedBy` varchar(200) NOT NULL,
+  `cusupdatedAt` varchar(200) NOT NULL,
+  `cusupdatedBy` varchar(200) NOT NULL,
+  PRIMARY KEY (`cusId`),
+  KEY `prinId` (`prinId`),
+  KEY `customer_ibfk_3` (`disId`),
+  CONSTRAINT `customer_ibfk_2` FOREIGN KEY (`prinId`) REFERENCES `principal` (`prinId`),
+  CONSTRAINT `customer_ibfk_3` FOREIGN KEY (`disId`) REFERENCES `distributor` (`disId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES ('ericFrandika.SinarSosro01','ericFrandikaw','Eric-Leo5','JL.Keeimas no.47 Ling.mandalaww','081278829165','SinarSosro01',NULL,'true','1998-03-21','1998-03-23','','','3/17/2021 5:54:08 PM','admin1'),('ericFrandika.Unimos01','ericFrandika','LeoW=123','JL.Keimas no.47 Ling.mandala','081278829165','Unimos01',NULL,'true','1412-02-01','3412-12-12','','','3/17/2021 5:32:10 PM','admin1'),('LEOKING2.Unliver01','LEOKING2','LeoW=123','JL.Keimas no.47 Ling.mandala','081278829165','Unliver01',NULL,'false','1231-04-13','4123-12-13','','','3/17/2021 5:53:19 PM','admin1'),('qeweqwwww.SinarSosro01','qeweqwwww','LeoW=123w','JL.Keimas no.47 Ling.mandalaw','081278829165','SinarSosro01',NULL,'true','4123-03-12','4123-03-21','','','3/17/2021 5:59:53 PM','admin1'),('qeweqwwwwww.SinarSosro01','qeweqwwwwww','LeoW=123w','JL.Keimas no.47 Ling.mandalaw','081278829165','SinarSosro01','Gizi01','false','4123-03-12','4123-03-21','','','',''),('qeweqwwwwwww.SinarSosro01','qeweqwwwwwww','LeoW=123w','JL.Keimas no.47 Ling.mandalaw','081278829165','SinarSosro01','Gizi01','false','4123-03-12','4123-03-21','','','',''),('qeweqwwwwwwww.SinarSosro01','qeweqwwwwwwww','LeoW=123w','JL.Keimas no.47 Ling.mandalaw','081278829165','SinarSosro01','Gizi01','false','4123-03-12','4123-03-21','','','','');
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `distributor`
+--
+
+DROP TABLE IF EXISTS `distributor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `distributor` (
+  `prinId` varchar(200) NOT NULL,
+  `disId` varchar(200) NOT NULL,
+  `disName` varchar(200) NOT NULL,
+  `disAddress` varchar(200) NOT NULL,
+  `disCity` varchar(200) NOT NULL,
+  `disOwner` varchar(200) NOT NULL,
+  `disEmail` varchar(200) NOT NULL,
+  `disPhone` varchar(200) NOT NULL,
+  `discreatedAt` varchar(200) NOT NULL,
+  `discreatedBy` varchar(200) NOT NULL,
+  `disupdatedAt` varchar(200) NOT NULL,
+  `disupdatedBy` varchar(200) NOT NULL,
+  PRIMARY KEY (`disId`),
+  KEY `prinId` (`prinId`),
+  CONSTRAINT `distributor_ibfk_1` FOREIGN KEY (`prinId`) REFERENCES `principal` (`prinId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `distributor`
+--
+
+LOCK TABLES `distributor` WRITE;
+/*!40000 ALTER TABLE `distributor` DISABLE KEYS */;
+INSERT INTO `distributor` VALUES ('Kalbe01','Enseval01','PT. Enseval Putera Megatrading Tbk','Jl. Pulo Lentut No. 10. Kawasan Industri Pulo Gadung','Jakarta','PT Kalbe Farma Tbk','ensevalPM@kalbe.co.id','02146822422','3/12/2021 2:28:20 AM','admin1','',''),('Nutrifood01','Gizi01','PT Gizi Dominann Tbk.','TITAN CENTER, 3rd Floor, Jl. Boulevard Bintaro, Blok B7/B1 No.5, Bintaro Jaya Sektor 7','Tangerang','PT Karya Maju','GiziDominan@company.co.id','0215364112','3/12/2021 9:59:45 AM','admin1','3/14/2021 11:26:42 PM','admin1'),('Loreal01','Komindo01','PT. KOMINDO BIZOLUSI','Jalan Musi No 28','Jakarta','Kyocera','komindo@kyocera.co.id','0219342112','3/12/2021 12:19:23 AM','admin1','3/12/2021 1:39:24 AM','admin1'),('Mayora01','MayoraIndah01','PT. MAYORA INDAH TBK.','Gedung Mayora Jl. Tomang Raya Kav 21 – 23','Jakarta','PT. Unita Branido','consumer@mayora.co.id','02180637704','3/12/2021 9:40:53 AM','admin1','3/16/2021 5:51:08 AM','admin1'),('Intrasari01','PrinID.. Jas520','PT. Jasa Nada Terpaku......','JL.Keimas no.47 Ling.mandala','Muara enim','PT Kalbe Farma Tbk','JasaNada@gmail.com','081278829165','3/17/2021 5:29:34 PM','admin1','',''),('Loreal01','SisedaP01','PT. Siseda Pepade','Jl Jembatan Tiga Brt Bl C/5 B, Pejagalan, Penjaringan','Jakarta Utara','Man Superman','info@sisedapepade.com','0216605035','3/12/2021 9:21:40 AM','admin1','','');
+/*!40000 ALTER TABLE `distributor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `principal`
+--
+
+DROP TABLE IF EXISTS `principal`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `principal` (
+  `prinId` varchar(200) NOT NULL,
+  `prinName` varchar(200) NOT NULL,
+  `prinAddress` varchar(200) NOT NULL,
+  `prinCity` varchar(200) NOT NULL,
+  `prinPhone` varchar(200) NOT NULL,
+  `prinFax` varchar(200) NOT NULL,
+  `prinCountry` varchar(200) NOT NULL,
+  `prinConPhone` varchar(200) NOT NULL,
+  `prinLicensed` varchar(200) NOT NULL,
+  `princreatedAt` varchar(200) NOT NULL,
+  `princreatedBy` varchar(200) NOT NULL,
+  `prinupdatedAt` varchar(200) NOT NULL,
+  `prinupdatedBy` varchar(200) NOT NULL,
+  PRIMARY KEY (`prinId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `principal`
+--
+
+LOCK TABLES `principal` WRITE;
+/*!40000 ALTER TABLE `principal` DISABLE KEYS */;
+INSERT INTO `principal` VALUES ('Eagle01','PT. EAGLE INDO PHARMA','Jl. Raya Prabu Siliwangi Km. 1.1 ,Desa Alam Jaya, Kec. Jatiuwung','Tangerang','02159033746','0215903378','Indonesia','08283828342','2023-06-27','3/11/2021 11:25:32 PM','admin1','3/16/2021 2:11:03 PM','admin1'),('Garudafood01','PT Garudafoodd Putra Putri Jaya Tbk.','Jl. Bintaro Raya No.10A, RT.4/RW.10, Kby. Lama Utara, Kec. Kby. Lama','Jakarta','0217290110','0217290111','Indonesia','083292819281','2023-09-15','3/11/2021 10:45:45 PM','admin1','3/14/2021 11:15:30 PM','admin1'),('Indofood01','PT. Indofood Sukses Makmur Tbk','Sudirman Plaza Indofood Tower Lt. 27 Jl. Jenderal Sudirman Kav. 76 - 78','Jakarta','02157958822','02157958822','Indonesia','082918291821','2024-02-05','3/11/2021 9:57:28 PM','admin1','3/11/2021 10:25:21 PM','admin1'),('Intrasari01','PT INTRASARI MULTI PRODUKSI Tbk.','KOMPLEKS PERGUDANGAN PANTAI INDAH DADAP BLOK BP-7, DADAP','Tangerang','021049382912','021049382912','Indonesia','082938271829','2024-01-17','3/11/2021 10:20:25 PM','admin1','3/11/2021 11:35:30 PM','admin1'),('Kalbe01','PT. Kalbe Farma Tbk.','Gedung KALBE. Jl. Let. Jend. Suprapto Kav. 4','Jakarta','02142870889','02142873680','Indonesia','08928172827','2024-03-04','3/11/2021 10:06:40 PM','admin1','',''),('Loreal01','PT. LOREAL Tbk','DBS Bank Tower, 29th floor, Ciputra World 1, Kuningan, Jl. Prof. DR. Satrio No.Kav 3-5, RT.18/RW.4, Kuningan, Karet Kuningan, Setiabudi','Jakarta','02129886666','02129886666','Indonesia','08001560325','2025-09-20','3/11/2021 10:04:23 PM','admin1','3/16/2021 10:07:12 AM','admin1'),('Mayora01','PT. Mayora GroupTbk.','Jl. Daan Mogot KM. 18, Cengkareng','Jakarta','02180637704','0215655323','Indonesia','081294837283','2025-03-11','3/11/2021 9:46:55 PM','admin1','3/12/2021 9:39:04 AM','admin1'),('Multiindo01','PT. MULTI INDOCITRA TBK.','Green central city Commercial Area Lt. 6 , Jl. Gajah Mada No. 188 ','Jakarta Barat','02129368888','02129368888','Indonesia','082193829382','2025-03-27','3/11/2021 10:49:16 PM','admin1','',''),('Nestle01','PT Nestle Indonesia','Perkantoran Hijau Arkadia, Tower B, 5th Floor Jalan Letjen T. B. Simatupang Kav. 88','Jakarta','02178836000','02178836001','Indonesia','089291827382','2026-02-12','3/11/2021 9:51:02 PM','admin1','',''),('Nutrifood01','PT. Nutrifood Indonesia','Jl. Rawabali II no. 3 ,Jakarta Industrial Estate Pulogadung','Jakarta','0214605780','0214605781','Indonesia','082312348321','2024-02-19','3/11/2021 11:32:37 PM','admin1','3/12/2021 10:57:47 AM','admin1'),('OrangTuaGroup01','PT. Orang Tua Group Tbk','Jl. Lingkar Luar Barat Kav. 35 - 36, Cengkareng','Jakarta Barat','02158397777','02158397777','Indonesia','08177007771','2023-05-20','3/11/2021 9:53:44 PM','admin1','3/12/2021 10:57:09 AM','admin1'),('Panasonic01','PT. Panasonic Gobel Indonesia Tbk.','Jl. Dewi Sartika (Cawang II), No.14','Jakarta','0218015710','0218015710','Indonesia','089482718274','2023-09-20','3/11/2021 10:10:27 PM','admin1','',''),('Pocari01','PT. Amerta Indah Otsuka Tbk.','Pondok Indah Office Tower I 6th Floor. Jl. Sultan Iskandar Muda Kav. V-TA','Jakarta','0217697475','0217697472','Indonesia','089392819283','2024-05-15','3/11/2021 10:16:30 PM','admin1','',''),('PrinID.. 535','PT. AnaBatik Tbk','JL.Keimas no.47 Ling.mandala','Muara enim','081232129165','0219384932','Indonesia','081278829165','2026-03-13','3/17/2021 4:00:09 PM','admin1','3/17/2021 4:00:09 PM','admin1'),('SinarSosro01','PT. SINAR SOSRO Tbk.','Jl. Raya Sultan Agung KM 28 ,Kel. Medan Satria','Bekasi','0215461930','0215461930','Indonesia','082918293821','2026-03-05','3/11/2021 10:32:27 PM','admin1','',''),('T. N863','PT. NexChief ParaMadaksaW','JL.Keimas no.47 Ling.mandala','Muara enim','081278829165','0219349123','Indonesia','0219382912','2026-03-12','3/17/2021 3:55:17 PM','admin1','3/17/2021 3:57:29 PM','admin1'),('Unicharm01','PT. UniCharm Indonesia Tbk.','Sinarmas MSIG Tower 42F. JL Jend. Sudirman Kav.21. Karet, Setiabudi,','Jakarta Selatan','02129189191','02129189199','Indonesia','082109329384','2025-11-02','3/11/2021 10:39:03 PM','admin1','',''),('Unimos01','PT. Badan Usaha Unimos','Kecamatan Driyorejo, Kabupaten Gresik','Jawa Timur','0317507088','0317507088','Indonesia','082192382912','2023-11-11','3/11/2021 10:23:02 PM','admin1','',''),('Unliver01','PT. Unilever Indonesia Tbk.','Grha Unilever - Jl. BSD Boulevard Barat Green Office Park Kavling 3, BSD City','Tangerang ','02180827000','02180827002','Indonesia','082918293827','2025-03-12','3/11/2021 9:59:59 PM','admin1','','');
+/*!40000 ALTER TABLE `principal` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-03-19 10:03:33
