@@ -5,8 +5,15 @@ import LabelPrin from '../../components/comp_principal/labelPrin'
 import axios from 'axios'
 import { connect } from 'react-redux';
 import Pagination from '@material-ui/lab/Pagination';
+import Kotak from '../../components/compDiv/div'
 import Swal from 'sweetalert2'
-
+import Tombol from '../../components/compButton/button';
+import InputArea from '../../components/comp_principal/textArea';
+import Ikon from '../../components/compIcon/FontIcon';
+import Pilih from '../../components/compSelect/select'
+import Pilihan from '../../components/compSelect/value'
+import Garis from '../../components/compGaris/garis';
+import PrintLn from '../../components/compGaris/Println';
 class Principal extends Component {
     constructor(props) {
         super(props);
@@ -68,6 +75,7 @@ class Principal extends Component {
     setLimit = el =>{
       this.setState({
           limit : el.target.value,
+          page : 1
       })
       if(this.state.searchPrin ==""){
       this.getAPICount();
@@ -417,7 +425,8 @@ buttonSearch =()=>{
     this.getAPICount();
     this.getPaging(this.state.pageNow, this.state.limit);
     this.setState({
-        searchPrin:""
+        searchPrin:"",
+        page : 1
     })
    
   }
@@ -425,7 +434,8 @@ else{
     this.getApiCountName();
     this.getApiName(this.state.pageNow , this.state.limit)
       this.setState({
-          actSearch:1
+          actSearch:1,
+          page : 1
       })
   
 }
@@ -446,8 +456,6 @@ else{
 
     render() { 
       this.props.dataNavbar({dataNavbar : this.state.tableClick})
-      console.log("Panjang Lenght : " , this.state.principals.length);
-        console.log("ini adalah ARRAY REDUX : ",this.state.principalsRedux)
         if ("prinName" in this.state.objPrin) {
             this.setState({
                 prinId:this.state.objPrin.prinId,
@@ -469,53 +477,52 @@ else{
         const {prinId,prinName,prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt,  princreatedBy, prinupdatedAt,prinupdatedBy} =this.state
         return (  
             <>
-             <div className="prinAtas">
-                <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{marginRight:"1%"}} name="searchPrin" onChange={this.setValue} placeholder="Search name Principal"></InputPrin>
-                <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
-                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></i>
-                <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
-                <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
-                <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
-                </div>
-            <div className="bodyPrin">
-                
-                <div className="prinKiri">
-                    <div className="prinKiriTabel">
+             <Kotak className="prinAtas">
+                <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{marginRight:"1%"}} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal"></InputPrin>
+                <Tombol className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Tombol>
+                <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></Ikon>
+                <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Tombol>
+                <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</Tombol>
+                <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</Tombol>
+                </Kotak>
+            <Kotak className="bodyPrin">
+                <Kotak className="prinKiri">
+                    <Kotak className="prinKiriTabel">
                     {/* ini nanti di for */}
                     {
                         this.state.principals.map((prin,idx)=>{
                             return(
-                              <div key={idx}>
-                                <div className="prinisiTable" disabled={this.state.tableClick} onClick={()=>this.HandleTable(prin.prinId)}>
-                                <div className ="prinTable">
-                                <i className="fas fa-tags" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
-                                </div>
-                                <div className="prinlabelTabel">
+                              <Kotak key={idx}>
+                                <Kotak className="prinisiTable" style={{cursor:"pointer"}} disabled={this.state.tableClick} onClick={()=>{this.HandleTable(prin.prinId)}}>
+                                <Kotak className ="prinTable">
+                                <Ikon className="fas fa-tags" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></Ikon>
+                                </Kotak>
+                                <Kotak className="prinlabelTabel">
                                 <LabelPrin className="prinlabelName">{prin.prinName}</LabelPrin>
-                                <br/>
+                                <PrintLn/>
                                 <LabelPrin className="prinLabelid">{prin.prinId}</LabelPrin>
-                                </div>
-                                </div>
-                                </div>
+                                </Kotak>
+                                </Kotak>
+                                </Kotak>
                             )
                         })  
                   }
-                </div>
-                <div className="prinKiriPagin">
-                    <div className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
-                    <select  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>
-                    <option value={parseInt(5)}>5</option>
-                    <option value={parseInt(10)}>10</option> 
-                    <option value={parseInt(15)}>15</option>
-                    </select>
-                    </div>
-                <div className="prinPage" style={{width:"75%"}}>
+                </Kotak>
+                <Kotak className="prinKiriPagin">
+                    <Kotak className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
+                      <Pilih  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>
+                        <Pilihan value={parseInt(5)}>5</Pilihan>
+                        <Pilihan value={parseInt(10)}>10</Pilihan> 
+                        <Pilihan value={parseInt(15)}>15</Pilihan>
+                      </Pilih>
+                    </Kotak>
+                <Kotak className="prinPage" style={{width:"75%"}}>
                <Pagination style={{background:'white' ,width:"100%"}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
-                </div>
-                </div>
-                </div>
-                <div className="prinKanan">
-                <div className="prinKiriLabel">
+                </Kotak>
+                </Kotak>
+                </Kotak>
+                <Kotak className="prinKanan">
+                <Kotak className="prinKiriLabel">
                     <LabelPrin className="labelprin">Principal ID</LabelPrin>
                    
                     <LabelPrin className="labelprin">Principal Name</LabelPrin>
@@ -536,7 +543,7 @@ else{
                  
                     <LabelPrin className="labelprin">Licensed Expired</LabelPrin>
                   
-                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
                     <LabelPrin className="labelprin">Created At</LabelPrin>
                
                     <LabelPrin className="labelprin">Created By</LabelPrin>
@@ -545,51 +552,51 @@ else{
                     
                     <LabelPrin className="labelprin">Updated By</LabelPrin>
                    
-                </div>
-                <div className="prinKananInput">
-                    <div>
-                    <InputPrin type="text" value={prinId} disabled={this.state.disableInputId} className="prinForm" name="prinId"  onChange={this.setValue} placeholder="Principal ID" ></InputPrin>
-                    </div>
-                    <div>
+                </Kotak>
+                <Kotak className="prinKananInput">
+                    <Kotak>
+                      <InputPrin type="text" value={prinId} disabled={this.state.disableInputId} className="prinForm" name="prinId"  onChange={this.setValue} placeholder="Principal ID" ></InputPrin>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" value={prinName} disabled={this.state.disableInput} className="prinForm" name="prinName" onChange={this.setValue} placeholder="Principal Name" ></InputPrin>
-                    </div> 
-                    <div>
-                    <textarea className="prinAlamat" value={prinAddress} disabled={this.state.disableInput} name="prinAddress" rows="4" cols="69" placeholder="Principal Address" onChange={this.setValue}></textarea>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
+                    <InputArea className="prinAlamat" value={prinAddress} disabled={this.state.disableInput} name="prinAddress" rows="4" cols="69" placeholder="Principal Address" onChange={this.setValue}></InputArea>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" value={prinCity} disabled={this.state.disableInput} className="prinForm" name="prinCity" onChange={this.setValue} placeholder="Principal City" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text"  value={prinPhone} disabled={this.state.disableInput} className="prinForm" name="prinPhone" onChange={this.setValue} placeholder="Principal Phone" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" value={prinFax} disabled={this.state.disableInput} className="prinForm" name="prinFax" onChange={this.setValue} placeholder="Principal Fax" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text"  value={prinCountry} disabled={this.state.disableInput} className="prinForm" name="prinCountry" onChange={this.setValue} placeholder="Principal Country" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" value={prinConPhone} disabled={this.state.disableInput} className="prinForm" name="prinConPhone" onChange={this.setValue} placeholder="Principal Contact Phone" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="date" value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
-                    </div> 
-                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
-                    <div>
+                    </Kotak> 
+                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
+                    <Kotak>
                     <InputPrin  type="text" value={princreatedAt} disabled={true} className="prinForm" name="princreatedAt" onChange={this.setValue} placeholder="Principal Created At" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" value={princreatedBy} disabled={true} className="prinForm" name= "princreatedBy" onChange={this.setValue} placeholder="Principal Created By" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" value={prinupdatedAt} disabled={true} className="prinForm" name="prinupdatedAt" onChange={this.setValue} placeholder="Principal Updated At" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" value={prinupdatedBy} disabled={true} className="prinForm" name="prinupdatedBy" onChange={this.setValue} placeholder="Principal Updated by" ></InputPrin>
-                    </div>
-                </div>
-                </div>
-            </div>
+                    </Kotak>
+                </Kotak>
+                </Kotak>
+            </Kotak>
             </>
          );
     }

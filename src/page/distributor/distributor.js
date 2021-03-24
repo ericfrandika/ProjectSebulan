@@ -5,6 +5,14 @@ import Swal from 'sweetalert2'
 import { connect } from 'react-redux';
 import Pagination from '@material-ui/lab/Pagination';
 import axios from 'axios'
+import Kotak from '../../components/compDiv/div';
+import Tombol from '../../components/compButton/button';
+import Ikon from '../../components/compIcon/FontIcon';
+import Pilih from '../../components/compSelect/select';
+import Pilihan from '../../components/compSelect/value';
+import InputArea from '../../components/comp_principal/textArea';
+import Garis from '../../components/compGaris/garis';
+import PrintLn from '../../components/compGaris/Println';
 
 class Distributor extends Component {
         constructor(props) {
@@ -165,7 +173,7 @@ class Distributor extends Component {
         const{prinId, disId,disName,disAddress, disCity,disOwner, disEmail, disPhone,  discreatedAt,discreatedBy, disupdatedAt, disupdatedBy} = this.state
         let objDistributor={prinId,disName, disId,disAddress, disCity,disOwner, disEmail, disPhone, discreatedAt,discreatedBy, disupdatedAt, disupdatedBy}
        
-        if(prinId ==="" || disId ==="" ||disName ==="" ||
+        if(prinId ===""  ||disName ==="" ||
          disAddress ==="" || disCity ==="" || disOwner ==="" || 
          disEmail ==="" ||   disPhone ===""){
             Swal.fire(
@@ -251,7 +259,7 @@ resetDisObj =()=>{
         const{prinId, disId,disName,disAddress, disCity,disOwner, disEmail, disPhone,  discreatedAt,discreatedBy, disupdatedAt, disupdatedBy} = this.state
         let objDistributor={prinId,disName, disId,disAddress, disCity,disOwner, disEmail, disPhone, discreatedAt,discreatedBy, disupdatedAt, disupdatedBy}
        
-        if(prinId ==="" || disId ==="" ||disName ==="" ||
+        if(prinId ==="" ||  disName ==="" ||
         disAddress ==="" || disCity ==="" || disOwner ==="" || 
         disEmail ==="" ||   disPhone ===""){
            Swal.fire(
@@ -466,56 +474,56 @@ getApiCountName =()=>{
         const{prinId , prinName,disId,disName,disAddress, disCity,disOwner, disEmail, disPhone,  discreatedAt,discreatedBy, disupdatedAt, disupdatedBy} = this.state
         return (
         <>
-          <div className="prinAtas">
+          <Kotak className="prinAtas">
                 <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Distributor Name" value={this.state.searchDis}></InputPrin>
-                <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
-                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></i>
-                    <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
-                    <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</button>
-                    <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
-                </div>
-         <div className="bodyPrin">
+                <Tombol className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Tombol>
+                <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></Ikon>
+                    <Tombol className="crudPrin" onClick={()=>this.buttonAdd()} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Tombol>
+                    <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</Tombol>
+                    <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</Tombol>
+                </Kotak>
+         <Kotak className="bodyPrin">
                
-                <div className="prinKiri">
-                <div className="prinKiriTabel" >
+                <Kotak className="prinKiri">
+                <Kotak className="prinKiriTabel" >
                     {/* ini nanti di for */}
                     {
                         this.state.distributors.map((dis,idx)=>{
                             return(
-                                <div key={idx}>
-                                <div className="prinisiTable" disabled={this.state.tableClick} style={{cursor:"pointer"}} onClick={()=>this.HandleTable(dis.disId)}>
-                                <div className ="prinTable">
-                                <i className="fas fa-hand-holding-usd" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></i>
-                                </div>
-                                <div className="prinlabelTabel" style={{marginTop:"0px"}}>
+                                <Kotak key={idx}>
+                                <Kotak className="prinisiTable" disabled={this.state.tableClick} style={{cursor:"pointer"}} onClick={()=>{this.HandleTable(dis.disId)}}>
+                                <Kotak className ="prinTable">
+                                <Ikon className="fas fa-hand-holding-usd" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></Ikon>
+                                </Kotak>
+                                <Kotak className="prinlabelTabel" style={{marginTop:"0px"}}>
                                 <LabelPrin className="prinlabelName">{dis.disName}</LabelPrin>
-                                <br/>
+                                <PrintLn/>
                                 <LabelPrin className="prinLabelalamat">{dis.disCity}</LabelPrin>
-                                <br/>
+                                <PrintLn/>
                                 <LabelPrin className="prinLabelid">{dis.disId}</LabelPrin>
-                                </div>
-                                </div>
-                                </div>
+                                </Kotak>
+                                </Kotak>
+                                </Kotak>
                             )
                         })  
                   }
                    
-            </div>
-                <div className="prinKiriPagin">
-                <div className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
-                    <select  className="prinForm"  name="limit" style={{height:"5vh",width:"100%"}} onChange={this.setLimit}>
-                    <option value={parseInt(5)}>5</option>
-                    <option value={parseInt(10)}>10</option> 
-                    <option value={parseInt(15)}>15</option>
-                    </select>
-                    </div>
-                    <div className="prinPage" style={{width:"75%"}}>
+            </Kotak>
+                <Kotak className="prinKiriPagin">
+                <Kotak className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
+                    <Pilih  className="prinForm"  name="limit" style={{height:"5vh",width:"100%"}} onChange={this.setLimit}>
+                    <Pilihan value={parseInt(5)}>5</Pilihan>
+                    <Pilihan value={parseInt(10)}>10</Pilihan> 
+                    <Pilihan value={parseInt(15)}>15</Pilihan>
+                    </Pilih>
+                    </Kotak>
+                    <Kotak className="prinPage" style={{width:"75%"}}>
                     <Pagination style={{background:'white'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
-                </div>
-                </div>
-                </div>
-                <div className="prinKanan">
-                <div className="prinKiriLabel">
+                </Kotak>
+                </Kotak>
+                </Kotak>
+                <Kotak className="prinKanan">
+                <Kotak className="prinKiriLabel">
                     <LabelPrin className="labelprin">Principal Name</LabelPrin>
                    
                     <LabelPrin className="labelprin">Distributor ID</LabelPrin>
@@ -534,7 +542,7 @@ getApiCountName =()=>{
                 
                     <LabelPrin className="labelprin">Phone</LabelPrin>
                   
-                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
                     <LabelPrin className="labelprin">Created At</LabelPrin>
                
                     <LabelPrin className="labelprin">Created By</LabelPrin>
@@ -543,60 +551,58 @@ getApiCountName =()=>{
                     
                     <LabelPrin className="labelprin">Updated By</LabelPrin>
                    
-                </div>
-                <div className="prinKananInput">
-                    <div>
+                </Kotak>
+                <Kotak className="prinKananInput">
+                    <Kotak>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <select disabled={this.state.disableInput}  value={prinId} className="prinForm"  name="prinId" style={{height:"33px"}} onChange={this.setValue}>
-                    <option value="">Principal Name</option>
+                    <Pilih disabled={this.state.disableInput}  value={prinId} className="prinForm"  name="prinId" style={{height:"33px"}} onChange={this.setValue}>
+                    <Pilihan value="">Principal Name</Pilihan>
                     {
                         this.props.dataPrincipal.map((dis,idx)=>{
                             return(
-                                <option key={idx} value={dis.prinId}>{dis.prinName}</option> 
+                                <Pilihan key={idx} value={dis.prinId}>{dis.prinName}</Pilihan> 
                             )
                         })  
                   }
-                    </select>
-                    </div>
-                    <div>
+                    </Pilih>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin value={disId} disabled={this.state.inputId} type="text" className="prinForm" name="disId" onChange={this.setValue} placeholder="Distributor ID" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin value={disName} disabled={this.state.disableInput} type="text" className="prinForm" name="disName" onChange={this.setValue} placeholder="Distributor Name" ></InputPrin>
-                    </div> 
-                    <div>
-                    <textarea value={disAddress} disabled={this.state.disableInput} className="prinAlamat" name="disAddress" rows="4" cols="54" placeholder="alamat" onChange={this.setValue}></textarea>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
+                    <InputArea value={disAddress} disabled={this.state.disableInput} className="prinAlamat" name="disAddress" rows="3" cols="69" placeholder="Distributor Address" onChange={this.setValue}></InputArea>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin value={disCity} disabled={this.state.disableInput} type="text" className="prinForm" name="disCity" onChange={this.setValue} placeholder="Distributor City" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin value={disOwner} disabled={this.state.disableInput} type="text" className="prinForm" name="disOwner" onChange={this.setValue} placeholder="Distributor Owner" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin value={disEmail} disabled={this.state.disableInput} type="text" className="prinForm" name="disEmail" onChange={this.setValue} placeholder="Distributor Email" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin value={disPhone} disabled={this.state.disableInput} type="text" className="prinForm" name="disPhone" onChange={this.setValue} placeholder="Distributor Phone" ></InputPrin>
-                    </div> 
-                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px"}}/>
-                    <div>
+                    </Kotak> 
+                    <Garis style={{backgroundColor:"blue" ,marginTop:"0",width:"99%" ,height:"1px"}}/>
+                    <Kotak>
                     <InputPrin value={discreatedAt} disabled={true} type="text" className="prinForm" name="discreatedAt" onChange={this.setValue} placeholder="Distributor Created At" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin value={discreatedBy} disabled={true} type="text" className="prinForm" name="discreatedBy" onChange={this.setValue} placeholder="Distributor Created By" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin value={disupdatedAt} disabled={true} type="text" className="prinForm" name="disupdatedAt" onChange={this.setValue} placeholder="Distributor Updated At" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  disabled={true} type="text" value={disupdatedBy} className="prinForm" name="disupdatedBy" onChange={this.setValue} placeholder="Distributor Updated by" ></InputPrin>
-                    </div>
-                </div>
-                </div>
-                
-
-            </div>
+                    </Kotak>
+                </Kotak>
+                </Kotak>
+            </Kotak>
         </>  );
     }
 }

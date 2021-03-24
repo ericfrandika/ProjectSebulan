@@ -6,14 +6,18 @@ import axios from 'axios'
 import Pagination from '@material-ui/lab/Pagination';
 import Swal from 'sweetalert2'
 import './style.css'
-import { withStyles } from '@material-ui/core/styles';
-import { purple } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import AntSwitch from './CustomizedSwitches'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Kotak from '../../components/compDiv/div';
+import Garis from '../../components/compGaris/garis';
+import Pilih from '../../components/compSelect/select';
+import Pilihan from '../../components/compSelect/value';
+import InputArea from '../../components/comp_principal/textArea';
+import Tombol from '../../components/compButton/button';
+import Ikon from '../../components/compIcon/FontIcon';
+import PrintLn from '../../components/compGaris/Println';
 class Customer extends Component {
     constructor(props) {
         super(props);
@@ -23,14 +27,14 @@ class Customer extends Component {
             count:0,
             limit:5,
             pageNow:1,
-            //-----------------------------------------State Form-------------------------------------------------------
+//-------------------------------------------------------------State Form---------------------------------------------------------------
             cusId:"",
             cusName:"",
             cusPass:"",
             cusAddress:"",
             cusPhone:"",
             prinId:"",
-            disId:null,
+            disId:"",
             cusOnOff:true,
             cusRegis:"",
             cusValid:"",
@@ -41,7 +45,7 @@ class Customer extends Component {
             customers:[],
             searchCus:"",
             objCus:{},
-             //-----------------------------------ini Seluruh State Condisii button--------------------
+//---------------------------------------------------ini Seluruh State Condisii button------------------------------------
              butCondi: true,
              butCondEdit:true,
              butCondAdd:false,
@@ -55,14 +59,26 @@ class Customer extends Component {
              actEdit:0,
              actDelete:0,
              actSearch:0
-             //------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
  }
  }
- //------------------------------------------------SET VALUE--------------------------------------------------
+//------------------------------------------------SET VALUE--------------------------------------------------
  setValue = el => {
     this.setState({
         [el.target.name]: el.target.value
     })  
+}
+setValueCus = el=>{
+    if(el.target.value === ""){
+        this.setState({
+            [el.target.name] : null
+        })
+    }
+    else{
+        this.setState({
+            [el.target.name]: el.target.value
+        })
+    }
 }
 
 setValueName  =el =>{
@@ -218,6 +234,7 @@ getPaging = (value, limit) => {
  this.resetState()
  }
  else{
+  
     const{cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy} = this.state
     let objCustomer = {cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy}
     if(cusId ==="" || cusName ==="" ||  cusPass ==="" || cusAddress ==="" ||
@@ -248,7 +265,8 @@ getPaging = (value, limit) => {
                     butCondDelete: true,
                     disabledButDel:true,
                     act:0,
-                    actDelete:1
+                    actDelete:1,
+                    tableClick:false
                     
                 })
                 this.getAPICount();
@@ -285,12 +303,11 @@ let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeSt
      cusupdatedAt : createNow,   
      cusupdatedBy :this.props.dataLoginUser.username,
      tableClick:true,
-
+     cusOnOff: this.state.cusOnOff === true ? "true" : "false",
  });
  }
 
  else{
-     
     const{cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cusupdatedAt,cusupdatedBy} = this.state
     let objCustomer = {cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cusupdatedAt,cusupdatedBy}
     if(cusId ==="" || cusName ==="" ||  cusPass ==="" || cusAddress ==="" ||
@@ -420,7 +437,7 @@ disabledButEdit:true,
         cusPhone:resp.data.cusPhone,
         prinId:resp.data.prinId,
         prinName:resp.data.prinName,
-        disId:resp.data.disId,
+        disId:resp.data.disId === null ?"" : resp.data.disId, 
         disName:resp.data.disName,
         cusOnOff:resp.data.cusOnOff === "true" ? true : false,
         cusRegis:resp.data.cusRegis,
@@ -463,76 +480,78 @@ setValueChecked =(el)=>{
 }
 
     render() { 
-        this.props.dataNavbar({dataNavbar : this.state.tableClick})
+
+    this.props.dataNavbar({dataNavbar : this.state.tableClick})
     console.log("SearchName" , this.state.searchCus);
       
         const{page,limit,cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy} = this.state
         console.log("TOGGLE : ", this.state.cusOnOff);
+
         return (  
             <>
-              <div className="prinAtas">
-                <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchCus" value={this.state.searchCus} onChange={this.setValue} placeholder="Search"></InputPrin>
-                <button className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</button>
-                <i className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer" ,color:"red"}} onClick={()=> this.searchName()}></i>
-                <button className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</button>
-                <button className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit? "EDIT" : "UPDATE"}</button>
-                <button className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</button>
-                </div>
-              <div className="bodyPrin">
-                <div className="prinKiri">
-                <div className="prinKiriTabel">
+              <Kotak className="prinAtas">
+                <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchCus" value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
+                <Tombol className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Tombol>
+                <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer" ,color:"red"}} onClick={()=> this.searchName()}></Ikon>
+                <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Tombol>
+                <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit? "EDIT" : "UPDATE"}</Tombol>
+                <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</Tombol>
+                </Kotak>
+              <Kotak className="bodyPrin">
+                <Kotak className="prinKiri">
+                <Kotak className="prinKiriTabel">
                     {/* ini nanti di for */}
                     {
                         this.state.customers.map((cus,idx)=>{
                             return(
-                                <div key={idx}>
-                                <div className="cusisiTable" disabled={this.state.tableClick} onClick={()=>this.HandleTable(cus.cusId)}>
-                                <div className ="prinTable">
-                                <i className="fas fa-id-badge" style={{color:"white",display:'inline-block', width:"30px" ,fontSize:"50px",marginTop:"20%"}}></i>
-                                </div>
-                                <div className="CustomerTabel">
-                                    <div className="CustomerTabelkiri" style={{fontSize:"small",marginLeft:"10%"}}>
+                                <Kotak key={idx}>
+                                <Kotak className="cusisiTable" style={{cursor:"pointer"}} disabled={this.state.tableClick} onClick={()=>this.HandleTable(cus.cusId)}>
+                                <Kotak className ="prinTable">
+                                <Ikon className="fas fa-id-badge" style={{color:"white",display:'inline-block', width:"30px" ,fontSize:"50px",marginTop:"20%"}}></Ikon>
+                                </Kotak>
+                                <Kotak className="CustomerTabel">
+                                    <Kotak className="CustomerTabelkiri" style={{fontSize:"small",marginLeft:"10%"}}>
                                         <LabelPrin className="prinlabelName">{cus.cusName}</LabelPrin>
-                                        <br/>
+                                        <PrintLn/>
                                         <LabelPrin className="prinLabelid">{cus.cusId}</LabelPrin>
                                         {/* <LabelPrin className="prinLabelid" style={{color:"blue" , fontWeight:"upperCase"}}>{"."+cus.prinId}</LabelPrin> */}
-                                        <br/>
+                                        <PrintLn/>
                                         <LabelPrin className="prinLabelDis" style={{fontSize:"small"}}>{cus.prinName}</LabelPrin>
-                                    </div>
-                                <div className="CustomerTabelKanan">
+                                    </Kotak>
+                                <Kotak className="CustomerTabelKanan">
                                     <LabelPrin className="prinIndex">{((page*limit)-limit)+idx+1}</LabelPrin>
-                                    <br/>  
+                                    <PrintLn/>  
                                     <LabelPrin className="prinTgl" style={{color:"#4CC417",fontSize:"small"}}>2020-03-11</LabelPrin>
-                                    <br/>
+                                    <PrintLn/>
                                     <LabelPrin className="prinPremium">Premium</LabelPrin>
-                                    <br/>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
+                                    <PrintLn/>
+                                </Kotak>
+                                </Kotak>
+                                </Kotak>
+                                </Kotak>
                            
                             )
                         })  
                   }
 
-                </div>
+                </Kotak>
 
-                <div className="prinKiriPagin">
-                    <div className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
-                        <select  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>      
-                            <option value={parseInt(5)}>5</option>
-                            <option value={parseInt(10)}>10</option> 
-                            <option value={parseInt(15)}>15</option>
-                        </select>
-                    </div>
-                    <div className="prinPage" style={{width:"75%"}}>
+                <Kotak className="prinKiriPagin">
+                    <Kotak className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
+                        <Pilih  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>      
+                            <Pilihan value={parseInt(5)}>5</Pilihan>
+                            <Pilihan value={parseInt(10)}>10</Pilihan> 
+                            <Pilihan value={parseInt(15)}>15</Pilihan>
+                        </Pilih>
+                    </Kotak>
+                    <Kotak className="prinPage" style={{width:"75%"}}>
                         <Pagination style={{background:'white' ,width:"100%"}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
-                    </div>
-                </div>
+                    </Kotak>
+                </Kotak>
 
-                </div>
-                <div className="prinKanan">
-                <div className="prinKiriLabel">
+                </Kotak>
+                <Kotak className="prinKanan">
+                <Kotak className="prinKiriLabel">
 
                     <LabelPrin className="labelprin">User ID</LabelPrin>
                    
@@ -546,20 +565,20 @@ setValueChecked =(el)=>{
                    
                     <LabelPrin className="labelprin">Phone</LabelPrin>
 
-                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
 
                   
                     <LabelPrin className="labelprin">Principal</LabelPrin>
                 
                     <LabelPrin className="labelprin">Distributor</LabelPrin>
                   
-                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
 
                     <LabelPrin className="labelprin">Disable Login</LabelPrin>
                     <LabelPrin className="labelprin">Registrasion Date</LabelPrin>
                     <LabelPrin className="labelprin">Product Valid Thru</LabelPrin>
 
-                    <hr style={{backgroundColor:"blue" , height:"1px"}}/>
+                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
 
                     <LabelPrin className="labelprin">Created At</LabelPrin>
                
@@ -569,53 +588,53 @@ setValueChecked =(el)=>{
                     
                     <LabelPrin className="labelprin">Updated By</LabelPrin>
                    
-                </div>
-                <div className="prinKananInput">
-                    <div>
+                </Kotak>
+                <Kotak className="prinKananInput">
+                    <Kotak>
                     <InputPrin type="text" disabled={true} value={cusId} className="prinForm" name="cusId" onChange={this.setValue} placeholder="Customer ID" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" disabled={this.state.disableInput} value={cusName} className="prinForm" name="cusName" onChange={this.setValueName} placeholder="Customer UserName" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
-                    </div> 
-                    <div>
-                    <textarea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Alamat"  onChange={this.setValue}></textarea>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
+                    <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Alamat"  onChange={this.setValue}></InputArea>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" disabled={this.state.disableInput} className="prinForm" value={cusPhone} name="cusPhone" onChange={this.setValue} placeholder="Customer Phone" ></InputPrin>
-                    </div> 
-                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px" ,marginBottom:"0"}}/>
-                    <div>
+                    </Kotak> 
+                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px" ,marginBottom:"0"}}/>
+                    <Kotak>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <select className="prinForm" disabled={this.state.disableInput} value={prinId}  name="prinId" style={{height:"33px"}} onChange={this.setValueName}>
-                    <option value="">Principal name</option> 
+                    <Pilih className="prinForm" disabled={this.state.disableInput} value={prinId}  name="prinId" style={{height:"33px"}} onChange={this.setValueName}>
+                    <Pilihan value="">Principal name</Pilihan> 
                         {
                         this.props.dataPrincipal.map((prin,idx)=>{
                             return(
-                                <option key={idx} value={prin.prinId}>{prin.prinId +" || "+prin.prinName}</option> 
+                                <Pilihan key={idx} value={prin.prinId}>{prin.prinId +" || "+prin.prinName}</Pilihan> 
                             )
                         })  
                     }
-                    </select>
-                    </div>
-                    <div>
+                    </Pilih>
+                    </Kotak>
+                    <Kotak>
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <select className="prinForm" disabled={this.state.disableInput} value={disId} name="disId" style={{height:"33px"}} onChange={this.setValue}>
-                        <option value={null}>Distributor name</option>
+                    <Pilih className="prinForm" disabled={this.state.disableInput} value={disId} name="disId" style={{height:"33px"}} onChange={this.setValueCus}>
+                        <Pilihan value="">Distributor name</Pilihan>
                         {
                         this.props.dataDistributor.map((dis,idx)=>{
                             return(
-                                <option key={idx} value={dis.disId}>{dis.disId +" || "+ dis.disName}</option> 
+                                <Pilihan key={idx} value={dis.disId}>{dis.disId +" || "+ dis.disName}</Pilihan> 
                                 
                             )
                         })  
                     } 
-                    </select>
-                    </div>
-                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px",marginBottom:"0"}}/>
-                    <div className="toggleOnOff">
+                    </Pilih>
+                    </Kotak>
+                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px",marginBottom:"0"}}/>
+                    <Kotak className="toggleOnOff">
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
                     {/* <select className="prinForm" disabled={this.state.disableInput} value={cusOnOff} name="cusOnOff" style={{height:"33px" ,width:"100px"}} onChange={this.setValue}>
                         <option value="On">On</option>
@@ -633,31 +652,30 @@ setValueChecked =(el)=>{
                             </Grid>
                         </Typography>
                      </FormGroup>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="date" style={{width:"20%"}} disabled={this.state.disableInput} disabled={this.state.disableInput} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="date" style={{width:"20%"}}  disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
-                    </div> 
-                    <hr style={{backgroundColor:"blue" ,width:"99%" ,height:"1px", marginBottom:"0"}}/>
-
-                    <div>
+                    </Kotak> 
+                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px", marginBottom:"2%"}}/>
+                    <Kotak>
                     <InputPrin  type="text" disabled={true} value={cuscreatedAt} className="prinForm" name="cuscreatedAt" onChange={this.setValue} placeholder="Customer Created At" ></InputPrin>
-                    </div> 
-                    <div>
+                    </Kotak> 
+                    <Kotak>
                     <InputPrin  type="text" disabled={true} value={cuscreatedBy} className="prinForm" name="cuscreatedby" onChange={this.setValue} placeholder="Customer Created By" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" disabled={true} value={cusupdatedAt} className="prinForm" name="cusupdatedAt" onChange={this.setValue} placeholder="Customer Updated At" ></InputPrin>
-                    </div>
-                    <div>
+                    </Kotak>
+                    <Kotak>
                     <InputPrin  type="text" disabled={true} value={cusupdatedBy} className="prinForm" name="cusupdatedBy" onChange={this.setValue} placeholder="Customer Updated by" ></InputPrin>
-                    </div>
+                    </Kotak>
 
-                </div>
-                </div>
-            </div>
+                </Kotak>
+                </Kotak>
+            </Kotak>
             </>
         );
     }
