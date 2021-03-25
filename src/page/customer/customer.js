@@ -21,674 +21,697 @@ import PrintLn from '../../components/compGaris/Println';
 class Customer extends Component {
     constructor(props) {
         super(props);
-        this.state = {  
+        this.state = {
             //------------------------------------------Page----------------------------------------
-            page:1,
-            count:0,
-            limit:5,
-            pageNow:1,
-//-------------------------------------------------------------State Form---------------------------------------------------------------
-            cusId:"",
-            cusName:"",
-            cusPass:"",
-            cusAddress:"",
-            cusPhone:"",
-            prinId:"",
-            disId:"",
-            cusOnOff:true,
-            cusRegis:"",
-            cusValid:"",
-            cuscreatedAt:"",
-            cuscreatedBy:"",
-            cusupdatedAt:"",
-            cusupdatedBy:"",
-            customers:[],
-            searchCus:"",
-            objCus:{},
-//---------------------------------------------------ini Seluruh State Condisii button------------------------------------
-             butCondi: true,
-             butCondEdit:true,
-             butCondAdd:false,
-             butCondDelete:true,
-             disableBut :false,
-             disableInput :true,
-             disabledButDel:true,
-             disabledButEdit:true,
-             tableClick:false,
-             act : 0,
-             actEdit:0,
-             actDelete:0,
-             actSearch:0
-//-----------------------------------------------------------------------------------------------------------------
- }
- }
-//------------------------------------------------SET VALUE--------------------------------------------------
- setValue = el => {
-    this.setState({
-        [el.target.name]: el.target.value
-    })  
-}
-setValueCus = el=>{
-    if(el.target.value === ""){
-        this.setState({
-            [el.target.name] : null
-        })
+            page: 1,
+            count: 0,
+            limit: 5,
+            pageNow: 1,
+            //-------------------------------------------------------------State Form---------------------------------------------------------------
+            cusId: "",
+            cusName: "",
+            cusPass: "",
+            cusAddress: "",
+            cusPhone: "",
+            prinId: "",
+            disId: "",
+            cusOnOff: true,
+            cusRegis: "",
+            cusValid: "",
+            cuscreatedAt: "",
+            cuscreatedBy: "",
+            cusupdatedAt: "",
+            cusupdatedBy: "",
+            customers: [],
+            searchCus: "",
+            objCus: {},
+            //---------------------------------------------------ini Seluruh State Condisii button------------------------------------
+            butCondi: true,
+            butCondEdit: true,
+            butCondAdd: false,
+            butCondDelete: true,
+            disableBut: false,
+            disableInput: true,
+            disabledButDel: true,
+            disabledButEdit: true,
+            tableClick: false,
+            act: 0,
+            actEdit: 0,
+            actDelete: 0,
+            actSearch: 0
+            //-----------------------------------------------------------------------------------------------------------------
+        }
     }
-    else{
+    //------------------------------------------------SET VALUE--------------------------------------------------
+    setValue = el => {
         this.setState({
             [el.target.name]: el.target.value
         })
     }
-}
-
-setValueName  =el =>{
-    if(this.state.actEdit === 1){
-        this.setState({
-            [el.target.name]: el.target.value,
-        })
+    setValueCus = el => {
+        if (el.target.value === "") {
+            this.setState({
+                [el.target.name]: null
+            })
+        }
+        else {
+            this.setState({
+                [el.target.name]: el.target.value
+            })
+        }
     }
-    else{
-    if(el.target.name == "prinId"){
-        this.setState({
-            [el.target.name]: el.target.value,
-            cusId:  this.state.cusName+"." +el.target.value
-        })
+
+    setValueName = el => {
+        if (this.state.actEdit === 1) {
+            this.setState({
+                [el.target.name]: el.target.value,
+            })
+        }
+        else {
+            if (el.target.name == "prinId") {
+                this.setState({
+                    [el.target.name]: el.target.value,
+                    cusId: this.state.cusName + "." + el.target.value
+                })
+            }
+            else {
+                this.setState({
+                    [el.target.name]: el.target.value,
+                    cusId: el.target.value + "." + this.state.prinId
+                })
+            }
+        }
+
     }
-    else{
-        this.setState({
-            [el.target.name]: el.target.value,
-            cusId:  el.target.value +"."+this.state.prinId
-        })
-    }
-}   
-
-}
 
 
-//-----------------------------------------------------Component Did Mount-------------------------------------------------------------------------
-componentDidMount(){
-    this.getAPICount();
-    this.getPaging(this.state.pageNow, this.state.limit);
-}
-//----------------------------------------------GET API COUNT----------------------------------
- getAPICount=()=>{
-    axios.get("http://localhost:8080/admin/nexchief/customer/count/")
-    .then(resp =>{
-        let limitPage = resp.data/this.state.limit
-      this.setState({
-         count :Math.ceil(limitPage)
-        })
-    })
-    .catch(() =>{
-      alert("Failed fetching")
-    })
-}
-//--------------------------------------GetCountAndApiName-------------------------------
-getApiName = (value, limit) => {
-    axios.get("http://localhost:8080/admin/nexchief/customer/name/"+this.state.searchCus+"?page="+value+"&limit="+limit)
-    .then(resp =>{
- this.setState({customers:resp.data})
- console.log(resp.data)
-})
-.catch(() =>{
-})
-   this.setState({
-       actSearch:1,
-   })
-}
-searchName =()=>{
-    this.getAPICount();
-    this.getPaging(this.state.page, this.state.limit);
-    this.setState({
-        actSearch:0,
-        searchCus:""
-    })
-
-}
-
-//---------------------------------------SEarchName--------------------------------------------
-
-getApiCountName =()=>{
-    axios.get("http://localhost:8080/admin/nexchief/customer/countName/"+this.state.searchCus)
-    .then(resp =>{
-        let limitPage = resp.data/this.state.limit
-      this.setState({
-         count :Math.ceil(limitPage)
-        })
-    })
-    .catch(() =>{
-     
-    })
-   }
-   //-------------------------------------------Search Name Distributor------------------------------------------------------------
-buttonSearch =()=>{
-    if(this.state.searchCus === ""){
+    //-----------------------------------------------------Component Did Mount-------------------------------------------------------------------------
+    componentDidMount() {
         this.getAPICount();
         this.getPaging(this.state.pageNow, this.state.limit);
-        this.setState({
-            searchCus:""
-        })
     }
-    else{
-        this.getApiCountName();
-        this.getApiName(this.state.pageNow , this.state.limit)
-            this.setState({
-                actSearch : 1
+    //----------------------------------------------GET API COUNT----------------------------------
+    getAPICount = () => {
+        axios.get("http://localhost:8080/admin/nexchief/customer/count/")
+            .then(resp => {
+                let limitPage = resp.data / this.state.limit
+                this.setState({
+                    count: Math.ceil(limitPage)
+                })
             })
-}
-}
-//--------------------------------------------handlePage---------------------------------------
-handleChange = (event, value) => {
-    this.setState({
-        page: value
-    }) 
-    if(this.state.searchCus ===""){
-        this.getAPICount();
-        this.getPaging(value ,this.state.limit);
+            .catch(() => {
+                alert("Failed fetching")
+            })
     }
-    else{
-        this.getApiCountName();
-        this.getApiName(value, this.state.limit)
-    }
-}
-getPaging = (value, limit) => {
-    axios.get("http://localhost:8080/admin/nexchief/customer/paging/?page="+value+"&limit="+limit)
-    .then((resp) => {
-      this.setState({
-        customers: resp.data,
-      });
-    });
-    }
-    setLimit = el =>{
+    //--------------------------------------GetCountAndApiName-------------------------------
+    getApiName = (value, limit) => {
+        axios.get("http://localhost:8080/admin/nexchief/customer/name/" + this.state.searchCus + "?page=" + value + "&limit=" + limit)
+            .then(resp => {
+                this.setState({ customers: resp.data })
+                console.log(resp.data)
+            })
+            .catch(() => {
+            })
         this.setState({
-            limit : el.target.value
+            actSearch: 1,
         })
-        if(this.state.searchCus ===""){
+    }
+    searchName = () => {
+        this.getAPICount();
+        this.getPaging(this.state.page, this.state.limit);
+        this.setState({
+            actSearch: 0,
+            searchCus: ""
+        })
+
+    }
+
+    //---------------------------------------SEarchName--------------------------------------------
+
+    getApiCountName = () => {
+        axios.get("http://localhost:8080/admin/nexchief/customer/countName/" + this.state.searchCus)
+            .then(resp => {
+                let limitPage = resp.data / this.state.limit
+                this.setState({
+                    count: Math.ceil(limitPage)
+                })
+            })
+            .catch(() => {
+
+            })
+    }
+    //-------------------------------------------Search Name Distributor------------------------------------------------------------
+    buttonSearch = () => {
+        if (this.state.searchCus === "") {
+            this.getAPICount();
+            this.getPaging(this.state.pageNow, this.state.limit);
+            this.setState({
+                searchCus: ""
+            })
+        }
+        else {
+            this.getApiCountName();
+            this.getApiName(this.state.pageNow, this.state.limit)
+            this.setState({
+                actSearch: 1
+            })
+        }
+    }
+    //--------------------------------------------handlePage---------------------------------------
+    handleChange = (event, value) => {
+        this.setState({
+            page: value
+        })
+        if (this.state.searchCus === "") {
+            this.getAPICount();
+            this.getPaging(value, this.state.limit);
+        }
+        else {
+            this.getApiCountName();
+            this.getApiName(value, this.state.limit)
+        }
+    }
+    getPaging = (value, limit) => {
+        axios.get("http://localhost:8080/admin/nexchief/customer/paging/?page=" + value + "&limit=" + limit)
+            .then((resp) => {
+                this.setState({
+                    customers: resp.data,
+                });
+            });
+    }
+    setLimit = el => {
+        this.setState({
+            limit: el.target.value
+        })
+        if (this.state.searchCus === "") {
             this.getAPICount();
             this.getPaging(this.state.pageNow, el.target.value);
-            }
-            else{
+        }
+        else {
             this.getApiCountName();
             this.getApiName(this.state.pageNow, el.target.value);
+        }
+    }
+
+    //---------------------------------------------------button Add--------------------------------------
+    buttonAdd = () => {
+        let regUsername = /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+        let regPass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-8])(?=.*?[^\w\s]).{8,}$/
+        let regPhone = /^(^\+62\s?|^0)(\d{3,4}-?){2}\d{3,4}$/
+        if (this.state.act === 0) {
+            let createNow = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
+            let current_datetime = new Date()
+        let yearTwoDigit = current_datetime.getFullYear();
+        let monthTwoDigit = ("0" + (current_datetime.getMonth() + 1)).slice(-2)
+        let dateTwoDigit = ("0" + current_datetime.getDate()).slice(-2)
+        let formatted_date = yearTwoDigit + "-" + monthTwoDigit + "-" + dateTwoDigit
+            this.setState({
+                butCondi: false,
+                disableButEdit: true,
+                butCondDelete: false,
+                disableInput: false,
+                disabledButDel: false,
+                disabledButEdit: true,
+                cuscreatedAt: createNow,
+                cuscreatedBy: this.props.dataLoginUser.username,
+                act: 1,
+                actDelete: 1,
+                tableClick: true,
+                cusRegis :formatted_date
+            });
+            this.resetState()
+        }
+        else {
+
+            const { cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
+            let objCustomer = { cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy }
+            if (cusId === "" || cusName === "" || cusPass === "" || cusAddress === "" ||
+                cusPhone === "" || prinId === "" || cusRegis === "" || cusValid === "") {
+                Swal.fire({
+                    title:'Insert all data!',
+                    icon: 'warning'
+               })
             }
+            else if (!regUsername.test(cusName)){
+                Swal.fire({
+                    title: 'Username is 8-20 characters long',
+                    icon: 'warning'
+                })
+            }
+            else if (!regPass.test(cusPass)){
+                Swal.fire({
+                    title: 'Password at least 8 characters, 1 numeric character , 1 lowercase letter, 1 uppercase letter, 1 special character',
+                    icon: 'warning'
+                })
+            } 
+            else if (!regPhone.test(cusPhone)){
+                Swal.fire({
+                    title: 'Phone number min. 11 number and max.14 number, must in Indonesia type (ex: 08134455555)',
+                    icon: 'warning'
+                })
+            }
+            
+            else {
+                Swal.fire({
+                    title: 'Do you want to save the changes?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `Save`,
+                    denyButtonText: `Don't save`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        axios.post("http://localhost:8080/admin/nexchief/customer/", {
+                            ...objCustomer
+                        })
+                            .then((resp) => {
+                                this.setState({
+                                    butCondi: true,
+                                    disableButEdit: false,
+                                    disableInput: true,
+                                    butCondDelete: true,
+                                    disabledButDel: true,
+                                    act: 0,
+                                    actDelete: 1,
+                                    tableClick: false
+
+                                })
+                                this.getAPICount();
+                                this.getPaging(this.state.pageNow, this.state.limit);
+                            })
+                            .catch((resp) => {
+                                console.log(resp.response)
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: resp.response.data.errorMessage || resp.response.data
+                                })
+                            })
+                        Swal.fire('Saved!', '', 'success')
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                    }
+                })
+            }
+        }
+    }
+    //// ------------------------------------------------------Button edit--------------------------------------
+    buttonEdit = () => {
+
+        if (this.state.actEdit === 0) {
+            let createNow = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
+            
+            this.setState({
+                butCondEdit: false,
+                disableInput: false,
+                butCondAdd: true,
+                butCondDelete: false,
+                actEdit: 1,
+                actDelete: 1,
+                cusupdatedAt: createNow,
+                cusupdatedBy: this.props.dataLoginUser.username,
+                tableClick: true,
+            });
+        }
+
+        else {
+            const { cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cusupdatedAt, cusupdatedBy } = this.state
+            let objCustomer = { cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cusupdatedAt, cusupdatedBy }
+            if (cusId === "" || cusName === "" || cusPass === "" || cusAddress === "" ||
+                cusPhone === "" || prinId === "" || cusRegis === "" || cusValid === "") {
+                Swal.fire(
+                    'Insert All Data!',
+                    'You clicked the button!',
+                    'error'
+                )
+            }
+            else {
+                Swal.fire({
+                    title: 'Do you want to save the changes?',
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: `Update`,
+                    denyButtonText: `Don't Update`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        axios.put("http://localhost:8080/admin/nexchief/customer/" + this.state.cusId, {
+                            ...objCustomer
+                        })
+                            .then((resp) => {
+                                this.setState({
+                                    butCondEdit: true,
+                                    disableInput: true,
+                                    butCondAdd: false,
+                                    butCondDelete: true,
+                                    disabledButDel: true,
+                                    disabledButEdit: true,
+                                    actEdit: 0,
+                                    actDelete: 0,
+                                    tableClick: false,
+
+                                });
+                                this.getAPICount();
+                                this.getPaging(this.state.pageNow, this.state.limit);
+                            })
+                            .catch((resp) => {
+                                console.log(resp.response)
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: resp.response.data.errorMessage || resp.response.data
+                                })
+                            })
+
+                        Swal.fire('Update!', '', 'success')
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not Update', '', 'info')
+                    }
+                })
+            }
+        }
     }
 
- //---------------------------------------------------button Add--------------------------------------
- buttonAdd = () => {
- if(this.state.act === 0){
-    let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
+    buttonCancel = () => {
+        //---------------------------------------------Untuk Cancel-----------------------------------
+        if (this.state.actDelete === 1) {
+            this.setState({
+                butCondi: true,
+                disableButEdit: false,
+                disableInput: true,
+                butCondDelete: true,
+                butCondAdd: false,
+                butCondEdit: true,
+                disabledButDel: true,
+                disabledButEdit: true,
+                cuscreatedAt: "",
+                cuscreatedBy: "",
+                cusupdatedAt: "",
+                cusupdatedBy: "",
+                act: 0,
+                actEdit: 0,
+                actDelete: 0,
+                tableClick: false,
+                cusRegis:""
+            })
+            this.resetState()
+        }
+        //------------------------------------------------Untuk Delete----------------------------------
+        else {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete("http://localhost:8080/admin/nexchief/customer/" + this.state.cusId)
+                        .then(resp => {
+                            this.setState({
+                                disabledButDel: true,
+                                disabledButEdit: true,
+                                discreatedAt: "",
+                                discreatedBy: "",
+                                tableClick: false
+                            })
+                            this.getAPICount();
+                            this.getPaging(this.state.pageNow, this.state.limit)
+                        })
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            })
+        }
+    }
 
- this.setState ({
-     butCondi: false,
-     disableButEdit : true,
-     butCondDelete :false,
-     disableInput :false,
-     disabledButDel:false,
-     disabledButEdit:true,
-     cuscreatedAt : createNow,   
-     cuscreatedBy :this.props.dataLoginUser.username,
-     act:1,
-     actDelete:1,
-     tableClick:true
- });
- this.resetState()
- }
- else{
-  
-    const{cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy} = this.state
-    let objCustomer = {cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy}
-    if(cusId ==="" || cusName ==="" ||  cusPass ==="" || cusAddress ==="" ||
-     cusPhone ==="" || prinId ==="" || cusRegis ==="" ||cusValid ===""){
-        Swal.fire(
-            'Insert All Data!',
-            'You clicked the button!',
-            'error'
-          )
-     }
-   else{ Swal.fire({
-        title: 'Do you want to save the changes?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: `Save`,
-        denyButtonText: `Don't save`,
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-            axios.post("http://localhost:8080/admin/nexchief/customer/",{
-                ...objCustomer
-             })
-               .then((resp) => {
+    //---------------------------------------------------Button TampilForm---------------------------------
+    HandleTable = (cusId) => {
+        axios.get("http://localhost:8080/admin/nexchief/customer/" + cusId)
+            .then(resp => {
+                console.log(resp.data);
                 this.setState({
-                    butCondi: true,
-                    disableButEdit : false ,
-                    disableInput :true,
-                    butCondDelete: true,
-                    disabledButDel:true,
-                    act:0,
-                    actDelete:1,
-                    tableClick:false
-                    
-                })
-                this.getAPICount();
-                this.getPaging(this.state.pageNow, this.state.limit);
-               })
-               .catch((resp)=>{
-                console.log(resp.response)
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: resp.response.data.errorMessage || resp.response.data
-                })
-            })
-          Swal.fire('Saved!', '', 'success')
-        } else if (result.isDenied) {
-          Swal.fire('Changes are not saved', '', 'info')
-        }
-      })
- }
-}
- }
- //// ------------------------------------------------------Button edit--------------------------------------
- buttonEdit = () =>{
- if(this.state.actEdit === 0){
-let createNow =  new Date().toLocaleDateString() +" "+ new Date().toLocaleTimeString()
-
- this.setState ({
-     butCondEdit: false,
-     disableInput :false,
-     butCondAdd:true,
-     butCondDelete:false,
-     actEdit:1,
-     actDelete: 1,
-     cusupdatedAt : createNow,   
-     cusupdatedBy :this.props.dataLoginUser.username,
-     tableClick:true,
-     cusOnOff: this.state.cusOnOff === true ? "true" : "false",
- });
- }
-
- else{
-    const{cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cusupdatedAt,cusupdatedBy} = this.state
-    let objCustomer = {cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cusupdatedAt,cusupdatedBy}
-    if(cusId ==="" || cusName ==="" ||  cusPass ==="" || cusAddress ==="" ||
-     cusPhone ==="" || prinId ==="" || cusRegis ==="" ||cusValid ===""){
-        Swal.fire(
-            'Insert All Data!',
-            'You clicked the button!',
-            'error'
-          )
-     }
-   else{ Swal.fire({
-        title: 'Do you want to save the changes?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: `Update`,
-        denyButtonText: `Don't Update`,
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-            axios.put("http://localhost:8080/admin/nexchief/customer/"+this.state.cusId,{
-                ...objCustomer
-             })
-               .then((resp) => {
-                    this.setState ({
-                        butCondEdit: true,
-                        disableInput :true,
-                        butCondAdd:false,
-                        butCondDelete: true,
-                        disabledButDel:true,
-                        disabledButEdit:true,
-                        actEdit:0,
-                        actDelete: 0,
-                        tableClick:false,
-
-                    });
-                this.getAPICount();
-                this.getPaging(this.state.pageNow, this.state.limit);
-               })
-               .catch((resp)=>{
-                console.log(resp.response)
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: resp.response.data.errorMessage || resp.response.data
+                    objCus: resp.data,
+                    disabledButEdit: false,
+                    disabledButDel: false,
+                    cusId: resp.data.cusId,
+                    cusName: resp.data.cusName,
+                    cusPass: resp.data.cusPass,
+                    cusAddress: resp.data.cusAddress,
+                    cusPhone: resp.data.cusPhone,
+                    prinId: resp.data.prinId,
+                    prinName: resp.data.prinName,
+                    disId: resp.data.disId === null ? "" : resp.data.disId,
+                    disName: resp.data.disName,
+                    cusOnOff: resp.data.cusOnOff === "true" ? true : false,
+                    cusRegis: resp.data.cusRegis,
+                    cusValid: resp.data.cusValid,
+                    cuscreatedAt: resp.data.cuscreatedAt,
+                    cuscreatedBy: resp.data.cuscreatedBy,
+                    cusupdatedAt: resp.data.cusupdatedAt,
+                    cusupdatedBy: resp.data.cusupdatedBy
                 })
             })
-       
-          Swal.fire('Update!', '', 'success')
-        } else if (result.isDenied) {
-          Swal.fire('Changes are not Update', '', 'info')
-        }
-      })
+            .catch(() => {
+                alert('fetching Failed')
+            })
     }
- }
- }
-
- buttonCancel =() => {
- //---------------------------------------------Untuk Cancel-----------------------------------
- if(this.state.actDelete === 1){
- this.setState({
- butCondi: true,
- disableButEdit : false ,
- disableInput :true,
- butCondDelete: true,
- butCondAdd:false,
- butCondEdit:true,
- disabledButDel: true,
-disabledButEdit:true,
-    cuscreatedAt:"",
-    cuscreatedBy:"",
-    cusupdatedAt:"",
-    cusupdatedBy:"",
- act:0,
- actEdit:0,
- actDelete:0,
- tableClick:false,
- })
- this.resetState()
- }
- //------------------------------------------------Untuk Delete----------------------------------
- else{
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-            axios.delete("http://localhost:8080/admin/nexchief/customer/"+this.state.cusId)
-            .then(resp =>{
+    //-------------------------------------------------------Reset RESET -------------------------------------------------------
+    resetCusObj = () => {
         this.setState({
-            disabledButDel : true,
-            disabledButEdit : true ,
-            discreatedAt:"",
-            discreatedBy:"",
-            tableClick:false
-          })
-          this.getAPICount();
-          this.getPaging(this.state.pageNow , this.state.limit)
+            objCus: {}
         })
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-        }
-    })
- }
- }
+    }
 
- //---------------------------------------------------Button TampilForm---------------------------------
- HandleTable = (cusId) =>{
-    axios.get("http://localhost:8080/admin/nexchief/customer/"+cusId)
-    .then(resp =>{
-        console.log(resp.data);
-      this.setState({
-        objCus:resp.data,
-        disabledButEdit : false,
-        disabledButDel : false,
-        cusId:resp.data.cusId,
-        cusName:resp.data.cusName,
-        cusPass:resp.data.cusPass,
-        cusAddress:resp.data.cusAddress,
-        cusPhone:resp.data.cusPhone,
-        prinId:resp.data.prinId,
-        prinName:resp.data.prinName,
-        disId:resp.data.disId === null ?"" : resp.data.disId, 
-        disName:resp.data.disName,
-        cusOnOff:resp.data.cusOnOff === "true" ? true : false,
-        cusRegis:resp.data.cusRegis,
-        cusValid: resp.data.cusValid,
-        cuscreatedAt:resp.data.cuscreatedAt,
-        cuscreatedBy:resp.data.cuscreatedBy,
-        cusupdatedAt:resp.data.cusupdatedAt,
-        cusupdatedBy:resp.data.cusupdatedBy
+    resetState = () => {
+        this.setState({
+            cusId: "",
+            cusName: "",
+            cusPass: "",
+            cusAddress: "",
+            cusPhone: "",
+            prinId: "",
+            disId: null,
+            cusOnOff: true,
+            cusValid: "",
         })
-    })
-    .catch(() =>{
-      alert('fetching Failed') 
-    })   
-}
-//-------------------------------------------------------Reset RESET -------------------------------------------------------
-resetCusObj=()=>{
-    this.setState({
-        objCus:{}
-    })
-}
+    }
+    setValueChecked = (el) => {
+        this.setState({
+            [el.target.name]: el.target.checked
+        })
+    }
 
-resetState =() =>{
-    this.setState({
-        cusId:"",
-        cusName:"",
-        cusPass:"",
-        cusAddress:"",
-        cusPhone:"",
-        prinId:"",
-        disId:null,
-        cusOnOff:true,
-        cusRegis:"",
-        cusValid:"",
-    })
-}
-setValueChecked =(el)=>{
-    this.setState({
-        [el.target.name]: el.target.checked 
-    })
-}
+    render() {
 
-    render() { 
+        this.props.dataNavbar({ dataNavbar: this.state.tableClick })
+        console.log("SearchName", this.state.searchCus);
 
-    this.props.dataNavbar({dataNavbar : this.state.tableClick})
-    console.log("SearchName" , this.state.searchCus);
-      
-        const{page,limit,cusId,cusName,cusPass,cusAddress,cusPhone,prinId,disId,cusOnOff,cusRegis,cusValid,cuscreatedAt,cuscreatedBy,cusupdatedAt,cusupdatedBy} = this.state
+        const { page, limit, cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
         console.log("TOGGLE : ", this.state.cusOnOff);
 
-        return (  
+        return (
             <>
-              <Kotak className="prinAtas">
-                <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchCus" value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
-                <Tombol className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Tombol>
-                <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer" ,color:"red"}} onClick={()=> this.searchName()}></Ikon>
-                <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Tombol>
-                <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit? "EDIT" : "UPDATE"}</Tombol>
-                <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete? "DELETE" : "CANCEL"}</Tombol>
+                <Kotak className="prinAtas">
+                    <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus" disabled={this.state.tableClick} value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
+                    <Tombol className="crudPrin" style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Tombol>
+                    <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
+                    <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Tombol>
+                    <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit ? "EDIT" : "UPDATE"}</Tombol>
+                    <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</Tombol>
                 </Kotak>
-              <Kotak className="bodyPrin">
-                <Kotak className="prinKiri">
-                <Kotak className="prinKiriTabel">
-                    {/* ini nanti di for */}
-                    {
-                        this.state.customers.map((cus,idx)=>{
-                            return(
-                                <Kotak key={idx}>
-                                <Kotak className="cusisiTable" style={{cursor:"pointer"}} disabled={this.state.tableClick} onClick={()=>this.HandleTable(cus.cusId)}>
-                                <Kotak className ="prinTable">
-                                <Ikon className="fas fa-id-badge" style={{color:"white",display:'inline-block', width:"30px" ,fontSize:"50px",marginTop:"20%"}}></Ikon>
-                                </Kotak>
-                                <Kotak className="CustomerTabel">
-                                    <Kotak className="CustomerTabelkiri" style={{fontSize:"small",marginLeft:"10%"}}>
-                                        <LabelPrin className="prinlabelName">{cus.cusName}</LabelPrin>
-                                        <PrintLn/>
-                                        <LabelPrin className="prinLabelid">{cus.cusId}</LabelPrin>
-                                        {/* <LabelPrin className="prinLabelid" style={{color:"blue" , fontWeight:"upperCase"}}>{"."+cus.prinId}</LabelPrin> */}
-                                        <PrintLn/>
-                                        <LabelPrin className="prinLabelDis" style={{fontSize:"small"}}>{cus.prinName}</LabelPrin>
-                                    </Kotak>
-                                <Kotak className="CustomerTabelKanan">
-                                    <LabelPrin className="prinIndex">{((page*limit)-limit)+idx+1}</LabelPrin>
-                                    <PrintLn/>  
-                                    <LabelPrin className="prinTgl" style={{color:"#4CC417",fontSize:"small"}}>2020-03-11</LabelPrin>
-                                    <PrintLn/>
-                                    <LabelPrin className="prinPremium">Premium</LabelPrin>
-                                    <PrintLn/>
-                                </Kotak>
-                                </Kotak>
-                                </Kotak>
-                                </Kotak>
-                           
-                            )
-                        })  
-                  }
+                <Kotak className="bodyPrin">
+                    <Kotak className="prinKiri">
+                        <Kotak className="prinKiriTabel">
+                            {/* ini nanti di for */}
+                            {
+                                this.state.customers.map((cus, idx) => {
+                                    return (
+                                        <Kotak key={idx}>
+                                            <Kotak className="cusisiTable" style={{ cursor: "pointer" }} disabled={this.state.tableClick} onClick={() => this.HandleTable(cus.cusId)}>
+                                                <Kotak className="prinTable">
+                                                    <Ikon className="fas fa-id-badge" style={{ color: "white", display: 'inline-block', width: "30px", fontSize: "350%", marginTop: "20%" }}></Ikon>
+                                                </Kotak>
+                                                <Kotak className="CustomerTabel">
+                                                    <Kotak className="CustomerTabelkiri" style={{ fontSize: "80%", marginLeft: "10%" }}>
+                                                        <LabelPrin className="prinlabelName">{cus.cusName}</LabelPrin>
+                                                        <PrintLn />
+                                                        <LabelPrin className="prinLabelid">{cus.cusId}</LabelPrin>
+                                                        {/* <LabelPrin className="prinLabelid" style={{color:"blue" , fontWeight:"upperCase"}}>{"."+cus.prinId}</LabelPrin> */}
+                                                        <PrintLn />
+                                                        <LabelPrin className="prinLabelDis" >{cus.prinName}</LabelPrin>
+                                                    </Kotak>
+                                                    <Kotak className="CustomerTabelKanan">
+                                                        <LabelPrin className="prinIndex">{((page * limit) - limit) + idx + 1}</LabelPrin>
+                                                        <PrintLn />
+                                                        <LabelPrin className="prinTgl" style={{ color: "#4CC417", fontSize: "small" }}>2020-03-11</LabelPrin>
+                                                        <PrintLn />
+                                                        <LabelPrin className="prinPremium">Premium</LabelPrin>
+                                                        <PrintLn />
+                                                    </Kotak>
+                                                </Kotak>
+                                            </Kotak>
+                                        </Kotak>
 
+                                    )
+                                })
+                            }
+
+                        </Kotak>
+
+                        <Kotak className="prinKiriPagin">
+                            <Kotak className="prinLimit" style={{ width: "23%", marginRight: "5%", textAlign: "center" }}>
+                                <Pilih className="prinForm" name="limit" style={{ fontWeight: "bold", height: "5vh", width: "100%", marginLeft: "5%" }} onChange={this.setLimit}>
+                                    <Pilihan value={parseInt(5)}>LIMIT : 5</Pilihan>
+                                    <Pilihan value={parseInt(10)}>LIMIT : 10</Pilihan>
+                                    <Pilihan value={parseInt(15)}>LIMIT : 15</Pilihan>
+                                </Pilih>
+                            </Kotak>
+                            <Kotak className="prinPage" style={{ width: "72%" }}>
+                                <Pagination style={{ background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
+                            </Kotak>
+                        </Kotak>
+
+                    </Kotak>
+                    <Kotak className="prinKanan">
+                        <Kotak className="prinKiriLabel">
+
+                            <LabelPrin className="labelprin">User ID</LabelPrin>
+
+                            <LabelPrin className="labelprin">User Name</LabelPrin>
+
+                            <LabelPrin className="labelprin">Password</LabelPrin>
+
+                            <LabelPrin className="labelprin">Address</LabelPrin>
+
+                            <LabelPrin className="labelprin">----</LabelPrin>
+
+                            <LabelPrin className="labelprin">Phone</LabelPrin>
+
+                            <Garis style={{ backgroundColor: "blue", height: "1px" }} />
+
+
+                            <LabelPrin className="labelprin">Principal</LabelPrin>
+
+                            <LabelPrin className="labelprin">Distributor</LabelPrin>
+
+                            <Garis style={{ backgroundColor: "blue", height: "1px" }} />
+
+                            <LabelPrin className="labelprin">Disable Login</LabelPrin>
+                            <LabelPrin className="labelprin">Registrasion Date</LabelPrin>
+                            <LabelPrin className="labelprin">Product Valid Thru</LabelPrin>
+
+                            <Garis style={{ backgroundColor: "blue", height: "1px" }} />
+
+                            <LabelPrin className="labelprin">Created At</LabelPrin>
+
+                            <LabelPrin className="labelprin">Created By</LabelPrin>
+
+                            <LabelPrin className="labelprin">Updated At</LabelPrin>
+
+                            <LabelPrin className="labelprin">Updated By</LabelPrin>
+
+                        </Kotak>
+                        <Kotak className="prinKananInput">
+                            <Kotak>
+                                <InputPrin type="text" disabled={true} value={cusId} className="prinForm" name="cusId" onChange={this.setValue} placeholder="Customer ID" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={this.state.disableInput} value={cusName} className="prinForm" name="cusName" onChange={this.setValueName} placeholder="Customer UserName" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Alamat" onChange={this.setValue}></InputArea>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={this.state.disableInput} className="prinForm" value={cusPhone} name="cusPhone" onChange={this.setValue} placeholder="Customer Phone" ></InputPrin>
+                            </Kotak>
+                            <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px", marginBottom: "0" }} />
+                            <Kotak>
+                                {/* -------------------------------------- nanti di for ini---------------------------------- */}
+                                <Pilih className="prinForm" disabled={this.state.disableInput} value={prinId} name="prinId" style={{ height: "33px" }} onChange={this.setValueName}>
+                                    <Pilihan value="">Principal name</Pilihan>
+                                    {
+                                        this.props.dataPrincipal.map((prin, idx) => {
+                                            return (
+                                                <Pilihan key={idx} value={prin.prinId}>{prin.prinId + " || " + prin.prinName}</Pilihan>
+                                            )
+                                        })
+                                    }
+                                </Pilih>
+                            </Kotak>
+                            <Kotak>
+                                {/* -------------------------------------- nanti di for ini---------------------------------- */}
+                                <Pilih className="prinForm" disabled={this.state.disableInput} value={disId} name="disId" style={{ height: "33px" }} onChange={this.setValueCus}>
+                                    <Pilihan value="">Distributor name</Pilihan>
+                                    {
+                                        this.props.dataDistributor.map((dis, idx) => {
+                                            return (
+                                                <Pilihan key={idx} value={dis.disId}>{dis.disId + " || " + dis.disName}</Pilihan>
+
+                                            )
+                                        })
+                                    }
+                                </Pilih>
+                            </Kotak>
+                            <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px", marginBottom: "0" }} />
+                            <Kotak className="toggleOnOff">
+                                <FormGroup>
+                                    <Typography component="div">
+                                        <Grid component="label" container alignItems="center" spacing={1}>
+                                            <Grid item>Off</Grid>
+                                            <Grid item>
+                                                <AntSwitch disabled={this.state.disableInput} checked={cusOnOff} onChange={this.setValueChecked} name="cusOnOff" />
+                                                {/* <InputText clasName="hobby" type="checkbox" checked={hobby.findIndex(e => e === "RENANG") > -1 ?"checked":""} name="hobby" id="hobby" value="RENANG"  onChange={this.setValueHobby} />Renang  */}
+                                            </Grid>
+                                            <Grid item>On</Grid>
+                                        </Grid>
+                                    </Typography>
+                                </FormGroup>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="date" style={{ width: "20%" }} disabled={this.state.disableInput} disabled={true} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="date" style={{ width: "20%" }} disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
+                            </Kotak>
+                            <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px", marginBottom: "1%" }} />
+                            <Kotak>
+                                <InputPrin type="text" disabled={true} value={cuscreatedAt} className="prinForm" name="cuscreatedAt" onChange={this.setValue} placeholder="Customer Created At" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={true} value={cuscreatedBy} className="prinForm" name="cuscreatedby" onChange={this.setValue} placeholder="Customer Created By" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={true} value={cusupdatedAt} className="prinForm" name="cusupdatedAt" onChange={this.setValue} placeholder="Customer Updated At" ></InputPrin>
+                            </Kotak>
+                            <Kotak>
+                                <InputPrin type="text" disabled={true} value={cusupdatedBy} className="prinForm" name="cusupdatedBy" onChange={this.setValue} placeholder="Customer Updated by" ></InputPrin>
+                            </Kotak>
+
+                        </Kotak>
+                    </Kotak>
                 </Kotak>
-
-                <Kotak className="prinKiriPagin">
-                    <Kotak className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
-                        <Pilih  className="prinForm"  name="limit" style={{fontWeight:"bold", height:"5vh",width:"100%", marginLeft:"5%"}} onChange={this.setLimit}>      
-                            <Pilihan value={parseInt(5)}>5</Pilihan>
-                            <Pilihan value={parseInt(10)}>10</Pilihan> 
-                            <Pilihan value={parseInt(15)}>15</Pilihan>
-                        </Pilih>
-                    </Kotak>
-                    <Kotak className="prinPage" style={{width:"75%"}}>
-                        <Pagination style={{background:'white' ,width:"100%"}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
-                    </Kotak>
-                </Kotak>
-
-                </Kotak>
-                <Kotak className="prinKanan">
-                <Kotak className="prinKiriLabel">
-
-                    <LabelPrin className="labelprin">User ID</LabelPrin>
-                   
-                    <LabelPrin className="labelprin">User Name</LabelPrin>
-
-                    <LabelPrin className="labelprin">Password</LabelPrin>
-                   
-                    <LabelPrin className="labelprin">Address</LabelPrin>
-                 
-                    <LabelPrin className="labelprin">----</LabelPrin>
-                   
-                    <LabelPrin className="labelprin">Phone</LabelPrin>
-
-                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
-
-                  
-                    <LabelPrin className="labelprin">Principal</LabelPrin>
-                
-                    <LabelPrin className="labelprin">Distributor</LabelPrin>
-                  
-                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
-
-                    <LabelPrin className="labelprin">Disable Login</LabelPrin>
-                    <LabelPrin className="labelprin">Registrasion Date</LabelPrin>
-                    <LabelPrin className="labelprin">Product Valid Thru</LabelPrin>
-
-                    <Garis style={{backgroundColor:"blue" , height:"1px"}}/>
-
-                    <LabelPrin className="labelprin">Created At</LabelPrin>
-               
-                    <LabelPrin className="labelprin">Created By</LabelPrin>
-                  
-                    <LabelPrin className="labelprin">Updated At</LabelPrin>
-                    
-                    <LabelPrin className="labelprin">Updated By</LabelPrin>
-                   
-                </Kotak>
-                <Kotak className="prinKananInput">
-                    <Kotak>
-                    <InputPrin type="text" disabled={true} value={cusId} className="prinForm" name="cusId" onChange={this.setValue} placeholder="Customer ID" ></InputPrin>
-                    </Kotak>
-                    <Kotak>
-                    <InputPrin  type="text" disabled={this.state.disableInput} value={cusName} className="prinForm" name="cusName" onChange={this.setValueName} placeholder="Customer UserName" ></InputPrin>
-                    </Kotak> 
-                    <Kotak>
-                    <InputPrin  type="text" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
-                    </Kotak> 
-                    <Kotak>
-                    <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Alamat"  onChange={this.setValue}></InputArea>
-                    </Kotak> 
-                    <Kotak>
-                    <InputPrin  type="text" disabled={this.state.disableInput} className="prinForm" value={cusPhone} name="cusPhone" onChange={this.setValue} placeholder="Customer Phone" ></InputPrin>
-                    </Kotak> 
-                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px" ,marginBottom:"0"}}/>
-                    <Kotak>
-                    {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <Pilih className="prinForm" disabled={this.state.disableInput} value={prinId}  name="prinId" style={{height:"33px"}} onChange={this.setValueName}>
-                    <Pilihan value="">Principal name</Pilihan> 
-                        {
-                        this.props.dataPrincipal.map((prin,idx)=>{
-                            return(
-                                <Pilihan key={idx} value={prin.prinId}>{prin.prinId +" || "+prin.prinName}</Pilihan> 
-                            )
-                        })  
-                    }
-                    </Pilih>
-                    </Kotak>
-                    <Kotak>
-                    {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    <Pilih className="prinForm" disabled={this.state.disableInput} value={disId} name="disId" style={{height:"33px"}} onChange={this.setValueCus}>
-                        <Pilihan value="">Distributor name</Pilihan>
-                        {
-                        this.props.dataDistributor.map((dis,idx)=>{
-                            return(
-                                <Pilihan key={idx} value={dis.disId}>{dis.disId +" || "+ dis.disName}</Pilihan> 
-                                
-                            )
-                        })  
-                    } 
-                    </Pilih>
-                    </Kotak>
-                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px",marginBottom:"0"}}/>
-                    <Kotak className="toggleOnOff">
-                    {/* -------------------------------------- nanti di for ini---------------------------------- */}
-                    {/* <select className="prinForm" disabled={this.state.disableInput} value={cusOnOff} name="cusOnOff" style={{height:"33px" ,width:"100px"}} onChange={this.setValue}>
-                        <option value="On">On</option>
-                        <option value="Off">Off</option> 
-                    </select> */}
-                    <FormGroup>
-                        <Typography component="div">
-                            <Grid component="label" container alignItems="center" spacing={1}>
-                            <Grid item>Off</Grid>
-                            <Grid item>
-                                <AntSwitch disabled={this.state.disableInput}  checked={cusOnOff} onChange={this.setValueChecked} name="cusOnOff" />
-                                {/* <InputText clasName="hobby" type="checkbox" checked={hobby.findIndex(e => e === "RENANG") > -1 ?"checked":""} name="hobby" id="hobby" value="RENANG"  onChange={this.setValueHobby} />Renang  */}
-                            </Grid>
-                            <Grid item>On</Grid>
-                            </Grid>
-                        </Typography>
-                     </FormGroup>
-                    </Kotak>
-                    <Kotak>
-                    <InputPrin  type="date" style={{width:"20%"}} disabled={this.state.disableInput} disabled={this.state.disableInput} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
-                    </Kotak> 
-                    <Kotak>
-                    <InputPrin  type="date" style={{width:"20%"}}  disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
-                    </Kotak> 
-                    <Garis style={{backgroundColor:"blue" ,width:"99%" ,height:"1px", marginBottom:"2%"}}/>
-                    <Kotak>
-                    <InputPrin  type="text" disabled={true} value={cuscreatedAt} className="prinForm" name="cuscreatedAt" onChange={this.setValue} placeholder="Customer Created At" ></InputPrin>
-                    </Kotak> 
-                    <Kotak>
-                    <InputPrin  type="text" disabled={true} value={cuscreatedBy} className="prinForm" name="cuscreatedby" onChange={this.setValue} placeholder="Customer Created By" ></InputPrin>
-                    </Kotak>
-                    <Kotak>
-                    <InputPrin  type="text" disabled={true} value={cusupdatedAt} className="prinForm" name="cusupdatedAt" onChange={this.setValue} placeholder="Customer Updated At" ></InputPrin>
-                    </Kotak>
-                    <Kotak>
-                    <InputPrin  type="text" disabled={true} value={cusupdatedBy} className="prinForm" name="cusupdatedBy" onChange={this.setValue} placeholder="Customer Updated by" ></InputPrin>
-                    </Kotak>
-
-                </Kotak>
-                </Kotak>
-            </Kotak>
             </>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    dataLoginUser   : state.authReducer.userLogin,
-    dataPrincipal   : state.prinReducer.reducPrincipal,
-    dataDistributor : state.disReducer.reducDistributor
+    dataLoginUser: state.authReducer.userLogin,
+    dataPrincipal: state.prinReducer.reducPrincipal,
+    dataDistributor: state.disReducer.reducDistributor
 })
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
     return {
-      dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
+        dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
     }
-  }
-export default connect(mapStateToProps, mapDispatchToProps) (Customer);
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Customer);

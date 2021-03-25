@@ -23,20 +23,31 @@ const verifLogout = (logout,history) => {
   })
 }
 
-
 function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
-  const [logout, setLogout] = useState(false);
-  const showSidebar = () => setSidebar(!sidebar);
+  const showSidebar = () => {
+  if (props.dataNavbar === true){
+    Swal.fire(
+      'Good job!',
+      '',
+      'warning'
+    )
+  }
+  else{
+  setSidebar(!sidebar);
+  }
+}
   console.log("data login Navbar " , props.dataLoginUser)
   console.log(props.dataNavbar)
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }} >
-        <div className='navbar' disabled={props.dataNavbar}>
-          <Link to='#' className='menu-bars'>
-            <FaIcons.FaBars onClick={showSidebar} />
-          </Link>
+        <div className='navbar1' >
+        {/* disabled={props.dataNavbar} */}
+        {/* onClick={()=>{navBarClick(props.dataNavbar)}} */}
+          {/* <Link to='#'  className='menu-bars1'> */}
+            <FaIcons.FaBars style={{cursor:'pointer'}} className='menu-bars1' onClick={()=>{showSidebar()}} />
+          {/* </Link> */}
           <div className="thisHeader1" style={{fontFamily:"Georgia, serif"}}>
                 <div className="bungkusWelcome" style={{marginRight:"240%" }}>
                 <div>
@@ -57,10 +68,10 @@ function Navbar(props) {
             </div>
         </div>
 
-        <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
-          <ul className='nav-menu-items' onClick={showSidebar}>
-            <li className='navbar-toggle'>
-              <Link to='#' className='menu-bars'>
+        <nav className={sidebar ? 'nav-menu1 active' : 'nav-menu1'}>
+          <ul className='nav-menu-items1' onClick={showSidebar}>
+            <li className='navbar-toggle1'>
+              <Link to='#' className='menu-bars1'>
                 <AiIcons.AiOutlineClose />
               </Link>
             </li>

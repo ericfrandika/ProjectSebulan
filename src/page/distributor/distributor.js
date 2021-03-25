@@ -512,9 +512,9 @@ getApiCountName =()=>{
                 <Kotak className="prinKiriPagin">
                 <Kotak className="prinLimit" style={{width:"20%",marginRight:"5%" ,textAlign:"center"}}> 
                     <Pilih  className="prinForm"  name="limit" style={{height:"5vh",width:"100%"}} onChange={this.setLimit}>
-                    <Pilihan value={parseInt(5)}>5</Pilihan>
-                    <Pilihan value={parseInt(10)}>10</Pilihan> 
-                    <Pilihan value={parseInt(15)}>15</Pilihan>
+                    <Pilihan value={parseInt(5)}>Limit : 5</Pilihan>
+                    <Pilihan value={parseInt(10)}>Limit : 10</Pilihan> 
+                    <Pilihan value={parseInt(15)}>Limit : 15</Pilihan>
                     </Pilih>
                     </Kotak>
                     <Kotak className="prinPage" style={{width:"75%"}}>
