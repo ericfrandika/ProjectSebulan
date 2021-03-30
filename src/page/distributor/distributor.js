@@ -6,14 +6,37 @@ import { connect } from 'react-redux';
 import Pagination from '@material-ui/lab/Pagination';
 import axios from 'axios'
 import Kotak from '../../components/compDiv/div';
-import Tombol from '../../components/compButton/button';
 import Ikon from '../../components/compIcon/FontIcon';
 import Pilih from '../../components/compSelect/select';
 import Pilihan from '../../components/compSelect/value';
 import InputArea from '../../components/comp_principal/textArea';
 import Garis from '../../components/compGaris/garis';
 import PrintLn from '../../components/compGaris/Println';
-
+import { Button } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
+import UpdateIcon from '@material-ui/icons/Update';
+import DeleteIcon from '@material-ui/icons/Delete';
+import {  withStyles } from '@material-ui/core/styles';
+import {red, green, purple } from '@material-ui/core/colors';
+const UpdateButton = withStyles((theme) => ({
+    root: {
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: green[500],
+      '&:hover': {
+        backgroundColor: green[700],
+      },
+    },
+  }))(Button);
+  
+  const DeleteButton = withStyles((theme) => ({
+    root: {
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: red[700],
+      '&:hover': {
+        backgroundColor: red[800],
+      },
+    },
+  }))(Button);
 class Distributor extends Component {
         constructor(props) {
             super(props);
@@ -185,7 +208,7 @@ class Distributor extends Component {
         else{
             Swal.fire({
                 title: 'Do you want to save the changes?',
-                showDenyButton: true,
+                showDenyButton: false,
                 showCancelButton: true,
                 confirmButtonText: `Save`,
                 denyButtonText: `Don't save`,
@@ -271,7 +294,7 @@ resetDisObj =()=>{
        else{ 
         Swal.fire({
          title: 'Do you want to Update the changes?',
-         showDenyButton: true,
+         showDenyButton: false,
          showCancelButton: true,
          confirmButtonText: `Update`,
          denyButtonText: `Don't Update`,
@@ -361,15 +384,23 @@ resetDisObj =()=>{
             discreatedBy:"",
             tableClick:false
           })
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
           this.getAPICount();
           this.getPaging(this.state.page ,this.state.limit);
           this.resetDis();
         })
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              )
+        .catch(resp =>{
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: resp.response.data.errorMessage || resp.response.data
+            })
+          })
+              
             }
           }) 
     }    
@@ -475,12 +506,12 @@ getApiCountName =()=>{
         return (
         <>
           <Kotak className="prinAtas">
-                <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Distributor Name" value={this.state.searchDis}></InputPrin>
-                <Tombol className="crudPrin"  style={{marginRight:"1%",width:"5%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Tombol>
+                <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Name Distributor..." value={this.state.searchDis}></InputPrin>
+                <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Button>
                 <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></Ikon>
-                    <Tombol className="crudPrin" onClick={()=>this.buttonAdd()} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Tombol>
-                    <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "SAVE"}</Tombol>
-                    <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</Tombol>
+                    <Button startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary"   onClick={()=>this.buttonAdd()} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Button>
+                    <UpdateButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={this.buttonEdit}  disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</UpdateButton>
+                    <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary"  onClick={this.buttonCancel} disabled={this.state.disabledButDel} >{this.state.butCondDelete? "DELETE" : "CANCEL"}</DeleteButton>
                 </Kotak>
          <Kotak className="bodyPrin">
                
@@ -557,6 +588,7 @@ getApiCountName =()=>{
                     {/* -------------------------------------- nanti di for ini---------------------------------- */}
                     <Pilih disabled={this.state.disableInput}  value={prinId} className="prinForm"  name="prinId" style={{height:"33px"}} onChange={this.setValue}>
                     <Pilihan value="">Principal Name</Pilihan>
+                    
                     {
                         this.props.dataPrincipal.map((dis,idx)=>{
                             return(

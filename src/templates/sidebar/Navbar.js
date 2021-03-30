@@ -8,7 +8,15 @@ import { IconContext } from 'react-icons';
 import { connect } from 'react-redux';
 import Swal from 'sweetalert2'
 
-const verifLogout = (logout,history) => {
+const verifLogout = (logout,history,dataNavbar) => {
+  if (dataNavbar === true){
+    Swal.fire(
+      'Cannot Logout. Finish input your data!!',
+      '',
+      'warning'
+    )
+  }
+  else{
   Swal.fire({
     title: 'Do you want to Logout?',
     showCancelButton: true,
@@ -22,13 +30,14 @@ const verifLogout = (logout,history) => {
     } 
   })
 }
+}
 
 function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => {
   if (props.dataNavbar === true){
     Swal.fire(
-      'Good job!',
+      'finish input your data!!',
       '',
       'warning'
     )
@@ -43,11 +52,7 @@ function Navbar(props) {
     <>
       <IconContext.Provider value={{ color: '#fff' }} >
         <div className='navbar1' >
-        {/* disabled={props.dataNavbar} */}
-        {/* onClick={()=>{navBarClick(props.dataNavbar)}} */}
-          {/* <Link to='#'  className='menu-bars1'> */}
             <FaIcons.FaBars style={{cursor:'pointer'}} className='menu-bars1' onClick={()=>{showSidebar()}} />
-          {/* </Link> */}
           <div className="thisHeader1" style={{fontFamily:"Georgia, serif"}}>
                 <div className="bungkusWelcome" style={{marginRight:"240%" }}>
                 <div>
@@ -59,7 +64,7 @@ function Navbar(props) {
                 </div>
                 <div className="thisLogout">
                 <div>
-                <i className="fas fa-sign-out-alt" onClick={()=>{verifLogout(props.logout, props.history)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
+                <i className="fas fa-sign-out-alt" onClick={()=>{verifLogout(props.logout, props.history,props.dataNavbar)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
                 </div>
                 <div>
                     <label style={{color:"white"}}><b>LOGOUT</b></label>

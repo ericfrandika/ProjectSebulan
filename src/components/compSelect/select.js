@@ -6,7 +6,7 @@ class Pilih extends Component {
     }
     render() { 
         return ( 
-            <select disabled={this.props.disabled} className={this.props.className} value={this.props.value} name={this.props.name} style={this.props.style}  onChange={this.props.onChange}>{this.props.children}</select>
+            <select disabled={this.props.disabled} size={this.props.size} className={this.props.className} value={this.props.value} name={this.props.name} style={this.props.style}  onChange={this.props.onChange}>{this.props.children}</select>
          );
     }
 }

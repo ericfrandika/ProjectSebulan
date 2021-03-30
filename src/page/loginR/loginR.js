@@ -9,6 +9,12 @@ import Swal from 'sweetalert2'
 import './style.css'
 import {ReactComponent as BgSvg}  from './bg.svg'
 import {ReactComponent as Avatar} from './avatar.svg'
+import Kotak from '../../components/compDiv/div';
+import Tombol from '../../components/compButton/button';
+import Ikon from '../../components/compIcon/FontIcon';
+import LabelPrin from '../../components/comp_principal/labelPrin';
+import Garis from '../../components/compGaris/garis';
+import InputPrin from '../../components/comp_principal/inputPrin';
 
 class LoginR extends Component {
     constructor(props) {
@@ -73,11 +79,11 @@ class LoginR extends Component {
                 loginData :resp.data,
                 })
                 this.props.submitLogin({dataLogin : resp.data})
-                this.props.history.push("/")
         })
-            .catch((e) =>{
+            .catch((err) =>{
+                console.log(err.response.data);
                 Swal.fire(
-                    'Username Or Password Wrong...!!!',
+                    err.response.data.errorMessage,
                     'You clicked the button!',
                     'error'
                   )
@@ -89,54 +95,54 @@ class LoginR extends Component {
         console.log(username)
         return ( 
             <>
-        <div className="allLogin">
-	    <div className="container">
+        <Kotak className="allLogin">
+	    <Kotak className="container">
             
-		<div className="img">   
+		<Kotak className="img">   
         <BgSvg style={{height:"500px" ,width:"100%"}}/>
-		</div>
-		<div className="login-content">
-				<div className="form">
+		</Kotak>
+		<Kotak className="login-content">
+				<Kotak className="form">
                 <Avatar style={{height:"100px",width:"100%"}}/>
-				<div>
-				<label className="labelNexChief">Nex</label>
-                <label className="labelNex">Chief</label>
-				<hr className="garisAtas"/>
-				</div>
-				<div className="labelPower">
-					<label className="LoginPower" style={{color: "wheat"}}>Powerred By Eric Frandika</label>
-					</div>
-           		<div className="input-div one">
-           		   <div className="i">
-           		   		<i className="fas fa-user"></i>
-           		   </div>
-           		   <div className="div">
-           		   		<input type="text" name="username" onChange={this.setValue} className="input" placeholder="Username"/>
-           		   </div>
-           		</div>
-           		<div className="input-div pass">
-           		   <div className="i" style={{marginLeft:"1%", marginRight:"3%"}}> 
-           		    	<i className="fas fa-lock"></i>
-           		   </div>
-           		   <div className="div">
-           		    	<input type={this.state.passType} onChange={this.setValue} name="password" className="input"  placeholder="Password"/>
-            	   </div>
-                   <div>
-                   <i className={this.state.passType === "password" ? 'fa fa-eye-slash' : 'fa fa-eye'} onClick={() => this.passClick()} style={{color: "wheat", float: "right",marginTop:"14px" ,cursor:"pointer"}}></i>
-                   </div>
+				<Kotak>
+				<LabelPrin className="labelNexChief">Nex</LabelPrin>
+                <LabelPrin className="labelNex">Chief</LabelPrin>
+				<Garis className="garisAtas"/>
+				</Kotak>
+				<Kotak className="labelPower">
+					<LabelPrin className="LoginPower" style={{color: "wheat"}}>Powerred By Eric Frandika</LabelPrin>
+					</Kotak>
+           		<Kotak className="input-div one">
+           		   <Kotak className="i">
+           		   		<Ikon className="fas fa-user"></Ikon>
+           		   </Kotak>
+           		   <Kotak className="div">
+           		   		<InputPrin type="text" name="username" onChange={this.setValue} className="input" placeholder="Username"/>
+           		   </Kotak>
+           		</Kotak>
+           		<Kotak className="input-div pass">
+           		   <Kotak className="i" style={{marginLeft:"1%", marginRight:"3%"}}> 
+           		    	<Ikon className="fas fa-lock"></Ikon>
+           		   </Kotak>
+           		   <Kotak className="div">
+           		    	<InputPrin type={this.state.passType} onChange={this.setValue} name="password" className="input"  placeholder="Password"/>
+            	   </Kotak>
+                   <Kotak>
+                   <Ikon className={this.state.passType === "password" ? 'fa fa-eye-slash' : 'fa fa-eye'} onClick={() => this.passClick()} style={{color: "wheat", float: "right",marginTop:"14px" ,cursor:"pointer"}}></Ikon>
+                   </Kotak>
                 
-            	</div>
+            	</Kotak>
                 <Recaptcha className="recaptcha"
                    sitekey="6LexcWYaAAAAAMWp_Rrps67jZRXyLQP86miIV-g1"
                     render="explicit"
                      verifyCallback={this.verifyCallback}
                       onloadCallback={this.recaptchaLoaded}
                     />
-                   <button className="btn" onClick={() => this.doLogin({ username, password })} ><b>LOGIN</b></button>
-			</div>
-        </div>
-    </div>
-</div>
+                   <Tombol className="btn" onClick={() => this.doLogin({ username, password })} ><b>LOGIN</b></Tombol>
+			</Kotak>
+        </Kotak>
+    </Kotak>
+</Kotak>
         </>
  );
     }

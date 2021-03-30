@@ -69,9 +69,12 @@
 
 .bdyhome{
   width: 100%;
-  height: 86vh;
+  height: 547px;
   display: flex;
   background-color: #282c34;
+  border-top-style: solid;
+  border-bottom-style: solid;
+
 }
 
 .bodyKiriHome{

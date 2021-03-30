@@ -15,14 +15,38 @@ import Garis from '../../components/compGaris/garis';
 import Pilih from '../../components/compSelect/select';
 import Pilihan from '../../components/compSelect/value';
 import InputArea from '../../components/comp_principal/textArea';
-import Tombol from '../../components/compButton/button';
 import Ikon from '../../components/compIcon/FontIcon';
 import PrintLn from '../../components/compGaris/Println';
+import { Button } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
+import UpdateIcon from '@material-ui/icons/Update';
+import DeleteIcon from '@material-ui/icons/Delete';
+import {  withStyles } from '@material-ui/core/styles';
+import {red, green, purple } from '@material-ui/core/colors';
+const UpdateButton = withStyles((theme) => ({
+    root: {
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: green[500],
+      '&:hover': {
+        backgroundColor: green[700],
+      },
+    },
+  }))(Button);
+  
+  const DeleteButton = withStyles((theme) => ({
+    root: {
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: red[700],
+      '&:hover': {
+        backgroundColor: red[800],
+      },
+    },
+  }))(Button);
 class Customer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //------------------------------------------Page----------------------------------------
+            //-------------------------------------------------Page---------------------------------------------
             page: 1,
             count: 0,
             limit: 5,
@@ -274,7 +298,7 @@ class Customer extends Component {
             else {
                 Swal.fire({
                     title: 'Do you want to save the changes?',
-                    showDenyButton: true,
+                    showDenyButton: false,
                     showCancelButton: true,
                     confirmButtonText: `Save`,
                     denyButtonText: `Don't save`,
@@ -348,7 +372,7 @@ class Customer extends Component {
             else {
                 Swal.fire({
                     title: 'Do you want to save the changes?',
-                    showDenyButton: true,
+                    showDenyButton: false,
                     showCancelButton: true,
                     confirmButtonText: `Update`,
                     denyButtonText: `Don't Update`,
@@ -511,7 +535,6 @@ class Customer extends Component {
 
         this.props.dataNavbar({ dataNavbar: this.state.tableClick })
         console.log("SearchName", this.state.searchCus);
-
         const { page, limit, cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
         console.log("TOGGLE : ", this.state.cusOnOff);
 
@@ -519,11 +542,11 @@ class Customer extends Component {
             <>
                 <Kotak className="prinAtas">
                     <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus" disabled={this.state.tableClick} value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
-                    <Tombol className="crudPrin" style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Tombol>
+                    <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Button>
                     <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
-                    <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Tombol>
-                    <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit ? "EDIT" : "UPDATE"}</Tombol>
-                    <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</Tombol>
+                    <Button startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary"   onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
+                    <UpdateButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit ? "EDIT" : "UPDATE"}</UpdateButton>
+                    <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary"  onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
                 </Kotak>
                 <Kotak className="bodyPrin">
                     <Kotak className="prinKiri">

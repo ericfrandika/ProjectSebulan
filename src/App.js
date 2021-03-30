@@ -1,4 +1,3 @@
-import Header from './templates/header/header'
 import Body from './templates/body/index'
 import LoginR from './page/loginR/loginR'
 import { BrowserRouter as Router, Switch,Route } from "react-router-dom"

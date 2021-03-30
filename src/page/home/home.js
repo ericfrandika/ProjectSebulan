@@ -75,7 +75,7 @@ class Home extends Component {
                         <div className="bodyCarousell">
                             <Carousel >
                                 {/* {this.state.items.map(item => <div key={item.id}>{item.title}</div>)} */}
-                                <img src={HomePng} className="sliderimg" alt="" />
+                                <img src="https://i.ibb.co/JQZkJ4J/scott-graham-5f-Nm-Wej4t-AA-unsplash.jpg" className="sliderimg" alt="" />
                                 <img src={HomesPng} className="sliderimg" alt="" />
                             </Carousel>
                         </div>

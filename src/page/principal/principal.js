@@ -7,13 +7,40 @@ import { connect } from 'react-redux';
 import Pagination from '@material-ui/lab/Pagination';
 import Kotak from '../../components/compDiv/div'
 import Swal from 'sweetalert2'
-import Tombol from '../../components/compButton/button';
 import InputArea from '../../components/comp_principal/textArea';
 import Ikon from '../../components/compIcon/FontIcon';
 import Pilih from '../../components/compSelect/select'
 import Pilihan from '../../components/compSelect/value'
 import Garis from '../../components/compGaris/garis';
 import PrintLn from '../../components/compGaris/Println';
+import { Button } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
+import UpdateIcon from '@material-ui/icons/Update';
+import DeleteIcon from '@material-ui/icons/Delete';
+import {  withStyles } from '@material-ui/core/styles';
+import {red, green, purple } from '@material-ui/core/colors';
+
+const ColorButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+}))(Button);
+
+const DeleteButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: red[700],
+    '&:hover': {
+      backgroundColor: red[800],
+    },
+  },
+}))(Button);
+
+
 class Principal extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +104,7 @@ class Principal extends Component {
       limit: el.target.value,
       page: 1
     })
-    if (this.state.searchPrin == "") {
+    if (this.state.searchPrin === "") {
       this.getAPICount();
       this.getPaging(this.state.pageNow, el.target.value);
     }
@@ -182,6 +209,20 @@ class Principal extends Component {
           'error'
         )
       }
+      else if (prinId.length > 25){
+        Swal.fire(
+          'Your Character Id to Long ',
+          'You clicked the button!',
+          'error'
+        )
+      }
+      else if (prinName.length > 25){
+        Swal.fire(
+          'Your Character Name to Long ',
+          'You clicked the button!',
+          'error'
+        )
+      }
       else {
         Swal.fire({
           title: 'Do you want to save the changes?',
@@ -264,10 +305,24 @@ class Principal extends Component {
           'error'
         )
       }
+      else if (prinId.length > 25){
+        Swal.fire(
+          'Your Character Id to Long ',
+          'You clicked the button!',
+          'error'
+        )
+      }
+      else if (prinName.length > 25){
+        Swal.fire(
+          'Your Character Name to Long ',
+          'You clicked the button!',
+          'error'
+        )
+      }
       else {
         Swal.fire({
           title: 'Do you want to Update the changes?',
-          showDenyButton: true,
+          showDenyButton: false,
           showCancelButton: true,
           confirmButtonText: `Update`,
           denyButtonText: `Don't Update`,
@@ -359,12 +414,19 @@ class Principal extends Component {
               this.getApiALLPrincipal();
               this.getAPICount();
               this.getPaging(this.state.page, this.state.limit);
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
             })
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
+            .catch(resp =>{
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: resp.response.data.errorMessage || resp.response.data
+              })
+            })
         }
       })
     }
@@ -450,7 +512,6 @@ class Principal extends Component {
         })
       })
       .catch(() => {
-
       })
   }
 
@@ -478,12 +539,12 @@ class Principal extends Component {
     return (
       <>
         <Kotak className="prinAtas">
-          <InputPrin value={this.state.searchPrin} disabled={this.state.tableClick} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal"></InputPrin>
-          <Tombol className="crudPrin" disabled={this.state.tableClick} style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} >SEARCH</Tombol>
+          <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal..."></InputPrin>
+          <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} >SEARCH</Button>
           <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} onClick={() => this.searchName()} disabled={this.state.tableClick}></Ikon>
-          <Tombol className="crudPrin" onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Tombol>
-          <Tombol className="crudPrin" onClick={this.buttonEdit} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</Tombol>
-          <Tombol className="crudPrin" onClick={this.buttonCancel} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</Tombol>
+          <Button  startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary" onClick={()=>{this.buttonAdd()}} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
+          <ColorButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={()=>{this.buttonEdit()}} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</ColorButton>
+          <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary" onClick={()=>{this.buttonCancel()}} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
         </Kotak>
         <Kotak className="bodyPrin">
           <Kotak className="prinKiri">
@@ -498,7 +559,7 @@ class Principal extends Component {
                           <Ikon className="fas fa-tags" style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px" }}></Ikon>
                         </Kotak>
                         <Kotak className="prinlabelTabel">
-                          <LabelPrin className="prinlabelName">{prin.prinName}</LabelPrin>
+                          <LabelPrin className="prinlabelName" style={{fontSize:"100%"}}>{prin.prinName}</LabelPrin>
                           <PrintLn />
                           <LabelPrin className="prinLabelid">{prin.prinId}</LabelPrin>
                         </Kotak>
@@ -517,7 +578,7 @@ class Principal extends Component {
                 </Pilih>
               </Kotak>
               <Kotak className="prinPage" style={{ width: "72%" }}>
-                <Pagination style={{ background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
+                <Pagination color="primary" style={{borderRadius:"10px", background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
               </Kotak>
             </Kotak>
           </Kotak>

@@ -27,6 +27,7 @@
 .nav-menu1.active {
   left: 0;
   transition: 350ms;
+  z-index: 10000;
 }
 
 .nav-text1 {
