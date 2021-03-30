@@ -32,14 +32,13 @@ public class CustomerController {
     @RequestMapping(value = "/customer/", method = RequestMethod.POST)
     public ResponseEntity<?> createCustomer(@Valid @RequestBody Customer customer, Errors error) {
         Principal principal = principalService.findByIdPrincipalService(customer.getPrinId());
-        if(error.hasErrors()){
-            return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        if(error.hasErrors()) {
+            return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (principal == null){
             logger.error("Unable to create. A Principal with id {} not Found", customer.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + customer.getPrinId() + " Not Found."), HttpStatus.NOT_FOUND);
         }
-
         else {
             logger.info("Creating Customer : {}", customer);
             customerService.saveCustomerService(customer);
@@ -88,10 +87,12 @@ public class CustomerController {
     @RequestMapping(value = "/customer/{cusId}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateCustomer(@Valid @PathVariable("cusId") String cusId
             , @RequestBody Customer customer , Errors error) {
-
         logger.info("Updating Distributor with id {}", cusId);
 
         Customer currentCustomer = customerService.findByIdCustomerService(cusId);
+        if(error.hasErrors()){
+            return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        }
         if (currentCustomer == null) {
             logger.error("Unable to Update. Customer with id {} not found.", cusId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Customer with id " + cusId + " not found."),

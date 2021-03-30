@@ -91,16 +91,20 @@ public class DistributorController {
     @RequestMapping(value = "/distributor/{disId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePrincipalbyId(@PathVariable("disId") String disId  ) {
         logger.info("Fetching & Deleting Distrbutor with id Distributor {}", disId);
-
-        Distributor distributor = distributorService.findByIdDistributorService(disId);
-        if (distributor == null) {
-            logger.error("Unable to delete. Distributor with id {} not found.", disId);
-            return new ResponseEntity<>(new CustomErrorType("Unable to delete. Distrbutor with id " + disId + " not found."),
-                    HttpStatus.NOT_FOUND);
-        }
-        else {
-            distributorService.deleteDistributorServicebyId(disId);
-            return new ResponseEntity<>(new CustomSuccessType("Id "+disId +" Success Deleted"),HttpStatus.ACCEPTED);
+try {
+    Distributor distributor = distributorService.findByIdDistributorService(disId);
+    if (distributor == null) {
+        logger.error("Unable to delete. Distributor with id {} not found.", disId);
+        return new ResponseEntity<>(new CustomErrorType("Unable to delete. Distrbutor with id " + disId + " not found."),
+                HttpStatus.NOT_FOUND);
+    } else {
+        distributorService.deleteDistributorServicebyId(disId);
+        return new ResponseEntity<>(new CustomSuccessType("Id " + disId + " Success Deleted"), HttpStatus.ACCEPTED);
+    }
+}
+        catch (Exception e){
+            return new ResponseEntity<>(new CustomErrorType("Dont Delete , Principal is Use in Distributor or Customer"),
+                    HttpStatus.BAD_REQUEST);
         }
     }
     //-(4)-----OKE-------------------------------------Update Bye Id------------------------------------------

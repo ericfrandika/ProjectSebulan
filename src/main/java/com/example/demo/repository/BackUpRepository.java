@@ -1,7 +1,6 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.Backup;
-import com.example.demo.model.Customer;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

@@ -15,7 +15,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     public Admin admin(String username, String password) {
         Admin admin;
         try {
-            admin = this.jdbcTemplate.query("select * from adminnc where username=? and password=?",
+            admin = this.jdbcTemplate.query("select * from adminnc where binary username=? and binary password=?",
                     preparedStatement -> {
                         preparedStatement.setString(1, username);
                         preparedStatement.setString(2, password);

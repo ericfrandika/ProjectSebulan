@@ -17,7 +17,7 @@ public class Customer {
     @NotBlank (message = "Customer Address Cannot be empty")
     private String cusAddress;
     @NotBlank (message = "Customer Phone Cannot be empty")
-    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "Number Phone Must be 08****** or 021******")
+    @Pattern(regexp = "^(^\\+62\\s?|^0)(\\d{3,4}-?){2}\\d{3,4}$" , message = "***Number Phone Must be 08****** or 021***")
     private String cusPhone;
     @NotBlank (message = "Customer Principal Cannot be empty")
     private String prinId;

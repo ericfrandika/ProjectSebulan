@@ -4,7 +4,7 @@ import com.example.demo.model.Principal;
 
 import java.util.List;
 
-public interface PrincipalService {
+public interface  PrincipalService {
 
     List<Principal> findAllPrincipalService();
 

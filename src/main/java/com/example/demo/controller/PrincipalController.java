@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -125,14 +126,19 @@ public class PrincipalController {
         logger.info("Fetching & Deleting Principal with Principal {}", prinId);
 
         Principal principal = principalService.findByIdPrincipalService(prinId);
-        if (principal == null) {
-            logger.error("Unable to delete. Principal with id {} not found.", prinId);
-            return new ResponseEntity<>(new CustomErrorType("Unable to delete. Principal with id " + prinId + " not found."),
-                    HttpStatus.NOT_FOUND);
+        try {
+            if (principal == null) {
+                logger.error("Unable to delete. Principal with id {} not found.", prinId);
+                return new ResponseEntity<>(new CustomErrorType("Unable to delete. Principal with id " + prinId + " not found."),
+                        HttpStatus.NOT_FOUND);
+            } else {
+                principalService.deletePrincipalServicebyId(prinId);
+                return new ResponseEntity<Principal>(HttpStatus.OK);
+            }
         }
-        else {
-            principalService.deletePrincipalServicebyId(prinId);
-            return new ResponseEntity<Principal>(HttpStatus.OK);
+        catch (Exception e){
+            return new ResponseEntity<>(new CustomErrorType("Dont Delete , Principal is Use in Distributor or Customer"),
+                    HttpStatus.BAD_REQUEST);
         }
     }
     //(1)----------------------------FIND BY NAME PRINCIPAL----------------------------------

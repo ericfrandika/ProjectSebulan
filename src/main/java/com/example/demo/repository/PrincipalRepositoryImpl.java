@@ -42,8 +42,8 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         UUID uuidPrinId = UUID.randomUUID();
         if(principal.getPrinId() == "") {
             int a = (int)(Math.random()*1000);
-            String prin="PrinID.";
-            String idFirst = principal.getPrinName().substring(2,7);
+            String prin="PrinID";
+            String idFirst = principal.getPrinName().substring(2,5);
             String idPrincipal =prin + idFirst +""+a+"" ;
             System.out.println(idPrincipal);
             principal.setPrinId(idPrincipal);

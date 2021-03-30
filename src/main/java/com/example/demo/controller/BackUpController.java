@@ -43,6 +43,7 @@ public class BackUpController {
 
     @Autowired
     BackUpService backUpService;
+
     @RequestMapping(value = "/backupdatabase/", method = RequestMethod.GET)
     public ResponseEntity<?> createBackup()  {
         logger.info("Creating BackUpdata : {}");
@@ -50,26 +51,24 @@ public class BackUpController {
         backUpService.downloadDatabaseService();
         return new ResponseEntity<>(new CustomSuccessType("Success"), HttpStatus.OK);
     }
-    //(1)----------------------------FIND ALL DISTRIBUTOR----------------------------------
+    //(1)----------------------------BackUp Database----------------------------------
 
     @RequestMapping(value = "/all/backupdatabase/", method = RequestMethod.GET)
     public ResponseEntity<List<Backup>> listBackUpdatabase() {
         List<Backup> backupList =backUpService.findAllBackUpService();
         return new ResponseEntity<>(backupList, HttpStatus.OK);
     }
-//    @RequestMapping(value = "/restoreDatabase/", method = RequestMethod.POST)
-//    public ResponseEntity<?> RestoreData(@RequestBody Backup backup) throws Exception {
-//        logger.info("Creating RestoreData : {}");
-//        backUpService.saveRestoreService(backup); ;
-//        return new ResponseEntity<>(new CustomSuccessType("Success"), HttpStatus.OK);
-//    }
 
+    //(1)----------------------------Restore Database----------------------------------
     @RequestMapping(value ="/uploadRestore/",method = RequestMethod.POST , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadFile(@RequestParam("nameDatabase")MultipartFile file) throws Exception{
-        backUpService.saveRestoreService(file); ;
-//        backUpService.DeletedDatabaseService();
-//        backUpService.CreatedDatabaseService();
-        backUpService.RestoreSQlService();
-        return new ResponseEntity<>("File SuccessFully Resotre Database",HttpStatus.OK);
+        try {
+            backUpService.saveRestoreService(file);
+            backUpService.RestoreSQlService();
+            return new ResponseEntity<>("File SuccessFully Resotre Database", HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>("Failed to Restore Data ..Try Again. MakeSure Your file its True", HttpStatus.BAD_REQUEST);
+        }
     }
 }
