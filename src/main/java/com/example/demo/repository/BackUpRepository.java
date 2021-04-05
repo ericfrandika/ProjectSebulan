@@ -7,12 +7,9 @@ import java.util.List;
 
 public interface BackUpRepository {
 
-    void BackUpDataRepository();
+    void BackUpDataRepository() throws Exception;
     List<Backup> findAllBackUpRepository();
-    void downloadDatabaseRepository();
+    void downloadDatabaseRepository()throws Exception;
     void saveRestoreRepository(MultipartFile file) throws Exception;
-    void RestoreSQlRepository();
-    void DeletedDatabaseRepository() throws Exception;
-    void CreatedDatabaseRepository() throws Exception;
-
+    void RestoreSQlRepository() throws Exception;
 }

@@ -6,11 +6,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface BackUpService {
-    void BackUpDataService();
+    void BackUpDataService() throws Exception;
     List<Backup> findAllBackUpService();
-    void downloadDatabaseService();
+    void downloadDatabaseService()throws Exception;
     void saveRestoreService(MultipartFile file) throws Exception;
-    void RestoreSQlService();
-    void DeletedDatabaseService() throws Exception;
-    void CreatedDatabaseService() throws Exception;
+    void RestoreSQlService()throws Exception;
+
 }

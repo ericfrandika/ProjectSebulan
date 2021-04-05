@@ -17,7 +17,7 @@ public class BackUpServiceImpl implements BackUpService {
     BackUpRepository backUpRepository;
 
     @Override
-    public void BackUpDataService() {
+    public void BackUpDataService() throws Exception {
         synchronized (this) {
             backUpRepository.BackUpDataRepository();        }
     }
@@ -29,7 +29,7 @@ public class BackUpServiceImpl implements BackUpService {
     }
 
     @Override
-    public void downloadDatabaseService() {
+    public void downloadDatabaseService()throws Exception {
         synchronized (this){
             backUpRepository.downloadDatabaseRepository();
         }
@@ -43,26 +43,10 @@ public class BackUpServiceImpl implements BackUpService {
     }
 
     @Override
-    public void RestoreSQlService() {
+    public void RestoreSQlService()throws Exception {
         synchronized (this){
-        backUpRepository.RestoreSQlRepository();
+         backUpRepository.RestoreSQlRepository();
         }
     }
-
-    @Override
-    public void DeletedDatabaseService() throws Exception {
-        synchronized (this){
-            backUpRepository.DeletedDatabaseRepository();
-
-        }
-    }
-
-    @Override
-    public void CreatedDatabaseService() throws Exception {
-        synchronized (this){
-            backUpRepository.CreatedDatabaseRepository();
-        }
-    }
-
 
 }

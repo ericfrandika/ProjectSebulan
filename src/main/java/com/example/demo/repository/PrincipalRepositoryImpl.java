@@ -88,7 +88,7 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
 
-        return jdbcTemplate.query("select * from principal where prinName like '%"+prinName+"%' LIMIT "+start +" ,"+ limit +"",
+        return jdbcTemplate.query("select * from principal where prinId like '%"+prinName+"%' OR prinName like '%"+prinName+"%' LIMIT "+start +" ,"+ limit +"",
                 (rs,rowNum)->
                         new Principal(
                                 rs.getString("prinId"),

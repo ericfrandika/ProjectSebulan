@@ -16,10 +16,9 @@ public class DistributorRepositoryImpl implements DistributorRepository {
 
     @Override
     public void saveDistributorRepository(Distributor distributor) {
-        UUID uuidDisID = UUID.randomUUID();
         if(distributor.getDisId() == "") {
             int a = (int)(Math.random()*1000);
-            String dis="PrinID.";
+            String dis="DisId.";
             String idFirst = distributor.getDisName().substring(2,7);
             String idDistributor =dis + idFirst +""+a+"" ;
             distributor.setDisId(idDistributor);

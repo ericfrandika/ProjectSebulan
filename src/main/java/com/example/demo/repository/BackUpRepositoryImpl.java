@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Properties;
 
 @Repository("BackUpRepository")
 public class BackUpRepositoryImpl implements BackUpRepository {
@@ -20,12 +19,15 @@ public class BackUpRepositoryImpl implements BackUpRepository {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void BackUpDataRepository() {
-        String dbUserName = "root";
-        String dbUserPassword = "eric321";
-        String dbNameList = "nexchief";
-        String savePath = "D:\\backupdatabase\\nexchief.sql";
-        String executeCmd = "C:/xampp/mysql/bin/mysqldump.exe --databases --user=" + dbUserName + " --password=" + dbUserPassword + "  --databases " + dbNameList + " -r " + savePath;
+    public void BackUpDataRepository()  throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/main/resources/database.properties"));
+        String user = prop.getProperty("username");
+        String pass = prop.getProperty("password");
+        String dbNameList = prop.getProperty("database");
+        String savePath = prop.getProperty("savepathbackup");
+        String pathMysqldump=prop.getProperty("pathMysqldump");
+        String executeCmd = pathMysqldump+ " --databases --user=" + user + " --password=" + pass + "  --databases " + dbNameList + " -r " + savePath;
         Process runtimeProcess;
         try {
             runtimeProcess = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", executeCmd});
@@ -53,15 +55,21 @@ public class BackUpRepositoryImpl implements BackUpRepository {
     }
 
     @Override
-    public void downloadDatabaseRepository() {
+    public void downloadDatabaseRepository()throws Exception {
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/main/resources/database.properties"));
+        String savePath = prop.getProperty("pathbackupsql");
         jdbcTemplate.update("delete from backresdata ");
-        jdbcTemplate.update("insert into backresdata(fileData) values (load_file('D:/backupdatabase/nexchief.sql'))");
+        jdbcTemplate.update("insert into backresdata(fileData) values (load_file("+savePath+"))");
 
     }
 
     @Override
     public void saveRestoreRepository(MultipartFile file)throws Exception {
-        File convertFile = new File("D:\\RestoreDatabase\\nexchief.sql");
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/main/resources/database.properties"));
+        String savePath = prop.getProperty("savepathbackup");
+        File convertFile = new File(savePath);
         convertFile.createNewFile();
         FileOutputStream fout = new FileOutputStream(convertFile);
         fout.write(file.getBytes());
@@ -70,12 +78,15 @@ public class BackUpRepositoryImpl implements BackUpRepository {
     }
 
     @Override
-    public void RestoreSQlRepository() {
-        String dbUserName = "root";
-        String dbUserPassword = "eric321";
-        String dbNameList = "nexchief";
-        String savePath = "D:\\RestoreDatabase\\nexchief.sql";
-        String executeCmd = "C:/xampp/mysql/bin/mysql.exe -u root -peric321 nexchief < D:/RestoreDatabase/nexchief.sql";
+    public void RestoreSQlRepository() throws Exception{
+        Properties prop = new Properties();
+        prop.load(new FileInputStream("src/main/resources/database.properties"));
+        String dbUserName = prop.getProperty("username");
+        String dbUserPassword =  prop.getProperty("password");
+        String dbNameList = prop.getProperty("database");
+        String savePath = prop.getProperty("savepathrestore");
+        String pathMysqlRestore=prop.getProperty("pathMysqlRestore");
+        String executeCmd = pathMysqlRestore+" -u "+dbUserName+" -p"+dbUserPassword+" "+dbNameList+" < "+savePath+"";
         Process runtimeProcess;
         try {
             runtimeProcess = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", executeCmd});
@@ -90,53 +101,5 @@ public class BackUpRepositoryImpl implements BackUpRepository {
         }
     }
 
-    @Override
-    public void DeletedDatabaseRepository() throws Exception {
-        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-        String DB_URL = "jdbc:mysql://localhost/3306";
 
-        //  Database credentials
-        String USER = "root";
-        String PASS = "eric321";
-        Connection conn = null;
-        Statement stmt = null;
-        //STEP 2: Register JDBC driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        //STEP 3: Open a connection
-        System.out.println("Connecting to a selected database...");
-        conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        System.out.println("Connected database successfully...");
-        //STEP 4: Execute a query
-        System.out.println("Deleting database...");
-        stmt = conn.createStatement();
-        String sql = "DROP DATABASE STUDENTS";
-        stmt.executeUpdate(sql);
-        System.out.println("Database deleted successfully...");
-        conn.close();
-    }
-
-    @Override
-    public void CreatedDatabaseRepository() throws Exception {
-        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-        String DB_URL = "jdbc:mysql://localhost/3306";
-
-        //  Database credentials
-        String USER = "root";
-        String PASS = "eric321";
-        Connection conn = null;
-        Statement stmt = null;
-        //STEP 2: Register JDBC driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        //STEP 3: Open a connection
-        System.out.println("Connecting to a selected database...");
-        conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        System.out.println("Connected database successfully...");
-        //STEP 4: Execute a query
-        System.out.println("Creating database...");
-        stmt = conn.createStatement();
-        String sql = "CREATE DATABASE nexchief";
-        stmt.executeUpdate(sql);
-        System.out.println("Database Created successfully...");
-        conn.close();
-    }
 }

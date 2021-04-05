@@ -45,7 +45,7 @@ public class BackUpController {
     BackUpService backUpService;
 
     @RequestMapping(value = "/backupdatabase/", method = RequestMethod.GET)
-    public ResponseEntity<?> createBackup()  {
+    public ResponseEntity<?> createBackup()throws Exception  {
         logger.info("Creating BackUpdata : {}");
         backUpService.BackUpDataService();
         backUpService.downloadDatabaseService();
