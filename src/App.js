@@ -9,6 +9,9 @@ import Distributor from './page/distributor/distributor'
 import Customer from './page/customer/customer'
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ContohBudi from './page/contohbudi/contoh'
+import FileNotFound from './page/notfound/notfound'
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -39,6 +42,7 @@ class App extends Component {
                     <Route path="/distributor" component={(props) => <Body {...props} comp={<Distributor/>} />}/>
                     <Route path="/customer" component={(props) => <Body {...props} comp={<Customer/>} />}/>
                     <Route path="/backdata" component={(props) => <Body {...props} comp={<BackUpData/>} />}/>
+                    <Route component={(props) => <FileNotFound {...props} />}/>
                 </Switch> 
               </Router>
               </div>)

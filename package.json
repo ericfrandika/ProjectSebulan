@@ -14,6 +14,7 @@
     "bootstrap": "^4.6.0",
     "get-file-path": "^1.0.0",
     "install": "^0.13.0",
+    "jwt-decode": "^3.1.2",
     "mysqldump": "^3.2.0",
     "npm": "^7.6.1",
     "react": "^17.0.1",

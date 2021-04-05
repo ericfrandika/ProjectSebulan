@@ -15,6 +15,7 @@ import Ikon from '../../components/compIcon/FontIcon';
 import LabelPrin from '../../components/comp_principal/labelPrin';
 import Garis from '../../components/compGaris/garis';
 import InputPrin from '../../components/comp_principal/inputPrin';
+import jwt_decode from "jwt-decode";
 
 class LoginR extends Component {
     constructor(props) {
@@ -68,13 +69,15 @@ class LoginR extends Component {
               )
         }
         else{       
-            axios.get("http://localhost:8080/admin/nexchief/login/?username="+username+"&password="+password)
+            axios.get("http://localhost:8080/admin/user/login/?username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password))
             .then((resp) =>{
                 Swal.fire(
                     'Login Success',
                     'You clicked the button!',
                     'success'
                   )
+                  var decoded = jwt_decode(resp.data.token);
+                 console.log("ini Respon login decode : ", decoded.userId)
               this.setState({
                 loginData :resp.data,
                 })

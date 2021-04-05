@@ -43,6 +43,14 @@
     background-color: black;
 }
 .prinKiriTabel{
+    width: 99%;
+    border-style: solid;
+    height: 68vh;
+    background-color: black;
+    border-bottom-color: white;
+    border-right-color: white;
+}
+.prinKiriTabelScroll{
     width: 100%;
     border-style: solid;
     height: 68vh;

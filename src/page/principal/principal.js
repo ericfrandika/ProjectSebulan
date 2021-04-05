@@ -17,9 +17,10 @@ import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import UpdateIcon from '@material-ui/icons/Update';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {  withStyles } from '@material-ui/core/styles';
-import {red, green, purple } from '@material-ui/core/colors';
-
+import { withStyles } from '@material-ui/core/styles';
+import { red, green, purple } from '@material-ui/core/colors';
+import DataNotFound from '../../components/compNotfound/Notfound.gif'
+import SearchIcon from '@material-ui/icons/Search';
 const ColorButton = withStyles((theme) => ({
   root: {
     color: theme.palette.getContrastText(purple[500]),
@@ -48,7 +49,7 @@ class Principal extends Component {
       //-------------------------------Find ALL with Pagination-----------------------------------------
       page: 1,
       count: 0,
-      limit: 5,
+      limit: "5",
       pageNow: 1,
 
       //----------------------------------------------------DIDMOUNT---------------------------------------------
@@ -84,7 +85,8 @@ class Principal extends Component {
       act: 0,
       actEdit: 0,
       actDelete: 0,
-      tableClick: false
+      tableClick: false,
+      min:""
       //----------------------------------------------------------------------------------------------------------
     }
   }
@@ -95,15 +97,22 @@ class Principal extends Component {
   }
 
   setValue = el => {
+    if(el.target.name === "searchPrin" && el.target.value === ""){
+      this.getAPICount();
+      this.getPaging(this.state.pageNow, this.state.limit);
+    }
+    
     this.setState({
       [el.target.name]: el.target.value
     })
+  
   }
   setLimit = el => {
     this.setState({
       limit: el.target.value,
       page: 1
     })
+    console.log("ini log : ", this.state.limit);
     if (this.state.searchPrin === "") {
       this.getAPICount();
       this.getPaging(this.state.pageNow, el.target.value);
@@ -171,13 +180,9 @@ class Principal extends Component {
       })
 
   }
-  //---------------------------------------------------button Add--------------------------------------
+  //---------------------------------------------------Button Add--------------------------------------
   buttonAdd = () => {
-    this.props.dataNavbar({ dataNavbar: this.state.tableClick })
     if (this.state.act === 0) {
-      if (this.state.prinName !== "") {
-        this.resetState();
-      }
       let createNow = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
       console.log(createNow);
       this.setState({
@@ -197,7 +202,7 @@ class Principal extends Component {
 
       });
       console.log("ini Admin ", this.state.princreatedBy)
-
+      this.resetState();
     }
     else {
       const { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy } = this.state
@@ -209,14 +214,14 @@ class Principal extends Component {
           'error'
         )
       }
-      else if (prinId.length > 25){
+      else if (prinId.length > 50) {
         Swal.fire(
           'Your Character Id to Long ',
           'You clicked the button!',
           'error'
         )
       }
-      else if (prinName.length > 25){
+      else if (prinName.length > 50) {
         Swal.fire(
           'Your Character Name to Long ',
           'You clicked the button!',
@@ -252,7 +257,6 @@ class Principal extends Component {
                   disableInputId: true,
 
                 })
-                this.resetState();
               })
               .catch((resp) => {
                 console.log("ini Consolog Eror : ", resp.response)
@@ -305,17 +309,17 @@ class Principal extends Component {
           'error'
         )
       }
-      else if (prinId.length > 25){
+      else if (prinId.length > 50) {
         Swal.fire(
           'Your Character Id to Long ',
-          'You clicked the button!',
+          '',
           'error'
         )
       }
-      else if (prinName.length > 25){
+      else if (prinName.length > 50) {
         Swal.fire(
           'Your Character Name to Long ',
-          'You clicked the button!',
+          '',
           'error'
         )
       }
@@ -349,7 +353,7 @@ class Principal extends Component {
                   disableButEdit: true,
                   disableInputId: true
                 });
-                this.resetState()
+                // this.resetState()
               })
               .catch((resp) => {
                 console.log(resp.response)
@@ -420,7 +424,7 @@ class Principal extends Component {
                 'success'
               )
             })
-            .catch(resp =>{
+            .catch(resp => {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -515,8 +519,29 @@ class Principal extends Component {
       })
   }
 
+  //--------------------------------------------------------------------------NEW DATE--------------------------------
+
+  NewDate =()=>{
+    var today = new Date();
+    var dd = today.getDate();
+  var mm = today.getMonth()+1; 
+  var yyyy = today.getFullYear();
+   if(dd<10){
+          dd='0'+dd
+      } 
+      if(mm<10){
+          mm='0'+mm
+      } 
+  today = yyyy+'-'+mm+'-'+dd;
+
+  return today;
+   
+  }
+
   render() {
+    
     this.props.dataNavbar({ dataNavbar: this.state.tableClick })
+    console.log("ini array coba : ", this.state.principals);
     if ("prinName" in this.state.objPrin) {
       this.setState({
         prinId: this.state.objPrin.prinId,
@@ -540,15 +565,15 @@ class Principal extends Component {
       <>
         <Kotak className="prinAtas">
           <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal..."></InputPrin>
-          <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} >SEARCH</Button>
+          <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary" style={{ marginRight: "1%" }} onClick={this.buttonSearch} >SEARCH</Button>
           <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} onClick={() => this.searchName()} disabled={this.state.tableClick}></Ikon>
-          <Button  startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary" onClick={()=>{this.buttonAdd()}} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
-          <ColorButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={()=>{this.buttonEdit()}} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</ColorButton>
-          <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary" onClick={()=>{this.buttonCancel()}} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
+          <Button startIcon={<SaveIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonAdd() }} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
+          <ColorButton startIcon={<UpdateIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonEdit() }} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</ColorButton>
+          <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary" onClick={() => { this.buttonCancel() }} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
         </Kotak>
         <Kotak className="bodyPrin">
           <Kotak className="prinKiri">
-            <Kotak className="prinKiriTabel">
+            <Kotak className={( this.state.principals.length<6)  ? "prinKiriTabel":"prinKiriTabelScroll"}>
               {/* ini nanti di for */}
               {
                 this.state.principals.map((prin, idx) => {
@@ -559,14 +584,22 @@ class Principal extends Component {
                           <Ikon className="fas fa-tags" style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px" }}></Ikon>
                         </Kotak>
                         <Kotak className="prinlabelTabel">
-                          <LabelPrin className="prinlabelName" style={{fontSize:"100%"}}>{prin.prinName}</LabelPrin>
+                          <LabelPrin className="prinlabelName" style={{ fontSize: "100%" }}>{prin.prinName.substring(20, 0)}</LabelPrin>
                           <PrintLn />
-                          <LabelPrin className="prinLabelid">{prin.prinId}</LabelPrin>
+                          <LabelPrin className="prinLabelid">{prin.prinId.substring(20,0)}</LabelPrin>
                         </Kotak>
                       </Kotak>
                     </Kotak>
                   )
                 })
+              }
+              {
+                (this.state.principals.length > 0) ?
+                  ""
+                  :
+                  <>
+                    <img src={DataNotFound} style={{width:"90%"}} />
+                  </>
               }
             </Kotak>
             <Kotak className="prinKiriPagin">
@@ -578,7 +611,7 @@ class Principal extends Component {
                 </Pilih>
               </Kotak>
               <Kotak className="prinPage" style={{ width: "72%" }}>
-                <Pagination color="primary" style={{borderRadius:"10px", background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
+                <Pagination color="primary" style={{ borderRadius: "10px", background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
               </Kotak>
             </Kotak>
           </Kotak>
@@ -640,7 +673,7 @@ class Principal extends Component {
                 <InputPrin type="text" value={prinConPhone} disabled={this.state.disableInput} className="prinForm" name="prinConPhone" onChange={this.setValue} placeholder="Principal Contact Phone" ></InputPrin>
               </Kotak>
               <Kotak>
-                <InputPrin type="date" value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
+                <InputPrin type="date" min={this.NewDate()} value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
               </Kotak>
               <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px" }} />
               <Kotak>

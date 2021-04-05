@@ -18,6 +18,8 @@ import UpdateIcon from '@material-ui/icons/Update';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {  withStyles } from '@material-ui/core/styles';
 import {red, green, purple } from '@material-ui/core/colors';
+import DataNotFound from '../../components/compNotfound/Notfound.gif'
+import SearchIcon from '@material-ui/icons/Search';
 const UpdateButton = withStyles((theme) => ({
     root: {
       color: theme.palette.getContrastText(purple[500]),
@@ -92,6 +94,10 @@ class Distributor extends Component {
 }
     //------------------------------------------SET VALUE---------------------------------------------
     setValue = el => {
+        if(el.target.name === "searchDis" && el.target.value === ""){
+            this.getAPICount();
+            this.getPaging(this.state.pageNow, this.state.limit);
+          }
         this.setState({
             [el.target.name]: el.target.value  
         })
@@ -507,7 +513,7 @@ getApiCountName =()=>{
         <>
           <Kotak className="prinAtas">
                 <InputPrin className="SeacrhPrin" style={{marginRight:"1%"}} name="searchDis" onChange={this.setValue} placeholder="Search Name Distributor..." value={this.state.searchDis}></InputPrin>
-                <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Button>
+                <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Button>
                 <Ikon className="far fa-window-close" style={{marginRight:"40%",cursor:"pointer",color:"red"}} onClick={()=> this.searchName()}></Ikon>
                     <Button startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary"   onClick={()=>this.buttonAdd()} disabled={this.state.butCondAdd}>{this.state.butCondi? "ADD" : "SAVE"}</Button>
                     <UpdateButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={this.buttonEdit}  disabled={this.state.disabledButEdit} >{this.state.butCondEdit? "EDIT" : "UPDATE"}</UpdateButton>
@@ -516,7 +522,7 @@ getApiCountName =()=>{
          <Kotak className="bodyPrin">
                
                 <Kotak className="prinKiri">
-                <Kotak className="prinKiriTabel" >
+                <Kotak className={( this.state.distributors.length<6)  ? "prinKiriTabel":"prinKiriTabelScroll"}>
                     {/* ini nanti di for */}
                     {
                         this.state.distributors.map((dis,idx)=>{
@@ -527,17 +533,25 @@ getApiCountName =()=>{
                                 <Ikon className="fas fa-hand-holding-usd" style={{color:"white",display:'inline-block', width:"70px" ,fontSize:"65px"}}></Ikon>
                                 </Kotak>
                                 <Kotak className="prinlabelTabel" style={{marginTop:"0px"}}>
-                                <LabelPrin className="prinlabelName">{dis.disName}</LabelPrin>
+                                <LabelPrin className="prinlabelName">{dis.disName.substring(20,0)}</LabelPrin>
                                 <PrintLn/>
-                                <LabelPrin className="prinLabelalamat">{dis.disCity}</LabelPrin>
+                                <LabelPrin className="prinLabelalamat">{dis.disCity.substring(20,0)}</LabelPrin>
                                 <PrintLn/>
-                                <LabelPrin className="prinLabelid">{dis.disId}</LabelPrin>
+                                <LabelPrin className="prinLabelid">{dis.disId.substring(20,0)}</LabelPrin>
                                 </Kotak>
                                 </Kotak>
                                 </Kotak>
                             )
                         })  
                   }
+                   {
+                (this.state.distributors.length > 0) ?
+                  ""
+                  :
+                  <>
+                    <img src={DataNotFound} style={{width:"90%"}} />
+                  </>
+              }
                    
             </Kotak>
                 <Kotak className="prinKiriPagin">
@@ -549,7 +563,7 @@ getApiCountName =()=>{
                     </Pilih>
                     </Kotak>
                     <Kotak className="prinPage" style={{width:"75%"}}>
-                    <Pagination style={{background:'white'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
+                    <Pagination color="primary" style={{background:'white'}} page={this.state.page} onChange={this.handleChange}  count={this.state.count} />
                 </Kotak>
                 </Kotak>
                 </Kotak>

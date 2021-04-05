@@ -1,70 +1,81 @@
-import React, { useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 import { connect } from 'react-redux';
 import Swal from 'sweetalert2'
+import React, { Component } from 'react';
 
-const verifLogout = (logout,history,dataNavbar) => {
-  if (dataNavbar === true){
-    Swal.fire(
-      'Cannot Logout. Finish input your data!!',
-      '',
-      'warning'
-    )
+class Navbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      sidebar:false
+     } 
   }
-  else{
-  Swal.fire({
-    title: 'Do you want to Logout?',
-    showCancelButton: true,
-    confirmButtonText: `Yes`,
-  }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed) {
-      Swal.fire('LogOut Success..!', '', 'success')
-      logout();
-      history.push("/")
-    } 
-  })
-}
-}
-
-function Navbar(props) {
-  const [sidebar, setSidebar] = useState(false);
-  const showSidebar = () => {
-  if (props.dataNavbar === true){
-    Swal.fire(
-      'finish input your data!!',
-      '',
-      'warning'
-    )
+  showSidebar = () => {
+    if (this.props.dataNavbar === true){
+      Swal.fire(
+        'finish input your data!!',
+        '',
+        'warning'
+      )
+    }
+    else{
+    this.setState({
+      sidebar:true
+    })
+    }
   }
-  else{
-  setSidebar(!sidebar);
+  hideSidebar=()=>{
+    this.setState({
+      sidebar:false
+    })
   }
-}
-  console.log("data login Navbar " , props.dataLoginUser)
-  console.log(props.dataNavbar)
+  verifLogout = (logout,history,dataNavbar) => {
+    if (dataNavbar === true){
+      Swal.fire(
+        'Cannot Logout. Finish input your data!!',
+        '',
+        'warning'
+      )
+    }
+    else{
+    Swal.fire({
+      title: 'Do you want to Logout?',
+      icon:'question',
+      showCancelButton: true,
+      confirmButtonText: `Yes`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire('LogOut Success..!', '', 'success')
+        logout();
+        history.push("/")
+      } 
+    })
+  }
+  }
+  render() { 
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }} >
         <div className='navbar1' >
-            <FaIcons.FaBars style={{cursor:'pointer'}} className='menu-bars1' onClick={()=>{showSidebar()}} />
+            <FaIcons.FaBars style={{cursor:'pointer'}} className='menu-bars1' onClick={()=>{this.showSidebar()}} />
           <div className="thisHeader1" style={{fontFamily:"Georgia, serif"}}>
                 <div className="bungkusWelcome" style={{marginRight:"240%" }}>
                 <div>
                 <label className="welcome"><b>WELCOME</b></label>
                 </div>
                 <div>
-                <label className="admin" ><b>{props.dataLoginUser.username}</b></label>
+                <label className="admin" ><b>{this.props.dataLoginUser.username}</b></label>
                 </div>
                 </div>
                 <div className="thisLogout">
                 <div>
-                <i className="fas fa-sign-out-alt" onClick={()=>{verifLogout(props.logout, props.history,props.dataNavbar)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
+                <i className="fas fa-sign-out-alt" onClick={()=>{this.verifLogout(this.props.logout, this.props.history,this.props.dataNavbar)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
                 </div>
                 <div>
                     <label style={{color:"white"}}><b>LOGOUT</b></label>
@@ -73,21 +84,21 @@ function Navbar(props) {
             </div>
         </div>
 
-        <nav className={sidebar ? 'nav-menu1 active' : 'nav-menu1'}>
-          <ul className='nav-menu-items1' onClick={showSidebar}>
+        <nav className={this.state.sidebar ? 'nav-menu1 active' : 'nav-menu1'} disabled={this.props.dataNavbar}>
+          <ul className='nav-menu-items1' onClick={()=>{this.hideSidebar()}}>
             <li className='navbar-toggle1'>
-              <Link to='#' className='menu-bars1'>
-                <AiIcons.AiOutlineClose />
-              </Link>
+                <AiIcons.AiOutlineClose className='menu-bars1' style={{cursor:'pointer'}} />
             </li>
             {SidebarData.map((item, index) => {
               return (
-                <li key={index} className={item.cName}>
+                <div  key={index} disabled={this.props.dataNavbar}>
+                <li className={item.cName}>
                   <Link to={item.path}>
                     {item.icon}
                     <span style={{marginLeft:"5%"}}>{item.title}</span>
                   </Link>
                 </li>
+                </div>
               );
             })}
       
@@ -98,6 +109,7 @@ function Navbar(props) {
       
     </>
   );
+}
 }
 
  

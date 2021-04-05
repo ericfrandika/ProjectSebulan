@@ -7,6 +7,7 @@ class Body extends Component {
         this.state = {  }
     }
     render() { 
+        console.log("ini props aneh : " , this.props);
         return ( 
         <>
             <Navbar {...this.props}/>

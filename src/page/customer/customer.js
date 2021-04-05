@@ -23,6 +23,8 @@ import UpdateIcon from '@material-ui/icons/Update';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {  withStyles } from '@material-ui/core/styles';
 import {red, green, purple } from '@material-ui/core/colors';
+import DataNotFound from '../../components/compNotfound/Notfound.gif'
+import SearchIcon from '@material-ui/icons/Search';
 const UpdateButton = withStyles((theme) => ({
     root: {
       color: theme.palette.getContrastText(purple[500]),
@@ -88,6 +90,10 @@ class Customer extends Component {
     }
     //------------------------------------------------SET VALUE--------------------------------------------------
     setValue = el => {
+        if(el.target.name === "searchCus" && el.target.value === ""){
+            this.getAPICount();
+            this.getPaging(this.state.pageNow, this.state.limit);
+          }
         this.setState({
             [el.target.name]: el.target.value
         })
@@ -112,7 +118,7 @@ class Customer extends Component {
             })
         }
         else {
-            if (el.target.name == "prinId") {
+            if (el.target.name === "prinId") {
                 this.setState({
                     [el.target.name]: el.target.value,
                     cusId: this.state.cusName + "." + el.target.value
@@ -225,7 +231,8 @@ class Customer extends Component {
     }
     setLimit = el => {
         this.setState({
-            limit: el.target.value
+            limit: el.target.value,
+            page: 1
         })
         if (this.state.searchCus === "") {
             this.getAPICount();
@@ -542,7 +549,7 @@ class Customer extends Component {
             <>
                 <Kotak className="prinAtas">
                     <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus" disabled={this.state.tableClick} value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
-                    <Button variant="contained" size="small" color="primary"   style={{ marginRight: "1%", width: "5%" }} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Button>
+                    <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Button>
                     <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
                     <Button startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary"   onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
                     <UpdateButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit ? "EDIT" : "UPDATE"}</UpdateButton>
@@ -550,7 +557,7 @@ class Customer extends Component {
                 </Kotak>
                 <Kotak className="bodyPrin">
                     <Kotak className="prinKiri">
-                        <Kotak className="prinKiriTabel">
+                        <Kotak className={( this.state.customers.length<6)  ? "prinKiriTabel":"prinKiriTabelScroll"}>
                             {/* ini nanti di for */}
                             {
                                 this.state.customers.map((cus, idx) => {
@@ -562,12 +569,12 @@ class Customer extends Component {
                                                 </Kotak>
                                                 <Kotak className="CustomerTabel">
                                                     <Kotak className="CustomerTabelkiri" style={{ fontSize: "80%", marginLeft: "10%" }}>
-                                                        <LabelPrin className="prinlabelName">{cus.cusName}</LabelPrin>
+                                                        <LabelPrin className="prinlabelName">{cus.cusName.substring(25,0)}</LabelPrin>
                                                         <PrintLn />
-                                                        <LabelPrin className="prinLabelid">{cus.cusId}</LabelPrin>
+                                                        <LabelPrin className="prinLabelid">{cus.cusId.substring(25,0)}</LabelPrin>
                                                         {/* <LabelPrin className="prinLabelid" style={{color:"blue" , fontWeight:"upperCase"}}>{"."+cus.prinId}</LabelPrin> */}
                                                         <PrintLn />
-                                                        <LabelPrin className="prinLabelDis" >{cus.prinName}</LabelPrin>
+                                                        <LabelPrin className="prinLabelDis" >{cus.prinName.substring(25,0)}</LabelPrin>
                                                     </Kotak>
                                                     <Kotak className="CustomerTabelKanan">
                                                         <LabelPrin className="prinIndex">{((page * limit) - limit) + idx + 1}</LabelPrin>
@@ -584,6 +591,14 @@ class Customer extends Component {
                                     )
                                 })
                             }
+                                {
+                (this.state.customers.length > 0) ?
+                  ""
+                  :
+                  <>
+                    <img src={DataNotFound} style={{width:"90%"}} />
+                  </>
+              }
 
                         </Kotak>
 
@@ -596,7 +611,7 @@ class Customer extends Component {
                                 </Pilih>
                             </Kotak>
                             <Kotak className="prinPage" style={{ width: "72%" }}>
-                                <Pagination style={{ background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
+                                <Pagination color="primary" style={{ background: 'white', width: "100%" }} page={this.state.page} onChange={this.handleChange} count={this.state.count} />
                             </Kotak>
                         </Kotak>
 

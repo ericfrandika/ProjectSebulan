@@ -14,6 +14,7 @@ class InputPrin extends Component {
             onChange={this.props.onChange}
             style={this.props.style}
             disabled={this.props.disabled}
+            min={this.props.min}
              />
              </>  );
     }
