@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/nexchief")
 
 public class DistributorController {
@@ -103,7 +103,7 @@ try {
     }
 }
         catch (Exception e){
-            return new ResponseEntity<>(new CustomErrorType("Dont Delete , Principal is Use in Distributor or Customer"),
+            return new ResponseEntity<>(new CustomErrorType("Dont Delete , Distributor is Use in Customer"),
                     HttpStatus.BAD_REQUEST);
         }
     }

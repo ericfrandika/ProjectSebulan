@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/nexchief")
 public class CustomerController {
     public static final Logger logger = LoggerFactory.getLogger(CustomerController.class);

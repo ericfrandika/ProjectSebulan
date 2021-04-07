@@ -34,7 +34,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin/nexchief")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @Configuration
 @EnableScheduling
 

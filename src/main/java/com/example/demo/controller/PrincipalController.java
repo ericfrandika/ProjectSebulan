@@ -17,7 +17,6 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/nexchief")
 public class PrincipalController {
     public static final Logger logger = LoggerFactory.getLogger(PrincipalController.class);
