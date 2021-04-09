@@ -59,29 +59,30 @@ class Navbar extends Component {
   }
   }
   render() { 
+
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }} >
         <div className='navbar1' >
             <FaIcons.FaBars style={{cursor:'pointer'}} className='menu-bars1' onClick={()=>{this.showSidebar()}} />
           <div className="thisHeader1" style={{fontFamily:"Georgia, serif"}}>
-                <div className="bungkusWelcome" style={{marginRight:"240%" }}>
+                <div className="bungkusWelcome" style={{marginRight:"1%" }}>
                 <div>
                 <label className="welcome"><b>WELCOME</b></label>
                 </div>
                 <div>
-                <label className="admin" ><b>{this.props.dataLoginUser.username}</b></label>
+                <label className="admin" ><b><center>{this.props.dataLoginUser.username}</center></b></label>
                 </div>
                 </div>
-                <div className="thisLogout">
+            </div>
+            <div className="thisLogout">
                 <div>
-                <i className="fas fa-sign-out-alt" onClick={()=>{this.verifLogout(this.props.logout, this.props.history,this.props.dataNavbar)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15px",fontSize:"30px" ,cursor:"pointer"}}></i>
+                <i className="fas fa-sign-out-alt" onClick={()=>{this.verifLogout(this.props.logout, this.props.history,this.props.dataNavbar)}} style={{color:"#cd0000",display:'inline-block', width:"70px" ,marginLeft:"15%",fontSize:"30px" ,cursor:"pointer"}}></i>
                 </div>
                 <div>
                     <label style={{color:"white"}}><b>LOGOUT</b></label>
                 </div>
                 </div>
-            </div>
         </div>
 
         <nav className={this.state.sidebar ? 'nav-menu1 active' : 'nav-menu1'} disabled={this.props.dataNavbar}>

@@ -21,29 +21,11 @@ import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import UpdateIcon from '@material-ui/icons/Update';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {  withStyles } from '@material-ui/core/styles';
-import {red, green, purple } from '@material-ui/core/colors';
 import DataNotFound from '../../components/compNotfound/Notfound.gif'
 import SearchIcon from '@material-ui/icons/Search';
-const UpdateButton = withStyles((theme) => ({
-    root: {
-      color: theme.palette.getContrastText(purple[500]),
-      backgroundColor: green[500],
-      '&:hover': {
-        backgroundColor: green[700],
-      },
-    },
-  }))(Button);
-  
-  const DeleteButton = withStyles((theme) => ({
-    root: {
-      color: theme.palette.getContrastText(purple[500]),
-      backgroundColor: red[700],
-      '&:hover': {
-        backgroundColor: red[800],
-      },
-    },
-  }))(Button);
+import UpdateButton from '../../components/compButton/updateButton';
+import DeleteButton from '../../components/compButton/deleteButton';
+
 class Customer extends Component {
     constructor(props) {
         super(props);
@@ -84,15 +66,18 @@ class Customer extends Component {
             act: 0,
             actEdit: 0,
             actDelete: 0,
-            actSearch: 0
+            actSearch: 0,
+            apiCus:"http://localhost:8080/admin/nexchief/customer/",
             //-----------------------------------------------------------------------------------------------------------------
         }
     }
     //------------------------------------------------SET VALUE--------------------------------------------------
     setValue = el => {
         if(el.target.name === "searchCus" && el.target.value === ""){
-            this.getAPICount();
             this.getPaging(this.state.pageNow, this.state.limit);
+            this.setState({
+                page:1
+            })
           }
         this.setState({
             [el.target.name]: el.target.value
@@ -137,73 +122,65 @@ class Customer extends Component {
 
     //-----------------------------------------------------Component Did Mount-------------------------------------------------------------------------
     componentDidMount() {
-        this.getAPICount();
         this.getPaging(this.state.pageNow, this.state.limit);
     }
-    //----------------------------------------------GET API COUNT----------------------------------
-    getAPICount = () => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/count/")
-            .then(resp => {
-                let limitPage = resp.data / this.state.limit
-                this.setState({
-                    count: Math.ceil(limitPage)
-                })
-            })
-            .catch(() => {
-                alert("Failed fetching")
-            })
-    }
+   
     //--------------------------------------GetCountAndApiName-------------------------------
     getApiName = (value, limit) => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/name/" + this.state.searchCus + "?page=" + value + "&limit=" + limit)
-            .then(resp => {
-                this.setState({ customers: resp.data })
-                console.log(resp.data)
+        axios.get(this.state.apiCus+"name/" + this.state.searchCus + "?page=" + value + "&limit=" + limit,
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
+            .then((resp) => {
+                let limitPage = resp.data.count / this.state.limit
+                this.setState({
+                    customers: resp.data.customer,
+                    count: Math.ceil(limitPage)
+
+                });
             })
-            .catch(() => {
+            .catch((resp) => {
+                if(resp.response.status === 403 ){
+                    console.log(resp.response.status)
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: ' Session expired, please login again'
+                    })
+                    this.props.logout()
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Fetching Failed'
+                      })
+                }
             })
-        this.setState({
-            actSearch: 1,
-        })
+       
     }
     searchName = () => {
-        this.getAPICount();
         this.getPaging(this.state.page, this.state.limit);
         this.setState({
-            actSearch: 0,
             searchCus: ""
         })
-
     }
 
-    //---------------------------------------SEarchName--------------------------------------------
-
-    getApiCountName = () => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/countName/" + this.state.searchCus)
-            .then(resp => {
-                let limitPage = resp.data / this.state.limit
-                this.setState({
-                    count: Math.ceil(limitPage)
-                })
-            })
-            .catch(() => {
-
-            })
-    }
     //-------------------------------------------Search Name Distributor------------------------------------------------------------
     buttonSearch = () => {
         if (this.state.searchCus === "") {
-            this.getAPICount();
             this.getPaging(this.state.pageNow, this.state.limit);
             this.setState({
-                searchCus: ""
+                searchCus: "",
+                page:1
             })
         }
         else {
-            this.getApiCountName();
             this.getApiName(this.state.pageNow, this.state.limit)
             this.setState({
-                actSearch: 1
+                actSearch: 1,
+                page:1
             })
         }
     }
@@ -213,21 +190,39 @@ class Customer extends Component {
             page: value
         })
         if (this.state.searchCus === "") {
-            this.getAPICount();
             this.getPaging(value, this.state.limit);
         }
         else {
-            this.getApiCountName();
             this.getApiName(value, this.state.limit)
         }
     }
     getPaging = (value, limit) => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/paging/?page=" + value + "&limit=" + limit)
+        axios.get(this.state.apiCus+"paging/?page=" + value + "&limit=" + limit,
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
             .then((resp) => {
+                let limitPage = resp.data.count / this.state.limit
                 this.setState({
-                    customers: resp.data,
+                    customers: resp.data.customer,
+                    count: Math.ceil(limitPage)
                 });
-            });
+            })
+            .catch((resp) => {
+                if(resp.response.status === 403 ){
+                  console.log(resp.response.status)
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ' Session expired, please login again'
+                  })
+                  this.props.logout()             
+              }
+              else{
+                alert("Failed fetching")
+              }
+              }) ;
     }
     setLimit = el => {
         this.setState({
@@ -235,11 +230,9 @@ class Customer extends Component {
             page: 1
         })
         if (this.state.searchCus === "") {
-            this.getAPICount();
             this.getPaging(this.state.pageNow, el.target.value);
         }
         else {
-            this.getApiCountName();
             this.getApiName(this.state.pageNow, el.target.value);
         }
     }
@@ -305,16 +298,18 @@ class Customer extends Component {
             else {
                 Swal.fire({
                     title: 'Do you want to save the changes?',
-                    showDenyButton: false,
                     showCancelButton: true,
                     confirmButtonText: `Save`,
-                    denyButtonText: `Don't save`,
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        axios.post("http://localhost:8080/admin/nexchief/customer/", {
+                        axios.post(this.state.apiCus, {
                             ...objCustomer
-                        })
+                        },
+                        {
+                            headers: {
+                                'Authorization': "Bearer " +this.props.dataToken       
+                          }})
                             .then((resp) => {
                                 this.setState({
                                     butCondi: true,
@@ -325,22 +320,28 @@ class Customer extends Component {
                                     act: 0,
                                     actDelete: 1,
                                     tableClick: false
-
                                 })
-                                this.getAPICount();
                                 this.getPaging(this.state.pageNow, this.state.limit);
+                                Swal.fire('Saved!', '', 'success')
                             })
                             .catch((resp) => {
-                                console.log(resp.response)
-                                Swal.fire({
+                                    if(resp.response.status === 403 ){
+                                      console.log(resp.response.status)
+                                      Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: ' Session expired, please login again'
+                                      })
+                                      this.props.logout()             
+                                  }
+                                else{
+                                    Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
                                     text: resp.response.data.errorMessage || resp.response.data
                                 })
+                            }
                             })
-                        Swal.fire('Saved!', '', 'success')
-                    } else if (result.isDenied) {
-                        Swal.fire('Changes are not saved', '', 'info')
                     }
                 })
             }
@@ -379,16 +380,18 @@ class Customer extends Component {
             else {
                 Swal.fire({
                     title: 'Do you want to save the changes?',
-                    showDenyButton: false,
                     showCancelButton: true,
                     confirmButtonText: `Update`,
-                    denyButtonText: `Don't Update`,
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
-                        axios.put("http://localhost:8080/admin/nexchief/customer/" + this.state.cusId, {
+                        axios.put(this.state.apiCus + this.state.cusId, {
                             ...objCustomer
-                        })
+                        },
+                        {
+                            headers: {
+                                'Authorization': "Bearer " +this.props.dataToken       
+                          }})
                             .then((resp) => {
                                 this.setState({
                                     butCondEdit: true,
@@ -402,21 +405,28 @@ class Customer extends Component {
                                     tableClick: false,
 
                                 });
-                                this.getAPICount();
                                 this.getPaging(this.state.pageNow, this.state.limit);
+                                Swal.fire('Update!', '', 'success')
                             })
                             .catch((resp) => {
-                                console.log(resp.response)
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: resp.response.data.errorMessage || resp.response.data
-                                })
+                                    if(resp.response.status === 403 ){
+                                      console.log(resp.response.status)
+                                      Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: ' Session expired, please login again'
+                                      })
+                                      this.props.logout()
+                                  }
+                                  else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: resp.response.data.errorMessage || resp.response.data
+                                    })
+                                }    
                             })
-
-                        Swal.fire('Update!', '', 'success')
-                    } else if (result.isDenied) {
-                        Swal.fire('Changes are not Update', '', 'info')
+                        
                     }
                 })
             }
@@ -459,7 +469,11 @@ class Customer extends Component {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete("http://localhost:8080/admin/nexchief/customer/" + this.state.cusId)
+                    axios.delete(this.state.apiCus + this.state.cusId,
+                    {
+                        headers: {
+                            'Authorization': "Bearer " +this.props.dataToken       
+                      }})
                         .then(resp => {
                             this.setState({
                                 disabledButDel: true,
@@ -468,14 +482,31 @@ class Customer extends Component {
                                 discreatedBy: "",
                                 tableClick: false
                             })
-                            this.getAPICount();
                             this.getPaging(this.state.pageNow, this.state.limit)
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
                         })
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+                        .catch((resp) => {
+                            if(resp.response.status === 403 ){
+                              console.log(resp.response.status)
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Session expired, please login again'
+                              })
+                              this.props.logout()
+                          }
+                            else {
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: resp.response.data.errorMessage || resp.response.data
+                            })
+                          }
+                          })
                 }
             })
         }
@@ -483,9 +514,12 @@ class Customer extends Component {
 
     //---------------------------------------------------Button TampilForm---------------------------------
     HandleTable = (cusId) => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/" + cusId)
+        axios.get(this.state.apiCus+ cusId,
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
             .then(resp => {
-                console.log(resp.data);
                 this.setState({
                     objCus: resp.data,
                     disabledButEdit: false,
@@ -508,16 +542,26 @@ class Customer extends Component {
                     cusupdatedBy: resp.data.cusupdatedBy
                 })
             })
-            .catch(() => {
-                alert('fetching Failed')
-            })
+            .catch((resp) => {
+                if(resp.response.status === 403 ){
+                  console.log(resp.response.status)
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Session expired, please login again'
+                  })
+                  this.props.logout()
+              }
+                else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Fetching Failed'
+                })
+              }
+              })
     }
     //-------------------------------------------------------Reset RESET -------------------------------------------------------
-    resetCusObj = () => {
-        this.setState({
-            objCus: {}
-        })
-    }
 
     resetState = () => {
         this.setState({
@@ -539,21 +583,21 @@ class Customer extends Component {
     }
 
     render() {
-
         this.props.dataNavbar({ dataNavbar: this.state.tableClick })
-        console.log("SearchName", this.state.searchCus);
         const { page, limit, cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
-        console.log("TOGGLE : ", this.state.cusOnOff);
-
         return (
             <>
                 <Kotak className="prinAtas">
+                <Kotak className="prinAtasKiri">
                     <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus" disabled={this.state.tableClick} value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
                     <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Button>
-                    <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
+                    <Ikon className="far fa-window-close" style={{  cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
+                   </Kotak>
+                   <Kotak className="prinAtasKanan">
                     <Button startIcon={<SaveIcon />} style={{marginRight:"8px"}} variant="contained" size="small" color="primary"   onClick={this.buttonAdd} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
                     <UpdateButton startIcon={<UpdateIcon />}  style={{marginRight:"8px" }} variant="contained" size="small" color="primary" onClick={this.buttonEdit} disabled={this.state.disabledButEdit}>{this.state.butCondEdit ? "EDIT" : "UPDATE"}</UpdateButton>
                     <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary"  onClick={this.buttonCancel} disabled={this.state.disabledButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
+               </Kotak>
                 </Kotak>
                 <Kotak className="bodyPrin">
                     <Kotak className="prinKiri">
@@ -577,7 +621,7 @@ class Customer extends Component {
                                                         <LabelPrin className="prinLabelDis" >{cus.prinName.substring(25,0)}</LabelPrin>
                                                     </Kotak>
                                                     <Kotak className="CustomerTabelKanan">
-                                                        <LabelPrin className="prinIndex">{((page * limit) - limit) + idx + 1}</LabelPrin>
+                                                        <LabelPrin className="prinIndex">{((page * limit) - limit)+ idx + 1}</LabelPrin>
                                                         <PrintLn />
                                                         <LabelPrin className="prinTgl" style={{ color: "#4CC417", fontSize: "small" }}>2020-03-11</LabelPrin>
                                                         <PrintLn />
@@ -596,7 +640,7 @@ class Customer extends Component {
                   ""
                   :
                   <>
-                    <img src={DataNotFound} style={{width:"90%"}} />
+                    <img src={DataNotFound} alt="dataNotFound"  style={{width:"90%"}} />
                   </>
               }
 
@@ -715,7 +759,7 @@ class Customer extends Component {
                                 </FormGroup>
                             </Kotak>
                             <Kotak>
-                                <InputPrin type="date" style={{ width: "20%" }} disabled={this.state.disableInput} disabled={true} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
+                                <InputPrin type="date" style={{ width: "20%" }}  disabled={true} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
                             </Kotak>
                             <Kotak>
                                 <InputPrin type="date" style={{ width: "20%" }} disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
@@ -745,11 +789,13 @@ class Customer extends Component {
 const mapStateToProps = state => ({
     dataLoginUser: state.authReducer.userLogin,
     dataPrincipal: state.prinReducer.reducPrincipal,
-    dataDistributor: state.disReducer.reducDistributor
+    dataDistributor: state.disReducer.reducDistributor,
+    dataToken : state.authReducer.token
 })
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
     return {
         dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
+        logout: () => dispatch({ type: "LOGOUT" })
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Customer);

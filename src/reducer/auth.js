@@ -1,9 +1,11 @@
 let defaultState={
     statusNavbar: false,
+    token:"",
     isLogin: false,
     userLogin : {
         username:""
-    }
+    },
+    
 }
 
 const authReducer = (state=defaultState, action)=>{
@@ -13,6 +15,7 @@ const authReducer = (state=defaultState, action)=>{
         case "LOGIN":
             console.log("object")
             return{
+                ...state,
                 isLogin: true,
                 userLogin : {
                     username:action.payload.dataLogin.username,
@@ -22,7 +25,11 @@ const authReducer = (state=defaultState, action)=>{
         case "LOGOUT":
             return{
                 ...state,
-                isLogin: false
+                userLogin : {
+                    username:""
+                }  ,
+                isLogin: false,
+                token:""
             }
             
         case "NAVBAR":
@@ -30,7 +37,12 @@ const authReducer = (state=defaultState, action)=>{
                 ...state,
                 statusNavbar: action.payload.dataNavbar
             }
-            
+
+            case "TOKEN":
+                return{
+                    ...state,
+                    token: action.payload.dataToken
+                }
         default:
             return state;
     }

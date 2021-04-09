@@ -7,11 +7,22 @@
 .prinAtas{
     width: 100%;
     height: 6vh;
+    display: flex;
+    background-color: white;
+}
+.prinAtasKiri{
+    width: 50%;
+
+}
+.prinAtasKanan{
+    width: 50%;
+    margin-left: 30%;
+    padding: 0.2%;
 }
 .SeacrhPrin{
     margin-left: 1%;
     margin-top: 5px;
-    width: 20%;
+    width: 60%;
     height: 20px;
     font-size: larger;
     border-radius: 10px;
@@ -107,16 +118,20 @@
     color: white;
     display:inline-block;
     width: 100%;
-    height: 25px;
+    height: 4vh;
     border-bottom-style: solid;
 }
 .prinForm{
-    width: 500px;
-    height: 23px;
+    width: 85%;
+    height: 3.7vh;
 }
 .prinAlamat{
-    height:46px;
+    width: 85%;
+    height:7.5vh;
     resize: none;
+}
+.divAlamat{
+    height:8.6vh;
 }
 .spaceAlamat{
     margin-bottom: 0px;

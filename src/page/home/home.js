@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
-import HomePng from '../home/home.png'
-import HomesPng from '../home/home2.jpg'
-import { Link, Redirect } from 'react-router-dom';
+import Salam from '../home/salam.jpg'
+import Salam2 from '../home/salam2.jpg'
+import Laptop from '../home/laptop1.jpg'
 import Carousel from 'react-elastic-carousel';
-
 import './style.css'
 import axios from 'axios';
+import Swal from 'sweetalert2';
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -16,54 +15,99 @@ class Home extends Component {
             countPrincipal:0,
             countDistributor:0,
             countCustomer:0,
+            apiCount:"http://localhost:8080/admin/nexchief/",
+            forbidden:false
         }
     }
 
     componentDidMount() {
-        this.getAPICountPrincipal()
-        this.getAPICountDistributor()
-        this.getAPICountCustomer()
+        if(this.state.forbidden===false){
+            this.getAPICountPrincipal()
+            if(this.state.forbidden===false){
+                this.getAPICountDistributor()
+                if(this.state.forbidden===false){
+                    this.getAPICountCustomer()
+                }
+            }
+        }
     }
     getAPICountPrincipal = () => {
-        axios.get("http://localhost:8080/admin/nexchief/principal/count/")
+        axios.get(this.state.apiCount+"principal/paging/?page=1&limit=1",{
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
           .then(resp => {
             this.setState({
-                countPrincipal:resp.data
+                countPrincipal:resp.data.count
             })
           })
-          .catch(() => {
-            alert("Failed fetching")
+          .catch((resp) => {
+            if(resp.response.status === 403){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ' Session expired, please login again'
+                  })
+                  this.setState({
+                    forbidden:true
+                  })
+                this.props.logout()             
+            }
           })
       }
 
       getAPICountDistributor=()=>{
-        axios.get("http://localhost:8080/admin/nexchief/distributor/count/")
+        axios.get(this.state.apiCount+"distributor/paging/?page=1&limit=1" ,
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
         .then(resp =>{
           this.setState({
-             countDistributor :resp.data
+             countDistributor :resp.data.count
             })
         })
-        .catch(() =>{
-          alert("Failed fetching")
+        .catch((resp) =>{
+            if(resp.response.status === 403){  
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ' Session expired, please login again'
+                  })
+                  this.setState({
+                    forbidden:true
+                  })
+                this.props.logout()    
+            }
         })
     }
     getAPICountCustomer = () => {
-        axios.get("http://localhost:8080/admin/nexchief/customer/count/")
+        axios.get(this.state.apiCount+"customer/paging/?page=1&limit=1",
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
             .then(resp => {
                 this.setState({
-                    countCustomer: resp.data
+                    countCustomer: resp.data.count
                 })
             })
-            .catch(() => {
-                alert("Failed fetching")
+            .catch((resp) => {
+                if(resp.response.status === 403){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: ' Session expired, please login again'
+                      })
+                      this.setState({
+                        forbidden:true
+                      })
+                    this.props.logout()             
+                }
             })
     }
 
     render() {
-
-        if (this.props.checkLogin === false) {
-            <Redirect to="/" />
-        }
         const {countPrincipal,countDistributor,countCustomer} =this.state
         return (
             <>
@@ -72,13 +116,18 @@ class Home extends Component {
 
                     </div>
                     <div className="bodyKananHome">
+
+                        
                         <div className="bodyCarousell">
                             <Carousel >
-                                {/* {this.state.items.map(item => <div key={item.id}>{item.title}</div>)} */}
-                                <img src="https://i.ibb.co/JQZkJ4J/scott-graham-5f-Nm-Wej4t-AA-unsplash.jpg" className="sliderimg" alt="" />
-                                <img src={HomesPng} className="sliderimg" alt="" />
+                                <img src={Salam} className="sliderimg" alt="" />
+                                <img src={Salam2} className="sliderimg" alt="" />
+                                <img src={Laptop} className="sliderimg" alt="" />
                             </Carousel>
                         </div>
+
+
+
                         <div className="bodyhomebawah">
                             <div className="bodyhomebawahHeader">
                                     <center><label className="labelNexChief1">Nex</label>
@@ -137,8 +186,8 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
     checkLogin: state.authReducer.isLogin,
-    dataLoginUser: state.authReducer.userLogin
-
+    dataLoginUser: state.authReducer.userLogin,
+    dataToken : state.authReducer.token
 })
 
 const mapDispatchToProps = dispatch => {

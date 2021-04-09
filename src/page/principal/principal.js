@@ -17,30 +17,10 @@ import { Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import UpdateIcon from '@material-ui/icons/Update';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { withStyles } from '@material-ui/core/styles';
-import { red, green, purple } from '@material-ui/core/colors';
 import DataNotFound from '../../components/compNotfound/Notfound.gif'
 import SearchIcon from '@material-ui/icons/Search';
-const ColorButton = withStyles((theme) => ({
-  root: {
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: green[500],
-    '&:hover': {
-      backgroundColor: green[700],
-    },
-  },
-}))(Button);
-
-const DeleteButton = withStyles((theme) => ({
-  root: {
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: red[700],
-    '&:hover': {
-      backgroundColor: red[800],
-    },
-  },
-}))(Button);
-
+import UpdateButton from '../../components/compButton/updateButton';
+import DeleteButton from '../../components/compButton/deleteButton';
 
 class Principal extends Component {
   constructor(props) {
@@ -86,62 +66,70 @@ class Principal extends Component {
       actEdit: 0,
       actDelete: 0,
       tableClick: false,
-      min:""
+      min: "",
+      apiall:"http://localhost:8080/admin/nexchief/principal/",
+      forbidden:false
       //----------------------------------------------------------------------------------------------------------
     }
   }
   componentDidMount() {
+    if (this.state.forbidden === false){
     this.getApiALLPrincipal();
-    this.getAPICount();
-    this.getPaging(this.state.page, this.state.limit);
+      if (this.state.forbidden === false){
+        this.getPaging(this.state.page, this.state.limit);
+      }
+    }
   }
 
   setValue = el => {
-    if(el.target.name === "searchPrin" && el.target.value === ""){
-      this.getAPICount();
+    if (el.target.name === "searchPrin" && el.target.value === "") {
       this.getPaging(this.state.pageNow, this.state.limit);
+      this.setState({
+        page:1
+    })
     }
-    
     this.setState({
       [el.target.name]: el.target.value
     })
-  
+
   }
   setLimit = el => {
     this.setState({
       limit: el.target.value,
       page: 1
     })
-    console.log("ini log : ", this.state.limit);
     if (this.state.searchPrin === "") {
-      this.getAPICount();
       this.getPaging(this.state.pageNow, el.target.value);
     }
     else {
-      this.getApiCountName();
       this.getApiName(this.state.pageNow, el.target.value);
     }
   }
   //---------------------------------------------------FUNCTION GET API--------------------------------------
   getApiALLPrincipal = () => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/")
+    axios.get(this.state.apiall, {
+      headers: {
+        'Authorization': "Bearer " + this.props.dataToken
+      }
+    })
       .then(resp => {
         this.props.dataPrincipal({ dataPrincipal: resp.data })
       })
-      .catch(() => {
+      .catch((resp) => {
+        if(resp.response.status === 403){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: ' Session expired, please login again'
+          })
+          this.setState({
+            forbidden:true
+          })
+          this.props.logout()             
+      }
+      else{
         alert("Failed fetching")
-      })
-  }
-  getAPICount = () => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/count/")
-      .then(resp => {
-        let limitPage = resp.data / this.state.limit
-        this.setState({
-          count: Math.ceil(limitPage)
-        })
-      })
-      .catch(() => {
-        alert("Failed fetching")
+      }
       })
   }
   //--------------------------------------------------------ONCHANGE PAGINATION------------------------------------------
@@ -150,35 +138,71 @@ class Principal extends Component {
       page: value,
     });
     if (this.state.searchPrin === "") {
-      this.getAPICount();
       this.getPaging(value, this.state.limit);
     }
     else {
-      this.getApiCountName();
       this.getApiName(value, this.state.limit)
     }
 
   };
   getPaging = (value, limit) => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/paging/?page=" + value + "&limit=" + limit)
+    axios.get(this.state.apiall+"paging/?page=" + value + "&limit=" + limit, {
+      headers: {
+        'Authorization': "Bearer " + this.props.dataToken
+      }
+    })
       .then((resp) => {
+       let limitPage = resp.data.count / this.state.limit
         this.setState({
-          principals: resp.data,
+          principals: resp.data.principal,
+          count: Math.ceil(limitPage)
         });
-      });
+      })
+      .catch((resp) => {
+        if(resp.response.status === 403 ){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: ' Session expired, please login again'
+          })
+          this.setState({
+            forbidden:true
+          })
+          this.props.logout()             
+      }
+      else{
+        alert("Failed fetching")
+      }
+      }) ;
   }
-
   //--------------------------------------------------GET PAGING NAME---------------------------------------------
   getApiName = (value, limit) => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/name/" + this.state.searchPrin + "?page=" + value + "&limit=" + limit)
+    axios.get(this.state.apiall+"name/" + this.state.searchPrin + "?page=" + value + "&limit=" + limit, {
+      headers: {
+        'Authorization': "Bearer " + this.props.dataToken
+      }
+    })
       .then(resp => {
-        this.setState({ principals: resp.data })
-        console.log(resp.data)
+         let limitPage = resp.data.count / this.state.limit
+        this.setState({ 
+          principals: resp.data.principal ,
+              count: Math.ceil(limitPage)
+        })
       })
-      .catch(() => {
-
+      .catch((resp) => {
+        if(resp.response.status === 403 ){
+          console.log(resp.response.status)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: ' Session expired, please login again'
+          })
+          this.props.logout()             
+      }
+      else{
+        alert("Failed fetching")
+      }
       })
-
   }
   //---------------------------------------------------Button Add--------------------------------------
   buttonAdd = () => {
@@ -201,7 +225,6 @@ class Principal extends Component {
         disableButDel: false,
 
       });
-      console.log("ini Admin ", this.state.princreatedBy)
       this.resetState();
     }
     else {
@@ -237,13 +260,16 @@ class Principal extends Component {
           denyButtonText: `Don't save`,
         }).then((result) => {
           if (result.isConfirmed) {
-            axios.post("http://localhost:8080/admin/nexchief/principal/", {
+            axios.post(this.state.apiall, {
+              headers: {
+                'Authorization': "Bearer " + this.props.dataToken
+              }
+            }, {
               ...objprincipal
             })
               .then((resp) => {
                 console.log(resp);
                 this.getApiALLPrincipal();
-                this.getAPICount();
                 this.getPaging(this.state.page, this.state.limit);
                 this.setState({
                   butCondi: true,
@@ -257,17 +283,29 @@ class Principal extends Component {
                   disableInputId: true,
 
                 })
+                Swal.fire('Saved!', '', 'success')
               })
               .catch((resp) => {
-                console.log("ini Consolog Eror : ", resp.response)
+                if(resp.response.status === 403){
+                  console.log(resp.response.status)
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ' Session expired, please login again'
+                  })
+                  this.setState({
+                    tableClick: false,
+                  })
+                  this.props.logout()             
+              }
+              else{
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
                   text: resp.response.data.errorMessage || resp.response.data
                 })
+              }
               })
-            Swal.fire('Saved!', '', 'success')
-
           } else if (result.isDenied) {
             Swal.fire('Changes are not saved', '', 'info')
           }
@@ -283,7 +321,6 @@ class Principal extends Component {
   buttonEdit = () => {
     if (this.state.actEdit === 0) {
       let createNow = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
-      console.log(createNow);
       this.setState({
         disableInputId: true,
         butCondEdit: false,
@@ -331,15 +368,18 @@ class Principal extends Component {
           confirmButtonText: `Update`,
           denyButtonText: `Don't Update`,
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            axios.put("http://localhost:8080/admin/nexchief/principal/" + this.state.prinId, {
+            axios.put(this.state.apiall + this.state.prinId, {
               ...objprincipal
-            })
+            },
+              {
+                headers: {
+                  'Authorization': "Bearer " + this.props.dataToken
+                }
+              })
               .then((resp) => {
                 console.log(resp);
                 this.getApiALLPrincipal();
-                this.getAPICount();
                 this.getPaging(this.state.page, this.state.limit);
                 this.setState({
                   butCondEdit: true,
@@ -353,17 +393,29 @@ class Principal extends Component {
                   disableButEdit: true,
                   disableInputId: true
                 });
-                // this.resetState()
-              })
+                Swal.fire('Update!', '', 'success')
+              }) 
               .catch((resp) => {
-                console.log(resp.response)
+                if(resp.response.status === 403){
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ' Session expired, please login again'
+                  })
+                  this.setState({
+                    tableClick: false,
+                  })
+                  this.props.logout()             
+              }
+              else{
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
                   text: resp.response.data.errorMessage || resp.response.data
                 })
+              }
               })
-            Swal.fire('Update!', '', 'success')
+            
           } else if (result.isDenied) {
             Swal.fire('Changes are not Update', '', 'info')
           }
@@ -409,14 +461,17 @@ class Principal extends Component {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.delete("http://localhost:8080/admin/nexchief/principal/" + this.state.prinId)
+          axios.delete(this.state.apiall + this.state.prinId, {
+            headers: {
+              'Authorization': "Bearer " + this.props.dataToken
+            }
+          })
             .then(resp => {
               this.setState({
                 disableButDel: true,
                 disableButEdit: true,
               })
               this.getApiALLPrincipal();
-              this.getAPICount();
               this.getPaging(this.state.page, this.state.limit);
               Swal.fire(
                 'Deleted!',
@@ -437,10 +492,26 @@ class Principal extends Component {
   }
   //---------------------------------------------------Button TampilForm---------------------------------
   HandleTable = (prinId) => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/" + prinId)
+    axios.get(this.state.apiall + prinId, {
+      headers: {
+        'Authorization': "Bearer " + this.props.dataToken
+      }
+    })
       .then(resp => {
         this.setState({
-          objPrin: resp.data,
+          prinId: resp.data.prinId,
+          prinName: resp.data.prinName,
+          prinAddress: resp.data.prinAddress,
+          prinCity: resp.data.prinCity,
+          prinPhone: resp.data.prinPhone,
+          prinFax: resp.data.prinFax,
+          prinCountry: resp.data.prinCountry,
+          prinConPhone: resp.data.prinConPhone,
+          prinLicensed: resp.data.prinLicensed,
+          princreatedAt: resp.data.princreatedAt,
+          princreatedBy: resp.data.princreatedBy,
+          prinupdatedAt: resp.data.prinupdatedAt,
+          prinupdatedBy: resp.data.prinupdatedBy,
         })
       })
       .catch(() => {
@@ -450,12 +521,6 @@ class Principal extends Component {
       disableButEdit: false,
       disableButDel: false,
     }))
-  }
-  //-------------------------------------------------------RESET OBJEK--------------------------------------------------
-  resetPrin = () => {
-    this.setState({
-      objPrin: {}
-    })
   }
   //-----------------------------------------------------RESET STATE---------------------------------------------------
   resetState = () => {
@@ -477,7 +542,6 @@ class Principal extends Component {
   //--------------------------------------------------------ONCCLICK SEARCH NAMA-----------------------------------------
 
   searchName = () => {
-    this.getAPICount();
     this.getPaging(this.state.pageNow, this.state.limit);
     this.setState({
       searchPrin: ""
@@ -488,7 +552,6 @@ class Principal extends Component {
   //--------------------------------------------------SearchName--------------------------------------------------------
   buttonSearch = () => {
     if (this.state.searchPrin === "") {
-      this.getAPICount();
       this.getPaging(this.state.pageNow, this.state.limit);
       this.setState({
         searchPrin: "",
@@ -497,7 +560,6 @@ class Principal extends Component {
 
     }
     else {
-      this.getApiCountName();
       this.getApiName(this.state.pageNow, this.state.limit)
       this.setState({
         actSearch: 1,
@@ -506,75 +568,57 @@ class Principal extends Component {
 
     }
   }
-  //--------------------------------------------------------------------------------------------------------------------
-  getApiCountName = () => {
-    axios.get("http://localhost:8080/admin/nexchief/principal/countName/" + this.state.searchPrin)
-      .then(resp => {
-        let limitPage = resp.data / this.state.limit
-        this.setState({
-          count: Math.ceil(limitPage)
-        })
-      })
-      .catch(() => {
-      })
-  }
 
   //--------------------------------------------------------------------------NEW DATE--------------------------------
 
-  NewDate =()=>{
+  NewDate = () => {
     var today = new Date();
     var dd = today.getDate();
-  var mm = today.getMonth()+1; 
-  var yyyy = today.getFullYear();
-   if(dd<10){
-          dd='0'+dd
-      } 
-      if(mm<10){
-          mm='0'+mm
-      } 
-  today = yyyy+'-'+mm+'-'+dd;
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+    today = yyyy + '-' + mm + '-' + dd;
+    return today;
 
-  return today;
-   
   }
 
+  NewDate2 = () => {
+    return (
+      <>
+      <div>
+        <label>GILA</label>
+      </div>
+      </>
+    )
+
+  }
+
+
   render() {
-    
     this.props.dataNavbar({ dataNavbar: this.state.tableClick })
-    console.log("ini array coba : ", this.state.principals);
-    if ("prinName" in this.state.objPrin) {
-      this.setState({
-        prinId: this.state.objPrin.prinId,
-        prinName: this.state.objPrin.prinName,
-        prinAddress: this.state.objPrin.prinAddress,
-        prinCity: this.state.objPrin.prinCity,
-        prinPhone: this.state.objPrin.prinPhone,
-        prinFax: this.state.objPrin.prinFax,
-        prinCountry: this.state.objPrin.prinCountry,
-        prinConPhone: this.state.objPrin.prinConPhone,
-        prinLicensed: this.state.objPrin.prinLicensed,
-        princreatedAt: this.state.objPrin.princreatedAt,
-        princreatedBy: this.state.objPrin.princreatedBy,
-        prinupdatedAt: this.state.objPrin.prinupdatedAt,
-        prinupdatedBy: this.state.objPrin.prinupdatedBy,
-      })
-      this.resetPrin();
-    }
     const { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy } = this.state
     return (
       <>
         <Kotak className="prinAtas">
+          <Kotak className="prinAtasKiri">
           <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal..."></InputPrin>
-          <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary" style={{ marginRight: "1%" }} onClick={this.buttonSearch} >SEARCH</Button>
-          <Ikon className="far fa-window-close" style={{ marginRight: "40%", cursor: "pointer", color: "red" }} onClick={() => this.searchName()} disabled={this.state.tableClick}></Ikon>
-          <Button startIcon={<SaveIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonAdd() }} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
-          <ColorButton startIcon={<UpdateIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonEdit() }} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</ColorButton>
-          <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary" onClick={() => { this.buttonCancel() }} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
+          <Button startIcon={<SearchIcon />} variant="contained" size="small" color="primary" style={{ marginRight: "1%" }} onClick={this.buttonSearch} >SEARCH</Button>
+          <Ikon className="far fa-window-close" style={{ cursor: "pointer", color: "red" }} onClick={() => this.searchName()} disabled={this.state.tableClick}></Ikon>
+          </Kotak>
+          <Kotak className="prinAtasKanan">
+            <Button startIcon={<SaveIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonAdd() }} disabled={this.state.butCondAdd}>{this.state.butCondi ? "ADD" : "SAVE"}</Button>
+            <UpdateButton startIcon={<UpdateIcon />} style={{ marginRight: "8px" }} variant="contained" size="small" color="primary" onClick={() => { this.buttonEdit() }} disabled={this.state.disableButEdit} >{this.state.butCondEdit ? "EDIT" : "UPDATE"}</UpdateButton>
+            <DeleteButton startIcon={<DeleteIcon />} variant="contained" size="small" color="secondary" onClick={() => { this.buttonCancel() }} disabled={this.state.disableButDel}>{this.state.butCondDelete ? "DELETE" : "CANCEL"}</DeleteButton>
+          </Kotak>
         </Kotak>
         <Kotak className="bodyPrin">
           <Kotak className="prinKiri">
-            <Kotak className={( this.state.principals.length<6)  ? "prinKiriTabel":"prinKiriTabelScroll"}>
-              {/* ini nanti di for */}
+            <Kotak className={(this.state.principals.length < 6) ? "prinKiriTabel" : "prinKiriTabelScroll"}>
               {
                 this.state.principals.map((prin, idx) => {
                   return (
@@ -586,7 +630,7 @@ class Principal extends Component {
                         <Kotak className="prinlabelTabel">
                           <LabelPrin className="prinlabelName" style={{ fontSize: "100%" }}>{prin.prinName.substring(20, 0)}</LabelPrin>
                           <PrintLn />
-                          <LabelPrin className="prinLabelid">{prin.prinId.substring(20,0)}</LabelPrin>
+                          <LabelPrin className="prinLabelid">{prin.prinId.substring(20, 0)}</LabelPrin>
                         </Kotak>
                       </Kotak>
                     </Kotak>
@@ -597,9 +641,8 @@ class Principal extends Component {
                 (this.state.principals.length > 0) ?
                   ""
                   :
-                  <>
-                    <img src={DataNotFound} style={{width:"90%"}} />
-                  </>
+                  <img src={DataNotFound} alt="dataNotFound" style={{ width: "90%" }} />
+
               }
             </Kotak>
             <Kotak className="prinKiriPagin">
@@ -654,7 +697,7 @@ class Principal extends Component {
               <Kotak>
                 <InputPrin type="text" value={prinName} disabled={this.state.disableInput} className="prinForm" name="prinName" onChange={this.setValue} placeholder="Principal Name" ></InputPrin>
               </Kotak>
-              <Kotak>
+              <Kotak className="divAlamat">
                 <InputArea className="prinAlamat" value={prinAddress} disabled={this.state.disableInput} name="prinAddress" rows="4" cols="69" placeholder="Principal Address" onChange={this.setValue}></InputArea>
               </Kotak>
               <Kotak>
@@ -675,7 +718,7 @@ class Principal extends Component {
               <Kotak>
                 <InputPrin type="date" min={this.NewDate()} value={prinLicensed} disabled={this.state.disableInput} className="prinForm" name="prinLicensed" onChange={this.setValue} placeholder="Principal Licensed Expired" ></InputPrin>
               </Kotak>
-              <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px" }} />
+              <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px", marginBottom: "0.5%" }} />
               <Kotak>
                 <InputPrin type="text" value={princreatedAt} disabled={true} className="prinForm" name="princreatedAt" onChange={this.setValue} placeholder="Principal Created At" ></InputPrin>
               </Kotak>
@@ -691,6 +734,7 @@ class Principal extends Component {
             </Kotak>
           </Kotak>
         </Kotak>
+      
       </>
     );
   }
@@ -698,12 +742,15 @@ class Principal extends Component {
 }
 
 const mapStateToProps = state => ({
-  dataLoginUser: state.authReducer.userLogin
+  dataLoginUser: state.authReducer.userLogin,
+  dataToken: state.authReducer.token,
+  
 })
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
   return {
     dataPrincipal: (data) => dispatch({ type: "PRINCIPAL", payload: data }),
-    dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data })
+    dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
+    logout: () => dispatch({ type: "LOGOUT" })
 
   }
 }

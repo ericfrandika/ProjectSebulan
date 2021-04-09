@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import LabelLog from '../../components/comp_login/label'
-import TextLog from '../../components/comp_login/text'
 import Recaptcha from 'react-recaptcha'
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import Swal from 'sweetalert2'
@@ -25,7 +23,8 @@ class LoginR extends Component {
             password:"",
             passType: "password",
             loginData:{},
-            response:""
+            response:"",
+            apiLogin:""
          }
     }
     recaptchaLoaded =()=>{
@@ -60,8 +59,9 @@ class LoginR extends Component {
         console.log(el.target.value)
     }
     doLogin = (object) =>{
+        // ||this.state.response ===""
         const {username , password} =object
-        if(username === "" || password ==="" ||this.state.response ===""){
+        if(username === "" || password ==="" ){
             Swal.fire(
                 'Insert Your Username and Password!',
                 'You clicked the button!',
@@ -77,11 +77,12 @@ class LoginR extends Component {
                     'success'
                   )
                   var decoded = jwt_decode(resp.data.token);
-                 console.log("ini Respon login decode : ", decoded.userId)
+                 console.log("ini Respon login decode : ", decoded)
               this.setState({
                 loginData :resp.data,
                 })
-                this.props.submitLogin({dataLogin : resp.data})
+                this.props.submitToken({dataToken : resp.data.token})
+                this.props.submitLogin({dataLogin : decoded})
         })
             .catch((err) =>{
                 console.log(err.response.data);
@@ -94,6 +95,11 @@ class LoginR extends Component {
         }
     }
     render() { 
+        if(this.props.checkLogin === true && this.props.dataLoginUser.username !=="" && this.props.dataToken !==""){
+            return(
+            <Redirect to="/home"></Redirect>
+            )
+          }
         const{username , password} = this.state;
         console.log(username)
         return ( 
@@ -141,7 +147,7 @@ class LoginR extends Component {
                      verifyCallback={this.verifyCallback}
                       onloadCallback={this.recaptchaLoaded}
                     />
-                   <Tombol className="btn" onClick={() => this.doLogin({ username, password })} ><b>LOGIN</b></Tombol>
+                   <Tombol className="btn" onClick={() => {this.doLogin({ username, password })}} ><b>LOGIN</b></Tombol>
 			</Kotak>
         </Kotak>
     </Kotak>
@@ -153,12 +159,15 @@ class LoginR extends Component {
  
     const mapStateToProps = state => ({ // NGAMBIL DATA
         checkLogin: state.authReducer.isLogin,
-    
+        dataLoginUser: state.authReducer.userLogin,
+        dataToken : state.authReducer.token
+
     })
     
     const mapDispatchToProps = dispatch => { // NGIRIM DATA
         return {
-            submitLogin: (data) => dispatch({ type: "LOGIN", payload: data }),
+            submitLogin : (data) => dispatch({ type: "LOGIN", payload: data }),
+            submitToken : (data) => dispatch({ type: "TOKEN" , payload : data})
         }
     }
     

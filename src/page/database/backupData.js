@@ -12,10 +12,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button, Dialog } from '@material-ui/core';
 import Kotak from '../../components/compDiv/div';
 import InputPrin from '../../components/comp_principal/inputPrin';
-import { Label } from '@material-ui/icons';
 import LabelPrin from '../../components/comp_principal/labelPrin';
 import Ikon from '../../components/compIcon/FontIcon';
 import PrintLn from '../../components/compGaris/Println';
+import { connect } from 'react-redux';
 
 const styles = (theme) => ({
     root: {
@@ -66,86 +66,153 @@ class BackUpData extends Component {
             backUpdata: [],
             nameDatabase: "",
             setOpen: false,
-            namaFileRestore:""
+            namaFileRestore: "",
+            forbidden: false
         }
     }
 
     componentDidMount() {
-        this.getAPIDownload();
-        this.getApiALLBackup();
+            this.getAPIDownload();
+            this.getApiALLBackup();
+        
     }
     setValueFile = (el) => {
         console.log(el);
         this.setState({
             [el.target.name]: el.target.files[0],
-            namaFileRestore : el.target.files[0].name
+            namaFileRestore: el.target.files[0].name
         })
     }
     HandleRestore = () => {
         let regEkstenSql = /^.*\.(sql)$/;
-        if(this.state.nameDatabase ===""){
+        if (this.state.nameDatabase === "") {
             Swal.fire(
                 'Import your file Sql, Before You Save!',
                 '',
                 'warning'
-              )
+            )
         }
-        else if (!regEkstenSql.test(this.state.namaFileRestore)){
+        else if (!regEkstenSql.test(this.state.namaFileRestore)) {
             Swal.fire({
                 title: 'Ekstension File Must be .SQL',
                 icon: 'warning'
             })
         }
-        else{
-        Swal.fire({
-            title: 'Do you want to Restore File?',
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: `Save`,
-            denyButtonText: `Don't save`,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const file = new FormData();
-                file.append('nameDatabase', this.state.nameDatabase, this.state.nameDatabase.name)
-                axios.post("http://localhost:8080/admin/nexchief/uploadRestore/", file)
-                    .then((resp) => {
-                        this.setState({
-                            nameDatabase: "",
-                            setOpen: false,
-                            namaFileRestore:""
+        else {
+            Swal.fire({
+                title: 'Do you want to Restore File?',
+                showCancelButton: true,
+                confirmButtonText: `Save`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const file = new FormData();
+                    file.append('nameDatabase', this.state.nameDatabase, this.state.nameDatabase.name)
+                    axios.post("http://localhost:8080/admin/nexchief/uploadRestore/", file,
+                        {
+                            headers: {
+                                'Authorization': "Bearer " + this.props.dataToken
+                            }
                         })
-                        Swal.fire('Saved!', '', 'success')
-                    })
-                    .catch((resp) => {
-                        this.setState({
-                            nameDatabase: ""
+                        .then((resp) => {
+                            console.log(resp.response)
+                            this.setState({
+                                nameDatabase: "",
+                                setOpen: false,
+                                namaFileRestore: ""
+                            })
+                            this.getAPIDownload();
+                            this.getApiALLBackup();
+                            Swal.fire('Saved!', '', 'success')
                         })
-                    })
-            } else if (result.isDenied) {
-                Swal.fire('Changes are not saved', '', 'info')
-            }
-        })
-    }
+                        .catch((resp) => {
+                            if (resp.response.status === 403) {
+                                console.log(resp.response.status)
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Session expired, please login again'
+                                })
+                                this.props.logout()
+                            }
+                            else {
+                                this.setState({
+                                    nameDatabase: ""
+                                })
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: resp.response
+                                })
+                            }
+                        })
+                }
+            })
+        }
     }
     //--------------------------------------GET API ALL---------------------------------------------
     getApiALLBackup = () => {
-        axios.get("http://localhost:8080/admin/nexchief/all/backupdatabase/")
+        axios.get("http://localhost:8080/admin/nexchief/all/backupdatabase/",
+            {
+                headers: {
+                    'Authorization': "Bearer " + this.props.dataToken
+                }
+            })
             .then(resp => {
                 this.setState({
                     backUpdata: resp.data
                 })
             })
-            .catch(() => {
-                alert("Failed fetching")
+            .catch((resp) => {
+                if (resp.response.status === 403) {
+                    console.log(resp.response.status)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Session expired, please login again'
+                    })
+                    this.setState({
+                        forbidden: true
+                    })
+                    this.props.logout()
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Fetching Failed'
+                    })
+                }
             })
     }
     getAPIDownload = () => {
-        axios.get("http://localhost:8080/admin/nexchief/backupdatabase/")
+        axios.get("http://localhost:8080/admin/nexchief/backupdatabase/",
+            {
+                headers: {
+                    'Authorization': "Bearer " + this.props.dataToken
+                }
+            })
             .then(resp => {
 
             })
-            .catch(() => {
-                alert("Failed fetching")
+            .catch((resp) => {
+                if (resp.response.status === 403) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Session expired, please login again'
+                    })
+                    this.setState({
+                        forbidden: true
+                    })
+                    this.props.logout()
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Fetching Failed'
+                    })
+                }
             })
     }
 
@@ -174,54 +241,62 @@ class BackUpData extends Component {
         this.setState({
             nameDatabase: "",
             setOpen: false,
-            namaFileRestore:""
+            namaFileRestore: ""
         })
     };
 
 
     render() {
-        console.log("ini Log : ", this.state.namaFileRestore);
-        const { show, setShow } = this.state
         return (
             <>
                 <Kotak className="bodyDatabase">
                     <Kotak className="containerBackup">
                         <Kotak className="kiriBackUp">
-                        <Ikon className="fas fa-download" onClick={() => this.databaseBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
-                        <PrintLn/>
-                        <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>BACKUP</b></LabelPrin>
+                            <Ikon className="fas fa-download" onClick={() => this.databaseBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
+                            <PrintLn />
+                            <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>BACKUP</b></LabelPrin>
                         </Kotak>
                         <Kotak className="kiriBackUp">
-                        <Ikon className="fas fa-upload" onClick={this.handleClickOpen}  style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
-                        <PrintLn/>
-                        <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>RESTORE</b></LabelPrin>
+                            <Ikon className="fas fa-upload" onClick={()=>{this.handleClickOpen()}} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
+                            <PrintLn />
+                            <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>RESTORE</b></LabelPrin>
                         </Kotak>
                     </Kotak>
-                 <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.state.setOpen}>
-                        <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+                    <Kotak>
+                    <Dialog onClose={()=>{this.handleClose()}} aria-labelledby="customized-dialog-title" open={this.state.setOpen}>
+                        <DialogTitle id="customized-dialog-title" onClose={()=>{this.handleClose()}}>
                             RESTORE FILE
         </DialogTitle>
                         <DialogContent dividers>
                             <Typography gutterBottom>
                                 Before Insert File, Make Sure your uploaded file with Extension .SQL
                              </Typography>
-                             <Typography gutterBottom>
+                            <Typography gutterBottom>
                                 ------
                              </Typography>
-                 <InputPrin className="importFile" type="file" onChange={(el) => this.setValueFile(el)} name="nameDatabase"></InputPrin>
+                            <InputPrin className="importFile" type="file" onChange={(el) => this.setValueFile(el)} name="nameDatabase"></InputPrin>
 
                         </DialogContent>
                         <DialogActions>
-                            <Button variant="contained" size="small" color="primary" autoFocus onClick={()=>{this.HandleRestore()}} color="primary">
+                            <Button variant="contained" size="small" color="primary" autoFocus onClick={() => { this.HandleRestore() }} >
                                 SAVE
           </Button>
                         </DialogActions>
                     </Dialog>
                 </Kotak>
-
+                </Kotak>
             </>
         );
     }
 }
+const mapStateToProps = state => ({
+    dataToken: state.authReducer.token
 
-export default BackUpData;
+})
+const mapDispatchToProps = dispatch => { // NGIRIM DATA
+    return {
+        logout: () => dispatch({ type: "LOGOUT" })
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BackUpData);
