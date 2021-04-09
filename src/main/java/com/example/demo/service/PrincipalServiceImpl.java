@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("PrincipalService")
 public class PrincipalServiceImpl implements PrincipalService {
@@ -54,9 +55,9 @@ public class PrincipalServiceImpl implements PrincipalService {
     }
 
     @Override
-    public List<Principal> findByNamePrincipalService(String prinName , int page, int limit) {
-        List<Principal>principalList = principalRepository.findByNamePrincipalRepository(prinName, page, limit);
-        return principalList;
+    public Map<String, Object>  findByNamePrincipalService(String prinName , int page, int limit) {
+        return principalRepository.findByNamePrincipalRepository(prinName, page, limit);
+
     }
 
     @Override
@@ -116,18 +117,8 @@ public class PrincipalServiceImpl implements PrincipalService {
     }
 
     @Override
-    public List<Principal> findAllPrincipalWithPagingService(int page, int limit) {
+    public Map<String, Object> findAllPrincipalWithPagingService(int page, int limit) {
         return principalRepository.findAllPrincipalWithPaging(page, limit);
-    }
-
-    @Override
-    public int findAllCountService() {
-        return principalRepository.findAllCountRepository();
-    }
-
-    @Override
-    public int findAllCountNameService(String prinName) {
-        return principalRepository.findAllCountNameRepository(prinName);
     }
 
 }

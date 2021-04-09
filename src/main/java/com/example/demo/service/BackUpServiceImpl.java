@@ -30,23 +30,21 @@ public class BackUpServiceImpl implements BackUpService {
 
     @Override
     public void downloadDatabaseService()throws Exception {
-        synchronized (this){
             backUpRepository.downloadDatabaseRepository();
-        }
     }
 
     @Override
     public void saveRestoreService(MultipartFile file) throws Exception {
-        synchronized (this){
+
             backUpRepository.saveRestoreRepository(file);
-        }
+
     }
 
     @Override
     public void RestoreSQlService()throws Exception {
-        synchronized (this){
+
          backUpRepository.RestoreSQlRepository();
-        }
+
     }
 
 }

@@ -13,8 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/nexchief")
@@ -26,7 +26,7 @@ public class PrincipalController {
     //(1)----------------------------FIND ALL PRINCIPAL----------------------------------
 
     @RequestMapping(value = "/principal/", method = RequestMethod.GET)
-    public ResponseEntity<List<Principal>> listPrincipal() {
+    public ResponseEntity<?> listPrincipal() {
         List<Principal> principalList = principalService.findAllPrincipalService();
             return new ResponseEntity<>(principalList, HttpStatus.OK);
     }
@@ -143,30 +143,17 @@ public class PrincipalController {
     //(1)----------------------------FIND BY NAME PRINCIPAL----------------------------------
 
     @RequestMapping(value = "/principal/name/{prinName}", method = RequestMethod.GET)
-    public ResponseEntity<List<Principal>> listPrincipalName(@PathVariable("prinName") String prinName, @RequestParam int page, @RequestParam int limit) {
-        List<Principal> principalList = principalService.findByNamePrincipalService(prinName , page , limit);
+    public ResponseEntity<?> listPrincipalName(@PathVariable("prinName") String prinName, @RequestParam int page, @RequestParam int limit) {
+        Map<String, Object>  principalList = principalService.findByNamePrincipalService(prinName , page , limit);
             return new ResponseEntity<>(principalList, HttpStatus.OK);
     }
 
         //(2) --------------------------------find All with pagination--------------------------------
         @RequestMapping(value = "/principal/paging/", method = RequestMethod.GET)
         public ResponseEntity<?>getPrincipalWithPagin(@RequestParam int page, @RequestParam int limit){
-            List<Principal>principalList = principalService.findAllPrincipalWithPagingService(page,limit);
+            Map<String, Object> principalList = principalService.findAllPrincipalWithPagingService(page,limit);
                 return new ResponseEntity<>(principalList, HttpStatus.OK);
         }
-    //-----------------------------------COUNT ALL DATA--------------------------------
-    @RequestMapping(value = "/principal/count/", method = RequestMethod.GET)
-    public ResponseEntity<?> countprincipal() {
-        int count = principalService.findAllCountService();
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
-    //-----------------------------------COUNT ALL DATA--------------------------------
-    @RequestMapping(value = "/principal/countName/{prinName}", method = RequestMethod.GET)
-    public ResponseEntity<?> countprincipal(@PathVariable("prinName") String prinName) {
-        int count = principalService.findAllCountNameService(prinName);
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
-
 
 }
 

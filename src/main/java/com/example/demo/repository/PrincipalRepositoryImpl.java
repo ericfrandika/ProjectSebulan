@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository("PrincipalRepository")
@@ -76,11 +78,13 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
     }
 
     @Override
-    public List<Principal> findByNamePrincipalRepository(String prinName,int page ,int limit) {
+    public Map<String, Object> findByNamePrincipalRepository(String prinName,int page ,int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
+
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal where prinName like '%"+prinName+"%'" ,
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
+        map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
@@ -88,7 +92,7 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
 
-        return jdbcTemplate.query("select * from principal where prinId like '%"+prinName+"%' OR prinName like '%"+prinName+"%' LIMIT "+start +" ,"+ limit +"",
+       map.put("principal", jdbcTemplate.query("select * from principal where prinId like '%"+prinName+"%' OR prinName like '%"+prinName+"%' LIMIT "+start +" ,"+ limit +"",
                 (rs,rowNum)->
                         new Principal(
                                 rs.getString("prinId"),
@@ -105,7 +109,8 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
                                 rs.getString("prinupdatedAt"),
                                 rs.getString("prinupdatedBy")
                         )
-        );
+        ));
+       return map;
     }
 
     @Override
@@ -201,16 +206,18 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
     }
 
     @Override
-    public List<Principal> findAllPrincipalWithPaging(int page, int limit) {
+    public Map<String, Object> findAllPrincipalWithPaging(int page, int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
+        map.put("count", numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
-        List<Principal> principalList = jdbcTemplate.query("SELECT * FROM principal LIMIT " + start + "," + limit + ";",
+        map.put ("principal", jdbcTemplate.query("SELECT * FROM principal LIMIT " + start + "," + limit + ";",
                 (rs, rowNum) ->
                         new Principal(
                                 rs.getString("prinId"),
@@ -227,22 +234,8 @@ public class PrincipalRepositoryImpl implements PrincipalRepository {
                                 rs.getString("prinupdatedAt"),
                                 rs.getString("prinupdatedBy")
                         )
-        );
-        return principalList;
-    }
-
-    @Override
-    public int findAllCountRepository() {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM principal", Integer.class);
-        return countUser;
-    }
-
-    @Override
-    public int findAllCountNameRepository(String prinName) {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM principal where prinName like '%"+prinName+"%'" , Integer.class);
-        return countUser;
+        ));
+        return map;
     }
 
     @Override

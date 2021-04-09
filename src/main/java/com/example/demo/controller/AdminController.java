@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/user")
 public class AdminController {
     public static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -42,12 +41,13 @@ public class AdminController {
         long timestamp = System.currentTimeMillis();
         String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECRET_KEY)
                 .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
+                .setExpiration(new Date(timestamp + Constants.EXPIRATION_TIME))
                 .claim("username", admin.getUsername())
                 .compact();
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
         return map;
     }
+
 
 }

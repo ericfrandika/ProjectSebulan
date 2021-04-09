@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-
+import java.util.Map;
 
 @Repository("DistributorRepository")
 public class DistributorRepositoryImpl implements DistributorRepository {
@@ -83,17 +83,18 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     }
 
     @Override
-    public List<Distributor> findByNameDistributorRepository(String disName , int page , int limit) {
+    public Map<String, Object> findByNameDistributorRepository(String disName , int page , int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM distributor where disName like '%"+disName+"%'" ,
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
+        map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
-        return jdbcTemplate.query("SELECT prin.prinId,prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
+        map.put("distributor", jdbcTemplate.query("SELECT prin.prinId,prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
                 "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
                 "distributor dis WHERE dis.prinId = prin.prinId AND dis.disName like '%"+disName+"%' Limit "+start+","+limit+"",
                 (rs,rowNum)->
@@ -112,7 +113,8 @@ public class DistributorRepositoryImpl implements DistributorRepository {
                                 rs.getString("disupdatedAt"),
                                 rs.getString("disupdatedBy")
                         )
-        );
+        ));
+        return map;
     }
 
     @Override
@@ -208,16 +210,18 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     }
 
     @Override
-    public List<Distributor> findAllDistributorWithPaging(int page, int limit) {
+    public Map<String, Object>  findAllDistributorWithPaging(int page, int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM distributor",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
+        map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
-        List<Distributor> distributorList = jdbcTemplate.query("SELECT prin.prinId, prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
+        map.put("distributor", jdbcTemplate.query("SELECT prin.prinId, prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
                 "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
                 "distributor dis WHERE dis.prinId = prin.prinId LIMIT "+ start +","+limit+";",
                 (rs, rowNum) ->
@@ -236,22 +240,10 @@ public class DistributorRepositoryImpl implements DistributorRepository {
                                 rs.getString("disupdatedAt"),
                                 rs.getString("disupdatedBy")
                         )
-        );
-        return distributorList;
+        ));
+        return map;
     }
 
-    @Override
-    public int findAllCountDistributorRepository() {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM distributor", Integer.class);
-        return countUser;
-    }
 
-    @Override
-    public int findAllCountNameDistributorRespository(String disName) {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM distributor where disName like '%"+disName+"%'", Integer.class);
-        return countUser;
-    }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000")
@@ -38,6 +39,14 @@ public class CustomerController {
         if (principal == null){
             logger.error("Unable to create. A Principal with id {} not Found", customer.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + customer.getPrinId() + " Not Found."), HttpStatus.NOT_FOUND);
+        }
+        if (customerService.findByUsernameService(customer.getCusName()) != null) {
+            logger.error("Unable to create. A Customer with UserName {} already exist", customer.getCusName());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with UserName " + customer.getCusName() + " already exist."), HttpStatus.CONFLICT);
+        }
+        if (customerService.findByPhoneCustomerService(customer.getCusPhone()) != null) {
+            logger.error("Unable to create. A Customer with Phone {} already exist", customer.getCusPhone());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with Phone " + customer.getCusPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
             logger.info("Creating Customer : {}", customer);
@@ -98,6 +107,14 @@ public class CustomerController {
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Customer with id " + cusId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
+        if (customerService.findByUsernameService(customer.getCusName()) != null && !currentCustomer.getCusName().equalsIgnoreCase(customer.getCusName())) {
+            logger.error("Unable to create. A Customer with UserName {} already exist", customer.getCusName());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with UserName " + customer.getCusName() + " already exist."), HttpStatus.CONFLICT);
+        }
+        if (customerService.findByPhoneCustomerService(customer.getCusPhone()) != null && !currentCustomer.getCusPhone().equalsIgnoreCase(customer.getCusPhone())) {
+            logger.error("Unable to create. A Customer with Phone {} already exist", customer.getCusPhone());
+            return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with Phone " + customer.getCusPhone() + " already exist."), HttpStatus.CONFLICT);
+        }
         else {
             customerService.updateCustomerService(customer);
             return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -106,26 +123,15 @@ public class CustomerController {
     //(2) --------------------------------find All with pagination--------------------------------
     @RequestMapping(value = "/customer/paging/", method = RequestMethod.GET)
     public ResponseEntity<?>getAllCustomerWithPagin(@RequestParam int page, @RequestParam int limit){
-        List<Customer>customerList = customerService.findAllCustomerServiceWithPaging(page,limit);
+        Map<String, Object> customerList = customerService.findAllCustomerServiceWithPaging(page,limit);
         return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
-    //-----------------------------------COUNT ALL DATA--------------------------------
-    @RequestMapping(value = "/customer/count/", method = RequestMethod.GET)
-    public ResponseEntity<?> countCustomer() {
-        int count = customerService.findAllCustomerCountService();
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
+
     //-------------------------------------FindByNameWithPage---------------------------------------------
     @RequestMapping(value = "/customer/name/{cusName}", method = RequestMethod.GET)
-    public ResponseEntity<List<Customer>> listDistributorName(@PathVariable("cusName") String cusName ,@RequestParam int page , @RequestParam int limit) {
-        List<Customer> customerList = customerService.findByNameCustomerService(cusName ,page , limit);
+    public ResponseEntity<?> listDistributorName(@PathVariable("cusName") String cusName ,@RequestParam int page , @RequestParam int limit) {
+        Map<String, Object> customerList = customerService.findByNameCustomerService(cusName ,page , limit);
         return new ResponseEntity<>(customerList, HttpStatus.OK);
-    }
-    //-----------------------------------COUNT ALL DATA NAME--------------------------------
-    @RequestMapping(value = "/customer/countName/{cusName}", method = RequestMethod.GET)
-    public ResponseEntity<?> countNameDistributor(@PathVariable("cusName") String cusName) {
-        int count = customerService.findAllCountNameCustomerService(cusName);
-        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
 }

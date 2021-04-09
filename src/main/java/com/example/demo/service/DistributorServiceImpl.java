@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("DistributorService")
 public class DistributorServiceImpl implements DistributorService {
@@ -42,9 +43,8 @@ public class DistributorServiceImpl implements DistributorService {
     }
 
     @Override
-    public List<Distributor> findByNameDistributorService(String disName , int page , int limit) {
-        List<Distributor>distributorList = distributorRepository.findByNameDistributorRepository(disName, page , limit);
-        return distributorList;
+    public Map<String, Object>  findByNameDistributorService(String disName , int page , int limit) {
+         return distributorRepository.findByNameDistributorRepository(disName, page , limit);
     }
 
 
@@ -102,18 +102,10 @@ public class DistributorServiceImpl implements DistributorService {
         }
     }
 
-    @Override
-    public int findAllDistributorCountService() {
-        return distributorRepository.findAllCountDistributorRepository();
-    }
+
 
     @Override
-    public int findAllCountNameDistributorService(String disName) {
-        return distributorRepository.findAllCountNameDistributorRespository(disName);
-    }
-
-    @Override
-    public List<Distributor> findAllDistributorWithPagingService(int page, int limit) {
+    public Map<String, Object> findAllDistributorWithPagingService(int page, int limit) {
         return distributorRepository.findAllDistributorWithPaging(page, limit);
     }
 }

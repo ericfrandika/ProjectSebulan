@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Customer;
+import com.example.demo.model.Distributor;
 import com.example.demo.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("CustomerService")
 public class CustomerServiceImpl implements CustomerService {
@@ -40,6 +42,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer findByUsernameService(String cusName) {
+        Customer obj;
+        try {
+            obj = customerRepository.findByUsernameRepository(cusName);
+        }
+        catch (EmptyResultDataAccessException e){
+            System.out.println(e);
+            obj = null;
+        }
+        return  obj;
+    }
+
+
+
+    @Override
     public void deleteCustomerServicebyId(String cusId) {
         synchronized (this){
             customerRepository.deleteByIdCustomerRepository(cusId);
@@ -55,35 +72,25 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findByPhoneCustomerService(String cusPhone) {
-
         Customer obj;
-        try{
+        try {
             obj = customerRepository.findByPhoneCustomerRepository(cusPhone);
         }
         catch (EmptyResultDataAccessException e){
             System.out.println(e);
             obj = null;
         }
-        return obj;
+        return  obj;
     }
 
     @Override
-    public List<Customer> findAllCustomerServiceWithPaging(int page, int limit) {
+    public Map<String, Object> findAllCustomerServiceWithPaging(int page, int limit) {
         return customerRepository.findAllCustomerWithPaging (page , limit);
     }
 
     @Override
-    public int findAllCustomerCountService() {
-        return customerRepository.findAllCountCustomerRepository();
-    }
-
-    @Override
-    public List<Customer> findByNameCustomerService(String cusName, int page, int limit) {
+    public Map<String, Object> findByNameCustomerService(String cusName, int page, int limit) {
         return customerRepository.findByNameCustomerRepository(cusName , page , limit);
-    }
-    @Override
-    public int findAllCountNameCustomerService(String cusName) {
-        return customerRepository.findAllCountNameCustomerRespository(cusName);
     }
 
 }

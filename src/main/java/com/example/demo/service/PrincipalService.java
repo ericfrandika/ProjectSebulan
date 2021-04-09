@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.Principal;
 
 import java.util.List;
+import java.util.Map;
 
 public interface  PrincipalService {
 
@@ -16,7 +17,7 @@ public interface  PrincipalService {
 
     void deletePrincipalServicebyId(String prinId);
 
-    List<Principal> findByNamePrincipalService(String prinName, int page , int limit);
+    Map<String, Object>  findByNamePrincipalService(String prinName, int page , int limit);
 
     Principal findByPhonePrincipalService(String prinPhone);
 
@@ -28,8 +29,6 @@ public interface  PrincipalService {
 
 
     boolean isPrincipalNameExist(Principal principal);
-    List<Principal> findAllPrincipalWithPagingService(int page, int limit);
-    int findAllCountService();
-    int findAllCountNameService(String prinName);
+    Map<String, Object> findAllPrincipalWithPagingService(int page, int limit);
 
 }

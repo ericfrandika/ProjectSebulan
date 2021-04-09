@@ -68,7 +68,7 @@ public class BackUpRepositoryImpl implements BackUpRepository {
     public void saveRestoreRepository(MultipartFile file)throws Exception {
         Properties prop = new Properties();
         prop.load(new FileInputStream("src/main/resources/database.properties"));
-        String savePath = prop.getProperty("savepathbackup");
+        String savePath = prop.getProperty("savepathrestore");
         File convertFile = new File(savePath);
         convertFile.createNewFile();
         FileOutputStream fout = new FileOutputStream(convertFile);

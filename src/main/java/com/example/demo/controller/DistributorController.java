@@ -14,9 +14,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/nexchief")
 
 public class DistributorController {
@@ -81,8 +81,8 @@ public class DistributorController {
     }
     //-------------------------------------FindByName---------------------------------------------
     @RequestMapping(value = "/distributor/name/{disName}", method = RequestMethod.GET)
-    public ResponseEntity<List<Distributor>> listDistributorName(@PathVariable("disName") String disName ,@RequestParam int page , @RequestParam int limit) {
-        List<Distributor> distributorList = distributorService.findByNameDistributorService(disName ,page , limit);
+    public ResponseEntity<?> listDistributorName(@PathVariable("disName") String disName ,@RequestParam int page , @RequestParam int limit) {
+        Map<String, Object> distributorList = distributorService.findByNameDistributorService(disName ,page , limit);
         return new ResponseEntity<>(distributorList, HttpStatus.OK);
     }
 
@@ -141,24 +141,13 @@ try {
             return new ResponseEntity<>(distributor, HttpStatus.OK);
         }
     }
-    //-----------------------------------COUNT ALL DATA--------------------------------
-    @RequestMapping(value = "/distributor/count/", method = RequestMethod.GET)
-    public ResponseEntity<?> countDistributor() {
-        int count = distributorService.findAllDistributorCountService();
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
+
     //(2) --------------------------------find All with pagination--------------------------------
     @RequestMapping(value = "/distributor/paging/", method = RequestMethod.GET)
     public ResponseEntity<?>getDistributorWithPagin(@RequestParam int page, @RequestParam int limit){
-        List<Distributor>distributorList = distributorService.findAllDistributorWithPagingService(page,limit);
-
+        Map<String, Object> distributorList = distributorService.findAllDistributorWithPagingService(page,limit);
         return new ResponseEntity<>(distributorList, HttpStatus.OK);
     }
-    //-----------------------------------COUNT ALL DATA NAME--------------------------------
-    @RequestMapping(value = "/distributor/countName/{disName}", method = RequestMethod.GET)
-    public ResponseEntity<?> countNameDistributor(@PathVariable("disName") String disName) {
-        int count = distributorService.findAllCountNameDistributorService(disName);
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
+
 
 }

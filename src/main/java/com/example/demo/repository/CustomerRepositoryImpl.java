@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository("CustomerRepository")
 public class CustomerRepositoryImpl implements CustomerRepository{
@@ -84,18 +86,49 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public List<Customer> findByNameCustomerRepository(String cusName, int page, int limit) {
+    public Customer findByUsernameRepository(String cusName) {
+        return jdbcTemplate.queryForObject("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName, " +
+                        "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus," +
+                        "principal prin WHERE cus.prinId = prin.prinId and cus.cusName=?",
+                new Object[]{cusName},
+
+                (rs,rowNum)->
+                        new Customer(
+                                rs.getString("cusId"),
+                                rs.getString("cusName"),
+                                rs.getString("cusPass"),
+                                rs.getString("cusAddress"),
+                                rs.getString("cusPhone"),
+                                rs.getString("prinId"),
+                                rs.getString("prinName"),
+                                rs.getString("disId"),
+                                rs.getString("cusOnOff"),
+                                rs.getString("cusRegis"),
+                                rs.getString("cusValid"),
+                                rs.getString("cuscreatedAt"),
+                                rs.getString("cuscreatedBy"),
+                                rs.getString("cusupdatedAt"),
+                                rs.getString("cusupdatedBy")
+                        )
+        );
+    }
+
+
+    @Override
+    public Map<String, Object> findByNameCustomerRepository(String cusName, int page, int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM customer where cusName like '%"+cusName+"%'" ,
                 (rs, rowNum) -> rs.getInt("count")).get(0);
 
+        map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
-        return jdbcTemplate.query("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName," +
-                        "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus ," +
+        map.put("customer", jdbcTemplate.query("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName," +
+                        "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus," +
                         "principal prin WHERE cus.prinId = prin.prinId  and cus.cusName like '%"+cusName+"%' Limit "+start+","+limit+"",
                 (rs,rowNum)->
                         new Customer(
@@ -115,13 +148,15 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                                 rs.getString("cusupdatedAt"),
                                 rs.getString("cusupdatedBy")
                         )
-        );    }
+        ));
+        return map;
+    }
 
     @Override
     public Customer findByPhoneCustomerRepository(String cusPhone) {
-        return jdbcTemplate.queryForObject("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName, " +
-                        "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus , " +
-                        "principal prin WHERE cus.prinId = prin.prinId  and cus.cusPhone=?",
+        return jdbcTemplate.queryForObject("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName," +
+                        "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus," +
+                        "principal prin WHERE cus.prinId = prin.prinId and cus.cusPhone=?",
                 new Object[]{cusPhone},
                 (rs,rowNum)->
                         new Customer(
@@ -141,7 +176,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                                 rs.getString("cusupdatedAt"),
                                 rs.getString("cusupdatedBy")
                         )
-        );    }
+        );
+    }
 
     @Override
     public int deleteByIdCustomerRepository(String cusId) {
@@ -164,17 +200,18 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
 
     @Override
-    public List<Customer> findAllCustomerWithPaging(int page, int limit) {
+    public Map<String, Object> findAllCustomerWithPaging(int page, int limit) {
+        Map<String, Object> map = new HashMap<>();
         int numPages;
         numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM customer",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
+        map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
         }
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
-        List<Customer> customerList = jdbcTemplate.query("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName, " +
+        map.put("customer", jdbcTemplate.query("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName, " +
                 "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus , " +
                 "principal prin WHERE cus.prinId = prin.prinId LIMIT "+ start +","+limit+";",
                 (rs,rowNum)->
@@ -195,22 +232,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                                 rs.getString("cusupdatedAt"),
                                 rs.getString("cusupdatedBy")
                         )
-        );
-        return customerList;
+        ));
+        return map;
     }
 
-    @Override
-    public int findAllCountCustomerRepository() {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM customer", Integer.class);
-        return countUser;
-    }
-
-    @Override
-    public int findAllCountNameCustomerRespository(String cusName) {
-        int countUser;
-        countUser = jdbcTemplate.queryForObject("SELECT COUNT(*) as count FROM customer where cusName like '%"+cusName+"%'", Integer.class);
-        return countUser;
-    }
 
 }
