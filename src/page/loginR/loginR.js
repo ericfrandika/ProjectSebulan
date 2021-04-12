@@ -28,7 +28,6 @@ class LoginR extends Component {
          }
     }
     recaptchaLoaded =()=>{
-        console.log('Capctcha sukses')
     }
     verifyCallback = (response)=>{
         if(response){
@@ -36,11 +35,9 @@ class LoginR extends Component {
                 response:response
             })
         }
-        console.log(this.state.response)
     }
     
     passClick = () => {
-        console.log("pass");
         const passTypeTemp = this.state.passType
         if (passTypeTemp === "password") {
             this.setState({
@@ -56,7 +53,6 @@ class LoginR extends Component {
         this.setState({
             [el.target.name] :el.target.value
         })
-        console.log(el.target.value)
     }
     doLogin = (object) =>{
         // ||this.state.response ===""
@@ -69,7 +65,7 @@ class LoginR extends Component {
               )
         }
         else{       
-            axios.get("http://localhost:8080/admin/user/login/?username="+encodeURIComponent(username)+"&password="+encodeURIComponent(password))
+            axios.get("http://localhost:8080/admin/user/login/?username="+username+"&password="+password)
             .then((resp) =>{
                 Swal.fire(
                     'Login Success',
@@ -77,7 +73,6 @@ class LoginR extends Component {
                     'success'
                   )
                   var decoded = jwt_decode(resp.data.token);
-                 console.log("ini Respon login decode : ", decoded)
               this.setState({
                 loginData :resp.data,
                 })
@@ -85,7 +80,6 @@ class LoginR extends Component {
                 this.props.submitLogin({dataLogin : decoded})
         })
             .catch((err) =>{
-                console.log(err.response.data);
                 Swal.fire(
                     err.response.data.errorMessage,
                     'You clicked the button!',
@@ -101,7 +95,6 @@ class LoginR extends Component {
             )
           }
         const{username , password} = this.state;
-        console.log(username)
         return ( 
             <>
         <Kotak className="allLogin">

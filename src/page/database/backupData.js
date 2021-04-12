@@ -74,10 +74,8 @@ class BackUpData extends Component {
     componentDidMount() {
             this.getAPIDownload();
             this.getApiALLBackup();
-        
     }
     setValueFile = (el) => {
-        console.log(el);
         this.setState({
             [el.target.name]: el.target.files[0],
             namaFileRestore: el.target.files[0].name
@@ -114,19 +112,16 @@ class BackUpData extends Component {
                             }
                         })
                         .then((resp) => {
-                            console.log(resp.response)
                             this.setState({
                                 nameDatabase: "",
                                 setOpen: false,
                                 namaFileRestore: ""
                             })
-                            this.getAPIDownload();
-                            this.getApiALLBackup();
+                            
                             Swal.fire('Saved!', '', 'success')
                         })
                         .catch((resp) => {
                             if (resp.response.status === 403) {
-                                console.log(resp.response.status)
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -164,7 +159,6 @@ class BackUpData extends Component {
             })
             .catch((resp) => {
                 if (resp.response.status === 403) {
-                    console.log(resp.response.status)
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -218,10 +212,11 @@ class BackUpData extends Component {
 
     databaseBackup = () => {
         let createNow = new Date().toLocaleDateString() + "_" + new Date().toLocaleTimeString() + "_nexchief.sql"
-        let newBackupData = this.state.backUpdata
+        const newBackupData = this.state.backUpdata
         const blob = new Blob([newBackupData[0].fileData], { type: "text/plain" });
         this.downloadfile(blob, createNow)
     }
+
     downloadfile = (blob, fileName) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -252,7 +247,7 @@ class BackUpData extends Component {
                 <Kotak className="bodyDatabase">
                     <Kotak className="containerBackup">
                         <Kotak className="kiriBackUp">
-                            <Ikon className="fas fa-download" onClick={() => this.databaseBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
+                            <Ikon className="fas fa-download" onClick={() =>this.databaseBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
                             <PrintLn />
                             <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>BACKUP</b></LabelPrin>
                         </Kotak>

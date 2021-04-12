@@ -1,5 +1,5 @@
 body{
-  background-color: #282c34;
+  background-image: linear-gradient(to right top, #15267a, #1a205d, #1a1b41, #161527, #0d0d0d);
 }
 .bodyHome{
     width: 100%;
@@ -27,9 +27,6 @@ body{
     font-size: xx-large;
 }
 
-
-  
-/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */
 
 .bdyhome{
   width: 100%;

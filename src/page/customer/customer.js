@@ -137,12 +137,10 @@ class Customer extends Component {
                 this.setState({
                     customers: resp.data.customer,
                     count: Math.ceil(limitPage)
-
                 });
             })
             .catch((resp) => {
                 if(resp.response.status === 403 ){
-                    console.log(resp.response.status)
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
@@ -211,7 +209,6 @@ class Customer extends Component {
             })
             .catch((resp) => {
                 if(resp.response.status === 403 ){
-                  console.log(resp.response.status)
                   Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -262,7 +259,9 @@ class Customer extends Component {
                 actDelete: 1,
                 tableClick: true,
                 cusRegis :formatted_date
+
             });
+            this.props.dataNavbar({ dataNavbar: true})
             this.resetState()
         }
         else {
@@ -321,12 +320,12 @@ class Customer extends Component {
                                     actDelete: 1,
                                     tableClick: false
                                 })
+                                this.props.dataNavbar({ dataNavbar: false})
                                 this.getPaging(this.state.pageNow, this.state.limit);
                                 Swal.fire('Saved!', '', 'success')
                             })
                             .catch((resp) => {
                                     if(resp.response.status === 403 ){
-                                      console.log(resp.response.status)
                                       Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -364,6 +363,8 @@ class Customer extends Component {
                 cusupdatedBy: this.props.dataLoginUser.username,
                 tableClick: true,
             });
+            this.props.dataNavbar({ dataNavbar: true})
+
         }
 
         else {
@@ -383,7 +384,6 @@ class Customer extends Component {
                     showCancelButton: true,
                     confirmButtonText: `Update`,
                 }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         axios.put(this.state.apiCus + this.state.cusId, {
                             ...objCustomer
@@ -403,14 +403,13 @@ class Customer extends Component {
                                     actEdit: 0,
                                     actDelete: 0,
                                     tableClick: false,
-
                                 });
+                                this.props.dataNavbar({ dataNavbar: false})
                                 this.getPaging(this.state.pageNow, this.state.limit);
                                 Swal.fire('Update!', '', 'success')
                             })
                             .catch((resp) => {
                                     if(resp.response.status === 403 ){
-                                      console.log(resp.response.status)
                                       Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -453,9 +452,11 @@ class Customer extends Component {
                 actEdit: 0,
                 actDelete: 0,
                 tableClick: false,
-                cusRegis:""
+                cusRegis:"",
+                
             })
             this.resetState()
+            this.props.dataNavbar({ dataNavbar: false})
         }
         //------------------------------------------------Untuk Delete----------------------------------
         else {
@@ -480,7 +481,8 @@ class Customer extends Component {
                                 disabledButEdit: true,
                                 discreatedAt: "",
                                 discreatedBy: "",
-                                tableClick: false
+                                tableClick: false,
+                                page:1
                             })
                             this.getPaging(this.state.pageNow, this.state.limit)
                             Swal.fire(
@@ -491,7 +493,6 @@ class Customer extends Component {
                         })
                         .catch((resp) => {
                             if(resp.response.status === 403 ){
-                              console.log(resp.response.status)
                               Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
@@ -544,7 +545,6 @@ class Customer extends Component {
             })
             .catch((resp) => {
                 if(resp.response.status === 403 ){
-                  console.log(resp.response.status)
                   Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -571,7 +571,7 @@ class Customer extends Component {
             cusAddress: "",
             cusPhone: "",
             prinId: "",
-            disId: null,
+            disId: "",
             cusOnOff: true,
             cusValid: "",
         })
@@ -583,14 +583,13 @@ class Customer extends Component {
     }
 
     render() {
-        this.props.dataNavbar({ dataNavbar: this.state.tableClick })
         const { page, limit, cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
         return (
             <>
                 <Kotak className="prinAtas">
                 <Kotak className="prinAtasKiri">
-                    <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus" disabled={this.state.tableClick} value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
-                    <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} disabled={this.state.tableClick}>SEARCH</Button>
+                    <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus"  value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
+                    <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} >SEARCH</Button>
                     <Ikon className="far fa-window-close" style={{  cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
                    </Kotak>
                    <Kotak className="prinAtasKanan">
@@ -616,7 +615,6 @@ class Customer extends Component {
                                                         <LabelPrin className="prinlabelName">{cus.cusName.substring(25,0)}</LabelPrin>
                                                         <PrintLn />
                                                         <LabelPrin className="prinLabelid">{cus.cusId.substring(25,0)}</LabelPrin>
-                                                        {/* <LabelPrin className="prinLabelid" style={{color:"blue" , fontWeight:"upperCase"}}>{"."+cus.prinId}</LabelPrin> */}
                                                         <PrintLn />
                                                         <LabelPrin className="prinLabelDis" >{cus.prinName.substring(25,0)}</LabelPrin>
                                                     </Kotak>

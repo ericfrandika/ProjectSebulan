@@ -193,7 +193,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         submitLogin: (data) => dispatch({ type: "LOGIN", payload: data }),
-        logout: () => dispatch({ type: "LOGOUT" })
+        logout: () => dispatch({ type: "LOGOUT" }),
     }
 }
 

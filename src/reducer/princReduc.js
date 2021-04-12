@@ -5,8 +5,6 @@ let defaultState={
 }
 
 const prinReducer = (state=defaultState, action) =>{
-    console.warn("state REDUX: ", state)
-    console.warn("action REDUX ", action)
     switch(action.type){
         case "PRINCIPAL" :
             return {

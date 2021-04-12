@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import './style.css'
 import InputPrin from '../../components/comp_principal/inputPrin'
 import LabelPrin from '../../components/comp_principal/labelPrin'
@@ -191,7 +192,6 @@ class Principal extends Component {
       })
       .catch((resp) => {
         if(resp.response.status === 403 ){
-          console.log(resp.response.status)
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -208,7 +208,6 @@ class Principal extends Component {
   buttonAdd = () => {
     if (this.state.act === 0) {
       let createNow = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString()
-      console.log(createNow);
       this.setState({
         disableInputId: false,
         butCondi: false,
@@ -223,8 +222,8 @@ class Principal extends Component {
         prinupdatedAt: createNow,
         prinupdatedBy: this.props.dataLoginUser.username,
         disableButDel: false,
-
       });
+      this.props.dataNavbar({ dataNavbar: true})
       this.resetState();
     }
     else {
@@ -268,7 +267,6 @@ class Principal extends Component {
               ...objprincipal
             })
               .then((resp) => {
-                console.log(resp);
                 this.getApiALLPrincipal();
                 this.getPaging(this.state.page, this.state.limit);
                 this.setState({
@@ -283,11 +281,11 @@ class Principal extends Component {
                   disableInputId: true,
 
                 })
+                this.props.dataNavbar({ dataNavbar: false})
                 Swal.fire('Saved!', '', 'success')
               })
               .catch((resp) => {
                 if(resp.response.status === 403){
-                  console.log(resp.response.status)
                   Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -333,12 +331,12 @@ class Principal extends Component {
         prinupdatedAt: createNow,
         prinupdatedBy: this.props.dataLoginUser.username
       });
+      this.props.dataNavbar({ dataNavbar: true})
 
     }
     else {
       const { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy } = this.state
       let objprincipal = { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy }
-      console.log("ini object Principal : ", objprincipal)
       if (prinName === "" || prinAddress === "" || prinCity === "" || prinPhone === "" || prinFax === "" || prinCountry === "" || prinConPhone === "" || prinLicensed === "") {
         Swal.fire(
           'Insert All Data!',
@@ -378,7 +376,6 @@ class Principal extends Component {
                 }
               })
               .then((resp) => {
-                console.log(resp);
                 this.getApiALLPrincipal();
                 this.getPaging(this.state.page, this.state.limit);
                 this.setState({
@@ -394,6 +391,7 @@ class Principal extends Component {
                   disableInputId: true
                 });
                 Swal.fire('Update!', '', 'success')
+                this.props.dataNavbar({ dataNavbar: false})
               }) 
               .catch((resp) => {
                 if(resp.response.status === 403){
@@ -446,7 +444,7 @@ class Principal extends Component {
         prinupdatedBy: "",
         disableInputId: true,
       })
-
+      this.props.dataNavbar({ dataNavbar: false})
       this.resetState()
     }
     //------------------------------------------------Untuk Delete----------------------------------
@@ -470,6 +468,7 @@ class Principal extends Component {
               this.setState({
                 disableButDel: true,
                 disableButEdit: true,
+                page:1
               })
               this.getApiALLPrincipal();
               this.getPaging(this.state.page, this.state.limit);
@@ -538,13 +537,13 @@ class Principal extends Component {
       prinupdatedBy: "",
     })
   }
-
   //--------------------------------------------------------ONCCLICK SEARCH NAMA-----------------------------------------
 
   searchName = () => {
     this.getPaging(this.state.pageNow, this.state.limit);
     this.setState({
-      searchPrin: ""
+      searchPrin: "",
+      page:1
     })
   }
 
@@ -557,7 +556,6 @@ class Principal extends Component {
         searchPrin: "",
         page: 1
       })
-
     }
     else {
       this.getApiName(this.state.pageNow, this.state.limit)
@@ -598,9 +596,7 @@ class Principal extends Component {
 
   }
 
-
   render() {
-    this.props.dataNavbar({ dataNavbar: this.state.tableClick })
     const { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy } = this.state
     return (
       <>

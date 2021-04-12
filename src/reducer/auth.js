@@ -9,11 +9,9 @@ let defaultState={
 }
 
 const authReducer = (state=defaultState, action)=>{
-    console.warn("state: ", state)
-    console.warn("action: ", action)
+
     switch (action.type) {
         case "LOGIN":
-            console.log("object")
             return{
                 ...state,
                 isLogin: true,
@@ -30,12 +28,6 @@ const authReducer = (state=defaultState, action)=>{
                 }  ,
                 isLogin: false,
                 token:""
-            }
-            
-        case "NAVBAR":
-            return{
-                ...state,
-                statusNavbar: action.payload.dataNavbar
             }
 
             case "TOKEN":

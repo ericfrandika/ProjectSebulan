@@ -117,7 +117,7 @@ class Navbar extends Component {
 const mapStateToProps = state => ({
   checkLogin: state.authReducer.isLogin,
   dataLoginUser : state.authReducer.userLogin,
-  dataNavbar :state.authReducer.statusNavbar
+  dataNavbar :state.tableCondiReducer.statusNavbar
 
 })
 

@@ -130,7 +130,6 @@ class Distributor extends Component {
       })
       .catch((resp) => {
         if(resp.response.status === 403 ){
-          console.log(resp.response.status)
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -206,7 +205,6 @@ class Distributor extends Component {
       })
       .catch((resp) => {
         if(resp.response.status === 403 ){
-          console.log(resp.response.status)
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -239,6 +237,8 @@ class Distributor extends Component {
         inputId: false,
         tableClick: true
       });
+      this.props.dataNavbar({ dataNavbar: true})
+
       this.resetDis()
     }
     else {
@@ -284,6 +284,7 @@ class Distributor extends Component {
                   discreatedBy: "",
                   tableClick: false
                 })
+                this.props.dataNavbar({ dataNavbar: false})
                 Swal.fire('Saved!', '', 'success')
               })
               .catch((resp) => {
@@ -325,6 +326,8 @@ class Distributor extends Component {
         inputId: true,
         tableClick: true,
       });
+      this.props.dataNavbar({ dataNavbar: true})
+
     }
 
     else {
@@ -356,7 +359,6 @@ class Distributor extends Component {
                 }
               })
               .then((resp) => {
-                console.log(resp);
                 this.getPaging(this.state.page, this.state.limit);
                 this.setState({
                   butCondEdit: true,
@@ -371,11 +373,12 @@ class Distributor extends Component {
                   discreatedAt: "",
                   discreatedBy: "",
                 });
+                this.props.dataNavbar({ dataNavbar: false})
+
                 Swal.fire('Update!', '', 'success')
               })
               .catch((resp) => {
                 if(resp.response.status === 403 ){
-                  console.log(resp.response.status)
                   Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -419,6 +422,8 @@ class Distributor extends Component {
         inputId: true
       })
       this.resetDis()
+      this.props.dataNavbar({ dataNavbar: false})
+
     }
     //------------------------------------------------Untuk Delete----------------------------------
     else {
@@ -444,7 +449,9 @@ class Distributor extends Component {
                 disabledButEdit: true,
                 discreatedAt: "",
                 discreatedBy: "",
-                tableClick: false
+                tableClick: false,
+                page:1
+
               })
               Swal.fire(
                 'Deleted!',
@@ -456,7 +463,6 @@ class Distributor extends Component {
             })
             .catch((resp) => {
               if(resp.response.status === 403 ){
-                console.log(resp.response.status)
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
@@ -505,7 +511,19 @@ class Distributor extends Component {
 
   //-------------------------------------------Search Name Distributor------------------------------------------------------------
   buttonSearch = () => {
+    if (this.state.searchDis   === "") {
+      this.getPaging(this.state.pageNow, this.state.limit);
+      this.setState({
+        searchDis: "",
+        page: 1
+      })
+    }
+      else{
       this.getApiName(this.state.pageNow, this.state.limit)
+      this.setState({
+          page: 1
+      })
+      }
   }
   //--------------------------------------GetCountAndApiName-------------------------------
   getApiName = (value, limit) => {
@@ -524,7 +542,6 @@ class Distributor extends Component {
       })
       .catch((resp) => {
         if(resp.response.status === 403 ){
-          console.log(resp.response.status)
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -540,8 +557,10 @@ class Distributor extends Component {
  
 
   render() {
-    this.props.dataNavbar({ dataNavbar: this.state.tableClick })
+  
     const { prinId, disId, disName, disAddress, disCity, disOwner, disEmail, disPhone, discreatedAt, discreatedBy, disupdatedAt, disupdatedBy } = this.state
+  
+      
     return (
       <>
         <Kotak className="prinAtas">
@@ -640,7 +659,6 @@ class Distributor extends Component {
                 {/* -------------------------------------- nanti di for ini---------------------------------- */}
                 <Pilih disabled={this.state.disableInput} value={prinId} className="prinForm" name="prinId" style={{ height: "4.7vh" }} onChange={this.setValue}>
                   <Pilihan value="">Principal Name</Pilihan>
-
                   {
                     this.props.dataPrincipal.map((dis, idx) => {
                       return (

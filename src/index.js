@@ -10,12 +10,12 @@ import persistStore from 'redux-persist/es/persistStore';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage'
-// import "bootstrap/dist/css/bootstrap.min.css";
 
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['AuthReducer','PrinReducer','DisReducer']
+     whitelist  : ['authReducer','prinReducer','disReducer'],
+     blacklist  : ['tableCondiReducer']
 }
 const persistedReducer = persistReducer(persistConfig, reducer);
 let store = createStore(persistedReducer);
