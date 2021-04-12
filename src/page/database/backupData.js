@@ -67,13 +67,11 @@ class BackUpData extends Component {
             nameDatabase: "",
             setOpen: false,
             namaFileRestore: "",
-            forbidden: false
         }
     }
 
     componentDidMount() {
             this.getAPIDownload();
-            this.getApiALLBackup();
     }
     setValueFile = (el) => {
         this.setState({
@@ -117,8 +115,8 @@ class BackUpData extends Component {
                                 setOpen: false,
                                 namaFileRestore: ""
                             })
-                            
                             Swal.fire('Saved!', '', 'success')
+                            this.getAPIDownload();
                         })
                         .catch((resp) => {
                             if (resp.response.status === 403) {
@@ -156,6 +154,7 @@ class BackUpData extends Component {
                 this.setState({
                     backUpdata: resp.data
                 })
+                this.databaseBackup(resp.data)
             })
             .catch((resp) => {
                 if (resp.response.status === 403) {
@@ -163,9 +162,6 @@ class BackUpData extends Component {
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Session expired, please login again'
-                    })
-                    this.setState({
-                        forbidden: true
                     })
                     this.props.logout()
                 }
@@ -195,9 +191,6 @@ class BackUpData extends Component {
                         title: 'Oops...',
                         text: 'Session expired, please login again'
                     })
-                    this.setState({
-                        forbidden: true
-                    })
                     this.props.logout()
                 }
                 else {
@@ -210,9 +203,9 @@ class BackUpData extends Component {
             })
     }
 
-    databaseBackup = () => {
+    databaseBackup = (data) => {
         let createNow = new Date().toLocaleDateString() + "_" + new Date().toLocaleTimeString() + "_nexchief.sql"
-        const newBackupData = this.state.backUpdata
+        const newBackupData = data
         const blob = new Blob([newBackupData[0].fileData], { type: "text/plain" });
         this.downloadfile(blob, createNow)
     }
@@ -247,7 +240,7 @@ class BackUpData extends Component {
                 <Kotak className="bodyDatabase">
                     <Kotak className="containerBackup">
                         <Kotak className="kiriBackUp">
-                            <Ikon className="fas fa-download" onClick={() =>this.databaseBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
+                            <Ikon className="fas fa-download" onClick={() =>this.getApiALLBackup()} style={{ color: "white", display: 'inline-block', width: "70px", fontSize: "65px", cursor: "pointer" }}></Ikon>
                             <PrintLn />
                             <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>BACKUP</b></LabelPrin>
                         </Kotak>
@@ -257,11 +250,11 @@ class BackUpData extends Component {
                             <LabelPrin className="principal" style={{ fontFamily: '-moz-initial', color: "white", display: 'inline-block', width: "250px", fontSize: "20px" }} ><b>RESTORE</b></LabelPrin>
                         </Kotak>
                     </Kotak>
-                    <Kotak>
+                   
                     <Dialog onClose={()=>{this.handleClose()}} aria-labelledby="customized-dialog-title" open={this.state.setOpen}>
                         <DialogTitle id="customized-dialog-title" onClose={()=>{this.handleClose()}}>
                             RESTORE FILE
-        </DialogTitle>
+                        </DialogTitle>
                         <DialogContent dividers>
                             <Typography gutterBottom>
                                 Before Insert File, Make Sure your uploaded file with Extension .SQL
@@ -275,10 +268,9 @@ class BackUpData extends Component {
                         <DialogActions>
                             <Button variant="contained" size="small" color="primary" autoFocus onClick={() => { this.HandleRestore() }} >
                                 SAVE
-          </Button>
+                            </Button>
                         </DialogActions>
                     </Dialog>
-                </Kotak>
                 </Kotak>
             </>
         );
