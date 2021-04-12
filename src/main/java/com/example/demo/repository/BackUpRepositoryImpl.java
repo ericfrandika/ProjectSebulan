@@ -20,6 +20,8 @@ public class BackUpRepositoryImpl implements BackUpRepository {
 
     @Override
     public void BackUpDataRepository()  throws Exception {
+        jdbcTemplate.update("delete from backresdata");
+
         Properties prop = new Properties();
         prop.load(new FileInputStream("src/main/resources/database.properties"));
         String user = prop.getProperty("username");
@@ -59,7 +61,6 @@ public class BackUpRepositoryImpl implements BackUpRepository {
         Properties prop = new Properties();
         prop.load(new FileInputStream("src/main/resources/database.properties"));
         String savePath = prop.getProperty("pathbackupsql");
-        jdbcTemplate.update("delete from backresdata ");
         jdbcTemplate.update("insert into backresdata(fileData) values (load_file("+savePath+"))");
 
     }

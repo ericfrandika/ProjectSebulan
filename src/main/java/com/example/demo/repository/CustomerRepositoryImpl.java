@@ -118,9 +118,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     public Map<String, Object> findByNameCustomerRepository(String cusName, int page, int limit) {
         Map<String, Object> map = new HashMap<>();
         int numPages;
-        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM customer where cusName like '%"+cusName+"%'" ,
+        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM customer cus,principal prin WHERE cus.prinId = prin.prinId  and (cus.cusId like '%"+cusName+"%' or cus.cusName like '%"+cusName+"%' or prin.prinName like '%"+cusName+"%')",
                 (rs, rowNum) -> rs.getInt("count")).get(0);
-
         map.put("count",numPages);
         if(numPages > 0){
             if (page > numPages) page = numPages;
@@ -129,7 +128,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         int start = (page - 1) * limit;
         map.put("customer", jdbcTemplate.query("SELECT cus.cusId, cus.cusName, cus.cusPass,cus.cusAddress, cus.cusPhone,prin.prinId, prin.prinName," +
                         "cus.disId,cus.cusOnOff,cus.cusRegis,cus.cusValid,cus.cuscreatedAt, cus.cuscreatedBy, cus.cusupdatedAt, cus.cusupdatedBy FROM customer cus," +
-                        "principal prin WHERE cus.prinId = prin.prinId  and cus.cusName like '%"+cusName+"%' Limit "+start+","+limit+"",
+                        "principal prin WHERE cus.prinId = prin.prinId  and (cus.cusId like '%"+cusName+"%' or cus.cusName like '%"+cusName+"%' or prin.prinName like '%"+cusName+"%') Limit "+start+","+limit+"",
                 (rs,rowNum)->
                         new Customer(
                                 rs.getString("cusId"),

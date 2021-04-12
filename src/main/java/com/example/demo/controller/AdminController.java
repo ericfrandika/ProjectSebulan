@@ -23,11 +23,9 @@ public class AdminController {
     public static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     @Autowired
     AdminService adminService;
-
     @GetMapping("/login/") ///-------------------ini login----------------------------------
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         logger.info("Comparing data!");
-
         Admin admin = adminService.admin(username, password);
 
         if(admin == null) {
@@ -48,6 +46,4 @@ public class AdminController {
         map.put("token", token);
         return map;
     }
-
-
 }

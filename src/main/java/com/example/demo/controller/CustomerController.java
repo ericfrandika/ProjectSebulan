@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.model.Customer;
 import com.example.demo.model.Principal;
 import com.example.demo.service.CustomerService;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/nexchief")
 public class CustomerController {
     public static final Logger logger = LoggerFactory.getLogger(CustomerController.class);

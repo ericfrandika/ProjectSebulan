@@ -86,7 +86,7 @@ public class DistributorRepositoryImpl implements DistributorRepository {
     public Map<String, Object> findByNameDistributorRepository(String disName , int page , int limit) {
         Map<String, Object> map = new HashMap<>();
         int numPages;
-        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM distributor where disName like '%"+disName+"%'" ,
+        numPages = jdbcTemplate.query("SELECT COUNT(*) as count FROM principal prin,distributor dis WHERE dis.prinId = prin.prinId AND (dis.disId like '%"+disName+"%' OR dis.disName like '%"+disName+"%' or dis.disCity like '%"+disName+"%')" ,
                 (rs, rowNum) -> rs.getInt("count")).get(0);
         map.put("count",numPages);
         if(numPages > 0){
@@ -95,8 +95,8 @@ public class DistributorRepositoryImpl implements DistributorRepository {
         if (page < 1) page = 1;
         int start = (page - 1) * limit;
         map.put("distributor", jdbcTemplate.query("SELECT prin.prinId,prin.prinName, dis.disId,dis.disName, dis.disAddress,dis.disCity, dis.disOwner, " +
-                "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
-                "distributor dis WHERE dis.prinId = prin.prinId AND dis.disName like '%"+disName+"%' Limit "+start+","+limit+"",
+                        "dis.disEmail, dis.disPhone,dis.discreatedAt, dis.discreatedBy, dis.disupdatedAt,dis.disupdatedBy FROM principal prin, " +
+                        "distributor dis WHERE dis.prinId = prin.prinId AND (dis.disId like '%"+disName+"%' OR dis.disName like '%"+disName+"%' or dis.disCity like '%"+disName+"%')  Limit "+start+","+limit+"",
                 (rs,rowNum)->
                         new Distributor(
                                 rs.getString("prinId"),

@@ -33,6 +33,7 @@ public class Distributor {
     private String disupdatedAt;
     private String disupdatedBy;
 
+
     public Distributor(String prinId, String prinName, String disId, String disName, String disAddress, String disCity, String disOwner, String disEmail, String disPhone, String discreatedAt, String discreatedBy, String disupdatedAt, String disupdatedBy) {
         this.prinId = prinId;
         this.prinName = prinName;
@@ -48,6 +49,7 @@ public class Distributor {
         this.disupdatedAt = disupdatedAt;
         this.disupdatedBy = disupdatedBy;
     }
+
 
     public String getPrinId() {
         return prinId;
