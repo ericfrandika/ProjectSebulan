@@ -584,16 +584,7 @@ class Principal extends Component {
 
   }
 
-  NewDate2 = () => {
-    return (
-      <>
-      <div>
-        <label>GILA</label>
-      </div>
-      </>
-    )
 
-  }
 
   render() {
     const { prinId, prinName, prinAddress, prinCity, prinPhone, prinFax, prinCountry, prinConPhone, prinLicensed, princreatedAt, princreatedBy, prinupdatedAt, prinupdatedBy } = this.state

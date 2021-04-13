@@ -582,6 +582,22 @@ class Customer extends Component {
         })
     }
 
+    NewDate = () => {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+          dd = '0' + dd
+        }
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        return today;
+      }
+    
+
     render() {
         const { page, limit, cusId, cusName, cusPass, cusAddress, cusPhone, prinId, disId, cusOnOff, cusRegis, cusValid, cuscreatedAt, cuscreatedBy, cusupdatedAt, cusupdatedBy } = this.state
         return (
@@ -757,10 +773,10 @@ class Customer extends Component {
                                 </FormGroup>
                             </Kotak>
                             <Kotak>
-                                <InputPrin type="date" style={{ width: "20%" }}  disabled={true} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
+                                <InputPrin type="date"  style={{ width: "20%" }}  disabled={true} className="prinForm" value={cusRegis} name="cusRegis" onChange={this.setValue} placeholder="Customer Regis Date" ></InputPrin>
                             </Kotak>
                             <Kotak>
-                                <InputPrin type="date" style={{ width: "20%" }} disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
+                                <InputPrin type="date" min={this.NewDate()} style={{ width: "20%" }} disabled={this.state.disableInput} className="prinForm" name="cusValid" onChange={this.setValue} value={cusValid} placeholder="Customer Product Thru" ></InputPrin>
                             </Kotak>
                             <Garis style={{ backgroundColor: "blue", width: "99%", height: "1px", marginBottom: "1%" }} />
                             <Kotak>

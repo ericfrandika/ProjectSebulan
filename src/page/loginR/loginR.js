@@ -55,9 +55,9 @@ class LoginR extends Component {
         })
     }
     doLogin = (object) =>{
-        // ||this.state.response ===""
+        // 
         const {username , password} =object
-        if(username === "" || password ==="" ){
+        if(username === "" || password ==="" ||this.state.response ===""){
             Swal.fire(
                 'Insert Your Username and Password!',
                 'You clicked the button!',
