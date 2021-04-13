@@ -13,5 +13,4 @@ const tableCondiReducer = (state=defaultState, action)=>{
             return state;
     }
 }
-
 export default tableCondiReducer

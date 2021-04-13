@@ -1,10 +1,8 @@
-
 .allLogin{
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
 	background-color: black;
 }
-
 .home2{
 	position: fixed;
 	bottom: 0;
@@ -148,7 +146,6 @@
 	
 }
 
-
 .btn{
 	display: block;
 	width: 100%;
@@ -169,7 +166,6 @@
 .btn:hover{
 	background-position: right;
 }
-
 
 @media screen and (max-width: 1050px){
 	.container{

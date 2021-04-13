@@ -565,7 +565,7 @@ class Distributor extends Component {
       <>
         <Kotak className="prinAtas">
           <Kotak className="prinAtasKiri">
-            <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchDis" onChange={this.setValue} placeholder="Search Name Distributor..." value={this.state.searchDis}></InputPrin>
+            <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchDis" onChange={this.setValue} placeholder="Search Distributor..." value={this.state.searchDis}></InputPrin>
             <Button startIcon={<SearchIcon />} variant="contained" size="small" color="primary" style={{ marginRight: "1%" }} onClick={this.buttonSearch} disabled={this.state.butCondAdd}>SEARCH</Button>
             <Ikon className="far fa-window-close" style={{ cursor: "pointer", color: "red" }} onClick={() => this.searchName()}></Ikon>
           </Kotak>

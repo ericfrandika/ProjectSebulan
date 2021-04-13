@@ -588,7 +588,7 @@ class Customer extends Component {
             <>
                 <Kotak className="prinAtas">
                 <Kotak className="prinAtasKiri">
-                    <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus"  value={this.state.searchCus} onChange={this.setValue} placeholder="Search Name Customer..."></InputPrin>
+                    <InputPrin className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchCus"  value={this.state.searchCus} onChange={this.setValue} placeholder="Search Customer..."></InputPrin>
                     <Button startIcon={<SearchIcon/>} variant="contained" size="small" color="primary"   style={{ marginRight: "1%"}} onClick={this.buttonSearch} >SEARCH</Button>
                     <Ikon className="far fa-window-close" style={{  cursor: "pointer", color: "red" }} disabled={this.state.tableClick}  onClick={() => this.searchName()}></Ikon>
                    </Kotak>
@@ -708,7 +708,7 @@ class Customer extends Component {
                                 <InputPrin type="text" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
                             </Kotak>
                             <Kotak>
-                                <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Alamat" onChange={this.setValue}></InputArea>
+                                <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Customer Address" onChange={this.setValue}></InputArea>
                             </Kotak>
                             <Kotak>
                                 <InputPrin type="text" disabled={this.state.disableInput} className="prinForm" value={cusPhone} name="cusPhone" onChange={this.setValue} placeholder="Customer Phone" ></InputPrin>

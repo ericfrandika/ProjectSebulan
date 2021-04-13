@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import './style.css'
 import InputPrin from '../../components/comp_principal/inputPrin'
 import LabelPrin from '../../components/comp_principal/labelPrin'
@@ -602,7 +601,7 @@ class Principal extends Component {
       <>
         <Kotak className="prinAtas">
           <Kotak className="prinAtasKiri">
-          <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Name Principal..."></InputPrin>
+          <InputPrin value={this.state.searchPrin} className="SeacrhPrin" style={{ marginRight: "1%" }} name="searchPrin" onChange={this.setValue} placeholder="Search Principal..."></InputPrin>
           <Button startIcon={<SearchIcon />} variant="contained" size="small" color="primary" style={{ marginRight: "1%" }} onClick={this.buttonSearch} >SEARCH</Button>
           <Ikon className="far fa-window-close" style={{ cursor: "pointer", color: "red" }} onClick={() => this.searchName()} disabled={this.state.tableClick}></Ikon>
           </Kotak>
