@@ -19,7 +19,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/nexchief")
 public class PrincipalController {
-    public static final Logger logger = LoggerFactory.getLogger(PrincipalController.class);
     @Autowired
     PrincipalService principalService;
 
@@ -39,27 +38,21 @@ public class PrincipalController {
             return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (principalService.findByIdPrincipalService(principal.getPrinId()) != null) {
-            logger.error("Unable to create. A Principal with Id {} already exist", principal.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + principal.getPrinId()+ " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByNameObjPrincipalService(principal.getPrinName())!=null) {
-            logger.error("Unable to create. A Principal with name {} already exist", principal.getPrinName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with name " + principal.getPrinName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByPhonePrincipalService(principal.getPrinPhone()) != null) {
-            logger.error("Unable to create. A Principal with Phone {} already exist", principal.getPrinPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Phone " + principal.getPrinPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByFaxPrincipalService(principal.getPrinFax()) !=null) {
-            logger.error("Unable to create. A Principal with Fax {} already exist", principal.getPrinFax());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Fax " + principal.getPrinFax() + " already exist."), HttpStatus.CONFLICT);
         }
        if (principalService.findByConPhonePrincipalService(principal.getPrinConPhone()) != null) {
-            logger.error("Unable to create. A Principal with ConPhone {} already exist", principal.getPrinConPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with ChonPhone " + principal.getPrinConPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
-            logger.info("Creating Principal : {}", principal);
             principalService.savePrincipalService(principal);
             return new ResponseEntity<>(principal, HttpStatus.OK);
         }
@@ -69,10 +62,8 @@ public class PrincipalController {
 
     @RequestMapping(value = "/principal/{prinId}", method = RequestMethod.GET)
     public ResponseEntity<?> getPrinId(@PathVariable("prinId") String prinId) {
-        logger.info("Fetching Principal with id {}", prinId);
         Principal principal = principalService.findByIdPrincipalService(prinId);
         if (principal == null) {
-            logger.error("Principal with id {} not found. ", prinId);
             return new ResponseEntity<>(new CustomErrorType("Principal with id " + prinId  + " not found"), HttpStatus.NOT_FOUND);
         }
         else {
@@ -86,31 +77,25 @@ public class PrincipalController {
     public ResponseEntity<?> updatePrincipal( @PathVariable("prinId") String prinId
             ,@Valid @RequestBody Principal principal ,Errors error) {
 
-        logger.info("Updating Principal with id {}", prinId);
         if(error.hasErrors()){
             return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         Principal currentPrincipal = principalService.findByIdPrincipalService(prinId);
 
         if (currentPrincipal == null) {
-            logger.error("Unable to update. Pasien with id {} not found.", prinId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Principal with id " + prinId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
         if (principalService.findByNameObjPrincipalService(principal.getPrinName())!=null && !currentPrincipal.getPrinName().equalsIgnoreCase(principal.getPrinName())) {
-            logger.error("Unable to create. A Principal with name {} already exist", principal.getPrinName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with name " + principal.getPrinName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByPhonePrincipalService(principal.getPrinPhone()) != null && !currentPrincipal.getPrinPhone().equalsIgnoreCase(principal.getPrinPhone())) {
-            logger.error("Unable to create. A Principal with Phone {} already exist", principal.getPrinPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Phone " + principal.getPrinPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByFaxPrincipalService(principal.getPrinFax()) !=null && !currentPrincipal.getPrinFax().equalsIgnoreCase(principal.getPrinFax())) {
-            logger.error("Unable to create. A Principal with Fax {} already exist", principal.getPrinFax());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Fax " + principal.getPrinFax() + " already exist."), HttpStatus.CONFLICT);
         }
         if (principalService.findByConPhonePrincipalService(principal.getPrinConPhone()) != null && !currentPrincipal.getPrinConPhone().equalsIgnoreCase(principal.getPrinConPhone())) {
-            logger.error("Unable to create. A Principal with ConPhone {} already exist", principal.getPrinConPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with ChonPhone " + principal.getPrinConPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
@@ -122,12 +107,10 @@ public class PrincipalController {
 
     @RequestMapping(value = "/principal/{prinId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePrincipalbyId(@PathVariable("prinId") String prinId  ) {
-        logger.info("Fetching & Deleting Principal with Principal {}", prinId);
 
         Principal principal = principalService.findByIdPrincipalService(prinId);
         try {
             if (principal == null) {
-                logger.error("Unable to delete. Principal with id {} not found.", prinId);
                 return new ResponseEntity<>(new CustomErrorType("Unable to delete. Principal with id " + prinId + " not found."),
                         HttpStatus.NOT_FOUND);
             } else {

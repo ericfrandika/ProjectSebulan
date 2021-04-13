@@ -32,14 +32,12 @@ import org.springframework.web.multipart.MultipartFile;
 @EnableScheduling
 
 public class BackUpController {
-    public static final Logger logger = LoggerFactory.getLogger(BackUpController.class);
 
     @Autowired
     BackUpService backUpService;
 
     @RequestMapping(value = "/backupdatabase/", method = RequestMethod.GET)
     public ResponseEntity<?> createBackup()throws Exception  {
-        logger.info("Creating BackUpdata : {}");
         backUpService.BackUpDataService();
         backUpService.downloadDatabaseService();
         return new ResponseEntity<>(new CustomSuccessType("Success"), HttpStatus.OK);

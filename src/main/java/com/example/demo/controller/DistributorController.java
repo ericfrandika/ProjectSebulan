@@ -20,7 +20,6 @@ import java.util.Map;
 @RequestMapping("/admin/nexchief")
 
 public class DistributorController {
-    public static final Logger logger = LoggerFactory.getLogger(DistributorController.class);
     @Autowired
     DistributorService distributorService;
     @Autowired
@@ -40,28 +39,22 @@ public class DistributorController {
             return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (principal == null){
-            logger.error("Unable to create. A Principal with id {} not Found", distributor.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + distributor.getPrinId() + " Not Found."), HttpStatus.NOT_FOUND);
         }
         if (distributorService.findByIdDistributorService(distributor.getDisId()) != null) {
-            logger.error("Unable to create. A Distributor with Id {} already exist", distributor.getDisId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with id " + distributor.getDisId() + " already exist."), HttpStatus.CONFLICT);
         }
 
         if (distributorService.findByNameObjDistributorService(distributor.getDisName()) != null) {
-            logger.error("Unable to create. A Distributor with name {} already exist", distributor.getDisName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with name " + distributor.getDisName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (distributorService.findByEmailDistributorService(distributor.getDisEmail()) != null) {
-            logger.error("Unable to create. A Distributor with Email {} already exist", distributor.getDisEmail());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with Email " + distributor.getDisEmail() + " already exist."), HttpStatus.CONFLICT);
         }
         if (distributorService.findByPhoneDistributorService(distributor.getDisPhone()) !=null) {
-            logger.error("Unable to create. A Distributor with Phone {} already exist", distributor.getDisPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with Phone " +distributor.getDisPhone() + " already exist."), HttpStatus.CONFLICT);
         }
 
-        logger.info("Creating Distributor : {}", distributor);
         distributorService.saveDistributorService(distributor);
         return new ResponseEntity<>(distributor, HttpStatus.CREATED);
     }
@@ -69,10 +62,8 @@ public class DistributorController {
 
     @RequestMapping(value = "/distributor/{disId}", method = RequestMethod.GET)
     public ResponseEntity<?> getPrinId(@PathVariable("disId") String disId) {
-        logger.info("Fetching Distributor with id {}", disId);
         Distributor distributor = distributorService.findByIdDistributorService(disId);
         if (distributor == null) {
-            logger.error("Distributor with id {} not found. ", disId);
             return new ResponseEntity<>(new CustomErrorType("Distributor with id " + disId  + " not found"), HttpStatus.NOT_FOUND);
         }
         else {
@@ -90,11 +81,9 @@ public class DistributorController {
 
     @RequestMapping(value = "/distributor/{disId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePrincipalbyId(@PathVariable("disId") String disId  ) {
-        logger.info("Fetching & Deleting Distrbutor with id Distributor {}", disId);
 try {
     Distributor distributor = distributorService.findByIdDistributorService(disId);
     if (distributor == null) {
-        logger.error("Unable to delete. Distributor with id {} not found.", disId);
         return new ResponseEntity<>(new CustomErrorType("Unable to delete. Distrbutor with id " + disId + " not found."),
                 HttpStatus.NOT_FOUND);
     } else {
@@ -113,27 +102,22 @@ try {
     public ResponseEntity<?> updatePrincipal(@Valid @PathVariable("disId") String disId
             , @RequestBody Distributor distributor , Errors error) {
 
-        logger.info("Updating Distributor with id {}", disId);
 
         Distributor currentDistributor = distributorService.findByIdDistributorService(disId);
         if(error.hasErrors()){
             return  new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (currentDistributor == null) {
-            logger.error("Unable to update. Distributor with id {} not found.", disId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Distributor with id " + disId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
         if (distributorService.findByNameObjDistributorService(distributor.getDisName()) != null && !currentDistributor.getDisName().equalsIgnoreCase(distributor.getDisName())) {
-            logger.error("Unable to create. A Distributor with name {} already exist", distributor.getDisName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with name " + distributor.getDisName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (distributorService.findByEmailDistributorService(distributor.getDisEmail()) != null && !currentDistributor.getDisEmail().equalsIgnoreCase(distributor.getDisEmail())) {
-            logger.error("Unable to create. A Distributor with Email {} already exist", distributor.getDisName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with Email " + distributor.getDisEmail() + " already exist."), HttpStatus.CONFLICT);
         }
         if (distributorService.findByPhoneDistributorService(distributor.getDisPhone()) !=null && !currentDistributor.getDisPhone().equalsIgnoreCase(distributor.getDisPhone())) {
-            logger.error("Unable to create. A Distributor with phone {} already exist", distributor.getDisPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Distributor with Phone " + distributor.getDisPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {

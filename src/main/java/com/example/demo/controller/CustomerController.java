@@ -20,7 +20,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/nexchief")
 public class CustomerController {
-    public static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
     CustomerService customerService;
@@ -35,19 +34,15 @@ public class CustomerController {
             return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (principal == null){
-            logger.error("Unable to create. A Principal with id {} not Found", customer.getPrinId());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Principal with id " + customer.getPrinId() + " Not Found."), HttpStatus.NOT_FOUND);
         }
         if (customerService.findByUsernameService(customer.getCusName()) != null) {
-            logger.error("Unable to create. A Customer with UserName {} already exist", customer.getCusName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with UserName " + customer.getCusName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (customerService.findByPhoneCustomerService(customer.getCusPhone()) != null) {
-            logger.error("Unable to create. A Customer with Phone {} already exist", customer.getCusPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with Phone " + customer.getCusPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
-            logger.info("Creating Customer : {}", customer);
             customerService.saveCustomerService(customer);
             return new ResponseEntity<>(customer, HttpStatus.CREATED);
         }
@@ -63,10 +58,8 @@ public class CustomerController {
 
     @RequestMapping(value = "/customer/{cusId}", method = RequestMethod.GET)
     public ResponseEntity<?> getCusId(@PathVariable("cusId") String cusId) {
-        logger.info("Fetching Customer with id {}", cusId);
         Customer customer = customerService.findByIdCustomerService(cusId);
         if (customer == null) {
-            logger.error("Customer with id {} not found. ", cusId);
             return new ResponseEntity<>(new CustomErrorType("Customer with id " + cusId + " not found"), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -76,11 +69,9 @@ public class CustomerController {
 
     @RequestMapping(value = "/customer/{cusId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCustomerbyId(@PathVariable("cusId") String cusId  ) {
-        logger.info("Fetching & Deleting Customer with id Customer {}", cusId);
 
         Customer customer = customerService.findByIdCustomerService(cusId);
         if (customer == null) {
-            logger.error("Unable to delete. Distributor with id {} not found.", cusId);
             return new ResponseEntity<>(new CustomErrorType("Unable to delete. Customer with id " + cusId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
@@ -94,23 +85,19 @@ public class CustomerController {
     @RequestMapping(value = "/customer/{cusId}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateCustomer(@Valid @PathVariable("cusId") String cusId
             , @RequestBody Customer customer , Errors error) {
-        logger.info("Updating Distributor with id {}", cusId);
 
         Customer currentCustomer = customerService.findByIdCustomerService(cusId);
         if(error.hasErrors()){
             return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         }
         if (currentCustomer == null) {
-            logger.error("Unable to Update. Customer with id {} not found.", cusId);
             return new ResponseEntity<>(new CustomErrorType("Unable to update. Customer with id " + cusId + " not found."),
                     HttpStatus.NOT_FOUND);
         }
         if (customerService.findByUsernameService(customer.getCusName()) != null && !currentCustomer.getCusName().equalsIgnoreCase(customer.getCusName())) {
-            logger.error("Unable to create. A Customer with UserName {} already exist", customer.getCusName());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with UserName " + customer.getCusName() + " already exist."), HttpStatus.CONFLICT);
         }
         if (customerService.findByPhoneCustomerService(customer.getCusPhone()) != null && !currentCustomer.getCusPhone().equalsIgnoreCase(customer.getCusPhone())) {
-            logger.error("Unable to create. A Customer with Phone {} already exist", customer.getCusPhone());
             return new ResponseEntity<>(new CustomErrorType("Unable to create. A Customer with Phone " + customer.getCusPhone() + " already exist."), HttpStatus.CONFLICT);
         }
         else {
