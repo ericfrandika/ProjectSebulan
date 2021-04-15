@@ -17,6 +17,7 @@ const persistConfig = {
      whitelist  : ['authReducer','prinReducer','disReducer'],
      blacklist  : ['tableCondiReducer']
 }
+
 const persistedReducer = persistReducer(persistConfig, reducer);
 let store = createStore(persistedReducer);
 const persistor = persistStore(store);

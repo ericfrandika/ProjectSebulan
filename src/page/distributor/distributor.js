@@ -172,7 +172,7 @@ class Distributor extends Component {
           this.props.logout()             
       }
       else{
-        alert("Failed fetching")
+        alert(resp.response)
       }
       }) ;
   }
@@ -665,6 +665,7 @@ class Distributor extends Component {
                         <Pilihan key={idx} value={dis.prinId}>{dis.prinName}</Pilihan>
                       )
                     })
+    
                   }
                 </Pilih>
               </Kotak>

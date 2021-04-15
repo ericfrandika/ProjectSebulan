@@ -154,7 +154,6 @@ class LoginR extends Component {
         checkLogin: state.authReducer.isLogin,
         dataLoginUser: state.authReducer.userLogin,
         dataToken : state.authReducer.token
-
     })
     
     const mapDispatchToProps = dispatch => { // NGIRIM DATA

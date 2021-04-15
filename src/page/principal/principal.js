@@ -29,7 +29,7 @@ class Principal extends Component {
       //-------------------------------Find ALL with Pagination-----------------------------------------
       page: 1,
       count: 0,
-      limit: "5",
+      limit: "6",
       pageNow: 1,
 
       //----------------------------------------------------DIDMOUNT---------------------------------------------
@@ -51,7 +51,6 @@ class Principal extends Component {
       objPrin: {},
       searchPrin: "",
       actSearch: 0,
-
       //--------------------------------------------ini Seluruh State Condisii button------------------------------
       disableInputId: true,
       butCondi: true,
@@ -259,11 +258,12 @@ class Principal extends Component {
         }).then((result) => {
           if (result.isConfirmed) {
             axios.post(this.state.apiall, {
+              ...objprincipal
+            },
+            {
               headers: {
                 'Authorization': "Bearer " + this.props.dataToken
               }
-            }, {
-              ...objprincipal
             })
               .then((resp) => {
                 this.getApiALLPrincipal();

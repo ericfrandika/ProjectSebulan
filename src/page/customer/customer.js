@@ -52,6 +52,7 @@ class Customer extends Component {
             cusupdatedBy: "",
             customers: [],
             searchCus: "",
+            distributors:[],
             objCus: {},
             //---------------------------------------------------ini Seluruh State Condisii button------------------------------------
             butCondi: true,
@@ -79,6 +80,7 @@ class Customer extends Component {
                 page:1
             })
           }
+        
         this.setState({
             [el.target.name]: el.target.value
         })
@@ -97,6 +99,9 @@ class Customer extends Component {
     }
 
     setValueName = el => {
+        if(el.target.name ==="prinId"){
+            this.getApiDistributor(el.target.value);
+         }
         if (this.state.actEdit === 1) {
             this.setState({
                 [el.target.name]: el.target.value,
@@ -158,6 +163,42 @@ class Customer extends Component {
             })
        
     }
+
+    //////////-------------------------------------------------------------------------------------------------------
+    getApiDistributor = (prinId) => {
+        axios.get('http://localhost:8080/admin/nexchief/distributor/allDistributor/?prinId='+prinId,
+        {
+            headers: {
+                'Authorization': "Bearer " +this.props.dataToken       
+          }})
+            .then((resp) => {
+                this.setState({
+                    distributors:resp.data
+                });
+            })
+            .catch((resp) => {
+                if(resp.response.status === 403 ){
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: ' Session expired, please login again'
+                    })
+                    this.props.logout()
+                }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Fetching Failed'
+                      })
+                }
+            })
+       
+    }
+
+
+
+    ///--------------------------------------------------------------------------------------------
     searchName = () => {
         this.getPaging(this.state.page, this.state.limit);
         this.setState({
@@ -721,7 +762,7 @@ class Customer extends Component {
                                 <InputPrin type="text" disabled={this.state.disableInput} value={cusName} className="prinForm" name="cusName" onChange={this.setValueName} placeholder="Customer UserName" ></InputPrin>
                             </Kotak>
                             <Kotak>
-                                <InputPrin type="text" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
+                                <InputPrin type="password" disabled={this.state.disableInput} value={cusPass} className="prinForm" name="cusPass" onChange={this.setValue} placeholder="Customer Password" ></InputPrin>
                             </Kotak>
                             <Kotak>
                                 <InputArea className="prinAlamat" disabled={this.state.disableInput} value={cusAddress} name="cusAddress" rows="4" cols="54" placeholder="Customer Address" onChange={this.setValue}></InputArea>
@@ -748,7 +789,7 @@ class Customer extends Component {
                                 <Pilih className="prinForm" disabled={this.state.disableInput} value={disId} name="disId" style={{ height: "33px" }} onChange={this.setValueCus}>
                                     <Pilihan value="">Distributor name</Pilihan>
                                     {
-                                        this.props.dataDistributor.map((dis, idx) => {
+                                        this.state.distributors.map((dis, idx) => {
                                             return (
                                                 <Pilihan key={idx} value={dis.disId}>{dis.disId + " || " + dis.disName}</Pilihan>
 
