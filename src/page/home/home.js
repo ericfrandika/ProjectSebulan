@@ -108,6 +108,7 @@ class Home extends Component {
     }
 
     render() {
+        this.props.dataNavbar({ dataNavbar: false})
         const {countPrincipal,countDistributor,countCustomer} =this.state
         return (
             <>
@@ -194,6 +195,7 @@ const mapDispatchToProps = dispatch => {
     return {
         submitLogin: (data) => dispatch({ type: "LOGIN", payload: data }),
         logout: () => dispatch({ type: "LOGOUT" }),
+        dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
     }
 }
 

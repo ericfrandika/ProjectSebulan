@@ -282,7 +282,8 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => { // NGIRIM DATA
     return {
-        logout: () => dispatch({ type: "LOGOUT" })
+        logout: () => dispatch({ type: "LOGOUT" }),
+        dataNavbar: (data) => dispatch({ type: "NAVBAR", payload: data }),
     }
 }
 

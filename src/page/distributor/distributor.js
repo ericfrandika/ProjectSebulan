@@ -557,7 +557,7 @@ class Distributor extends Component {
  
 
   render() {
-  
+    this.props.dataNavbar({ dataNavbar: false})
     const { prinId, disId, disName, disAddress, disCity, disOwner, disEmail, disPhone, discreatedAt, discreatedBy, disupdatedAt, disupdatedBy } = this.state
   
       
